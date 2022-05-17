@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="eu" data-theme="dark">
+
+<head>
+    <link rel="stylesheet" type="text/css" href="vendors/css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="vendors/css/grid.css">
+    <link rel="stylesheet" type="text/css" href="vendors/css/ionicons.min.css">
+    <link rel="stylesheet" type="text/css" href="resources/css/style.css">
+    <link rel="stylesheet" type="text/css" href="resources/css/mediaqueries.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+    <script data-main="./resources/js/index.js" src="./resources/js/require.js"></script>
+    <title>PTZ-Optics</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0">
+</head>
+
+<body>
+    <!--Header Section-->
+    <section id='header'>
+        <div id='assignLinkContainer'>
+            <a href='javascript:delay("./assignPresets.html")' id='assignLink'>Assign Presets</a>
+        </div>
+        <div id='logoBox'>
+            <img src='./resources/images/PTZ-Logo.svg' id='logo'>
+            <h1 id='title'>PTZ-OPTICS</h1>
+        </div>
+        <div id='preferenceLinkContainer'>
+            <a href='javascript:delay("./preferenceMenu.html")' id='preferenceLink'>Preferences</a>
+        </div>
+    </section>
+    <!--End of Header Section-->
+
+    <!--Link to open "About" box-->
+    <a href='#' id='infoLink'><i class='ion-ios-information'></i></a>
+
+    <section id='wrapper'>
+        <!--Container for the "About" box-->
+        <section id='about'>
+            <!--The "About" box itself-->
+            <div id='aboutBox'>
+                <div id='aboutTitleBox'>
+                    <!--Title for the "About" box-->
+                    <h1 id='aboutTitle'>About</h1>
+                </div>
+                <!--Container for content in the "About" box-->
+                <div id="aboutContent">  
+                    <p id='a'>This is a controller for PTZ-OPTICS cameras that I designed and developed. It took me
+                        quite a while to make!</p>
+                    <p>I completely re-designed the UI with a sleek, minimalistic look and added a light/dark mode toggle
+                        that lets you switch between the two modern-looking designs</p>
+                    <p>The backend of the controller is based off the original open-source controller built by
+                        PTZ-OPTICS. I took their code and modified it to fit my controller as well as tidying up the
+                        original code.</p>
+                </div>
+            </div>
+        </section>
+
+        <!--Preview section-->
+        <section id='prevContainer'>
+            <div id='preview'>
+                <img src="" id="camFeed" >
+                <h1 id='camTitle'>Active Preset: </h1>
+            </div>
+        </section>
+
+        <section id='ctrlContainer'>
+            <div id='controls'>
+                <div id='slidersContainer'>
+                    <div id='zoom'>
+                        <a href='#' class='zoom plus'><img src='./resources/images/plus.svg'></a>
+                        <!-- <div id="zoomSlider"></div> -->
+                        <input type="range" min="1" max="1000" value="500" class='q a' id="zoomSlider">
+                        <a href='#' class='zoom minus'><img src='./resources/images/minus.svg'></a>
+                    </div>
+                    <div id='focus'>
+                        <a href='#' class='focus plus'><img src='./resources/images/plus.svg'></a>
+                        <input type="range" min="1" max="1000" value="500" class='w s' id="focusSlider"
+                            orient='vertical'>
+                        <a href='#' class='focus minus'><img src='./resources/images/minus.svg'></a>
+                    </div>
+                </div>
+                <div id='ptzContainer'>
+                    <div id='padding'>
+                        <div class='row ptzBtnRow'>
+                            <div class='col span-1-of-3 ctrlBtn'></div>
+                            <div class='col span-1-of-3 ctrlBtn'><a href='#' class='btn1' id='up'><img src='./resources/images/up.svg'></a></div>
+                            <div class='col span-1-of-3 ctrlBtn'></div>
+                        </div>
+                        <div class='row ptzBtnRow'>
+                            <div class='col span-1-of-3 ctrlBtn'><a href='#' class='btn1' id='left'><img src='./resources/images/left.svg'></a></div>
+                            <div class='col span-1-of-3 ctrlBtn'><a href='#' class='btn1' id='esc'><img src='./resources/images/home.svg'></a></div>
+                            <div class='col span-1-of-3 ctrlBtn'><a href='#' class='btn1' id='right'><img src='./resources/images/right.svg'></a></div>
+                        </div>
+                        <div class='row ptzBtnRow'>
+                            <div class='col span-1-of-3 ctrlBtn'></div>
+                            <div class='col span-1-of-3 ctrlBtn'><a href='#' class='btn1' id='down'><img src='./resources/images/down.svg'></a></div>
+                            <div class='col span-1-of-3 ctrlBtn'></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id='pstContainer'>
+            <div id='presets'>
+                <div id='presetTitleContainer'>
+                    <h1 id='presetTitle'>Presets</h1>
+                    <h1 id='presetTitle1'>Presets</h1>
+                </div>
+                <div id='pstBtnContainer'>
+                    <div id='pstButtons'>
+                        <div class='row buttonRow'>
+                            <div class='col span-1-of-3 pstBtn'><a href='#' id='pst1' onmouseover='preview(this)' class='btn'>1</a></div>
+                            <div class='col span-1-of-3 pstBtn'><a href='#' id='pst2' onmouseover='preview(this)' class='btn'>2</a></div>
+                            <div class='col span-1-of-3 pstBtn'><a href='#' id='pst3' onmouseover='preview(this)' class='btn'>3</a></div>
+                        </div>
+                        <div class='row buttonRow'>
+                            <div class='col span-1-of-3 pstBtn'><a href='#' id='pst4' onmouseover='preview(this)' class='btn'>4</a></div>
+                            <div class='col span-1-of-3 pstBtn'><a href='#' id='pst5' onmouseover='preview(this)' class='btn'>5</a></div>
+                            <div class='col span-1-of-3 pstBtn'><a href='#' id='pst6' onmouseover='preview(this)' class='btn'>6</a></div>
+                        </div>
+                        <div class='row buttonRow'>
+                            <div class='col span-1-of-3 pstBtn'><a href='#' id='pst7' onmouseover='preview(this)' class='btn'>7</a></div>
+                            <div class='col span-1-of-3 pstBtn'><a href='#' id='pst8' onmouseover='preview(this)' class='btn'>8</a></div>
+                            <div class='col span-1-of-3 pstBtn'><a href='#' id='pst9' onmouseover='preview(this)' class='btn'>9</a></div>
+                        </div>
+                    </div>
+                    <div id='autoPan'>
+                        <a href='#' id='panBtn'>Auto Pan</a>
+                    </div>
+                    <div id='clearPresets'>
+                        <a href='#' id='clearBtn'>Clear Presets</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </section>
+
+</body>
+
+</html>

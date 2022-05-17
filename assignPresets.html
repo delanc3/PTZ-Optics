@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="eu" data-theme="dark">
+
+<head>
+    <link rel="stylesheet" type="text/css" href="vendors/css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="vendors/css/grid.css">
+    <link rel="stylesheet" type="text/css" href="vendors/css/ionicons.min.css">
+    <link rel="stylesheet" type="text/css" href="resources/css/style.css">
+    <link rel="stylesheet" type="text/css" href="resources/css/mediaqueries.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+    <script data-main="./resources/js/index.js" src="./resources/js/require.js"></script>
+    <title>PTZ-Optics</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0">
+</head>
+
+<body>
+    <section id='header'>
+        <div id='assignLinkContainer'>
+            <a href='#' id='assignLink'>Assign Presets</a>
+        </div>
+        <div id='logoBox'>
+            <img src='./resources/images/PTZ-Logo.svg' id='logo'>
+            <h1 id='title'>PTZ-OPTICS</h1>
+        </div>
+        <div id='preferenceLinkContainer'>
+            <a href='javascript:delay("./preferenceMenu.html")' id='preferenceLink'>Preferences</a>
+        </div>
+
+    </section>
+
+    <section id='wrapper'>
+        <section id='assignPresets'>
+            <div id='assignPresetsBox'>
+                <div id='titleDiv'>
+                    <div id='div1'></div>
+                    <div id='div2'>
+                        <h1 id='assignTitle'>Assign Presets</h1>
+                    </div>
+                    <div id='div3'><a href='javascript:delay("./index.html")' id='closeLink'><i
+                                class="icon ion-close-round"></i></a></div>
+                </div>
+                <div id='contentDiv'>
+                    <p id='one'>To assign a preset:</p>
+                    <p>1. Move the camera to the position you want to set as a preset</p>
+                    <p>2. Click the number that corresponds to the desired preset</p>
+                    <p>3. Enter a name for the preset in the alert box</p>
+                </div>
+                <div id="buttonsContainer">
+                    <div class='assign row'>
+                        <div class='col span-1-of-3 asgnCol'><a href='#' class="asgnBtn" id='assgn1'>1</a></div>
+                        <div class='col span-1-of-3 asgnCol'><a href='#' class="asgnBtn" id='assgn2'>2</a></div>
+                        <div class='col span-1-of-3 asgnCol'><a href='#' class="asgnBtn" id='assgn3'>3</a></div>
+                    </div>
+                    <div class='assign row'>
+                        <div class='col span-1-of-3 asgnCol'><a href='#' class="asgnBtn" id='assgn4'>4</a></div>
+                        <div class='col span-1-of-3 asgnCol'><a href='#' class="asgnBtn" id='assgn5'>5</a></div>
+                        <div class='col span-1-of-3 asgnCol'><a href='#' class="asgnBtn" id='assgn6'>6</a></div>
+                    </div>
+                    <div class='assign row'>
+                        <div class='col span-1-of-3 asgnCol'><a href='#' class="asgnBtn" id='assgn7'>7</a></div>
+                        <div class='col span-1-of-3 asgnCol'><a href='#' class="asgnBtn" id='assgn8'>8</a></div>
+                        <div class='col span-1-of-3 asgnCol'><a href='#' class="asgnBtn" id='assgn9'>9</a></div>
+                    </div>
+                    <div class='assign row'>
+                        <div class='col span-1-of-3 asgnCol'></div>
+                        <div class='col span-1-of-3 asgnCol'><a href='#' class="asgnBtn" id='assgn8'>Auto Pan Start</a>
+                        </div>
+                        <div class='col span-1-of-3 asgnCol'></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </section>
+
+    <!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+        <script src="./vendors/js/mousetrap.min.js"></script>
+        <script type="text/javascript" src="./resources/js/script.js"></script> -->
+
+</body>
+
+</html>

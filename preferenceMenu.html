@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="eu" data-theme="dark">
+
+<head>
+    <link rel="stylesheet" type="text/css" href="vendors/css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="vendors/css/grid.css">
+    <link rel="stylesheet" type="text/css" href="vendors/css/ionicons.min.css">
+    <link rel="stylesheet" type="text/css" href="resources/css/style.css">
+    <link rel="stylesheet" type="text/css" href="resources/css/mediaqueries.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+    <script data-main="./resources/js/index.js" src="./resources/js/require.js"></script>
+    <title>PTZ-Optics</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0">
+</head>
+
+<body>
+    <section id='header'>
+        <div id='assignLinkContainer'>
+            <a href='javascript:delay("./assignPresets.html")' id='assignLink'>Assign Presets</a>
+        </div>
+        <div id='logoBox'>
+            <img src='./resources/images/PTZ-Logo.svg' id='logo'>
+            <h1 id='title'>PTZ-OPTICS</h1>
+        </div>
+        <div id='preferenceLinkContainer'>
+            <a href='#' id='preferenceLink'>Preferences</a>
+        </div>
+
+    </section>
+
+    <section id='wrapper'>
+        <section id='prefMenu'>
+            <div id='prefMenuBox'>
+                <div id='titleDiv'>
+                    <div id='div2'>
+                        <h1 id='prefTitle'>Preferences</h1>
+                    </div>
+                    <div id='div3'><a href='javascript:delay("./index.html")' id='closeLink'><i
+                                class="icon ion-close-round"></i></a></div>
+                </div>
+                <div id="buttonsContainer">
+                    <div class='pref row'>
+                        <div class='col span-1-of-2 prefCol'><a href='#' class="adjust_setting prefBtn" id='flip'>Flip - No</a></div>
+                        <div class='col span-1-of-2 prefCol'><a href='#' class="adjust_setting prefBtn" id='mirror'>Mirror - No</a>
+                        </div>
+                    </div>
+                    <div class='pref row'>
+                        <div class='col span-1-of-2 prefCol'><a href='#' class="adjust_setting prefBtn" id='invertcontrols'>Invert Controls
+                                -
+                                No</a></div>
+                        <div class='col span-1-of-2 prefCol'><a href='#' class="adjust_setting prefBtn" id='infinitypt'>Infinity Pan/Tilt -
+                                Yes</a></div>
+                    </div>
+                    <div class='pref row'>
+                        <div class='col span-1-of-2 prefCol'><a href='#' class="adjust_setting prefBtn" id='infinityzoom'>Infinity Zoom</a>
+                        </div>
+                        <div class='col span-1-of-2 prefCol'><a href='#' class="adjust_setting prefBtn" id='infinityfocus'>Infinity Focus</a>
+                        </div>
+                    </div>
+                    <div class='pref row'>
+                        <div class='col span-1-of-2 prefCol'>
+                            <a href='#' class="adjust_setting prefBtn" id='themeToggle'>Dark Mode
+                                <input type='checkbox' id='switch' name='toggle'>
+                            </a>
+                        </div>
+                        <div class='col span-1-of-2 prefCol'><a href='#' class="adjust_setting prefBtn" id='reloadcamera'>Reload
+                                Camera</a>
+                        </div>
+                    </div>
+                    <div class='pref row'>
+                        <div class='col span-1-of-2 prefCol'>
+                            <label for='Pan Speed'>Pan Speed</label>
+                            <select class='dropDown' id='panSpeed' name='Pan Speed'>
+                                <option value="1">1 (Slow)</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                                <option value="13">13</option>
+                                <option value="14">14</option>
+                                <option value="15">15</option>
+                                <option value="16">16</option>
+                                <option value="17">17</option>
+                                <option value="18">18</option>
+                                <option value="19">19</option>
+                                <option value="20">20 (Fast)</option>
+                            </select>
+                        </div>
+                        <div class='col span-1-of-2 prefCol'>
+                            <label for='Zoom Speed'>Zoom Speed</label>
+                            <select class='dropDown' id='zoomSpeed' name='Zoom Speed'>
+                                <option value="1">1 (Slow)</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7 (Fast)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class='pref row'>
+                        <div class='col span-1-of-2 prefCol'>
+                            <label for='Tilt Speed'>Tilt Speed</label>
+                            <select class='dropDown' id='tiltSpeed' name='Tilt Speed'>
+                                <option value="1">1 (Slow)</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                                <option value="13">13</option>
+                                <option value="14">14</option>
+                                <option value="15">15</option>
+                                <option value="16">16</option>
+                                <option value="17">17</option>
+                                <option value="18">18</option>
+                                <option value="19">19</option>
+                                <option value="20">20 (Fast)</option>
+                            </select>
+                        </div>
+                        <div class='col span-1-of-2 prefCol'>
+                            <label for='Focus Speed'>Focus Speed</label>
+                            <select class='dropDown' id='focusSpeed' name='Focus Speed'>
+                                <option value="1">1 (Slow)</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7 (Fast)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class='pref row'>
+                        <div class='col span-1-of-2 prefCol'>
+                            <label for='panInterval'>Auto Pan Interval</label>
+                            <select class='dropDown' id='panInterval' name='panInterval'>
+                                <option value="30">30 Seconds</option>
+                                <option value="45">45 Seconds</option>
+                                <option value="60">1 Minute</option>
+                                <option value="90">1 Minute, 30 Seconds</option>
+                                <option value="120">2 Minutes</option>
+                            </select>
+                        </div>
+                        <div class='col span-1-of-2 prefCol'>
+                            <label for='cameraIP'>Camera IP Address</label>
+                            <input type="text" name="cameraIP" id='cameraIP' placeholder="192.168.xxx.xxx" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </section>
+
+    <!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+        <script src="./vendors/js/mousetrap.min.js"></script>
+        <script type="text/javascript" src="./resources/js/script.js"></script> -->
+
+</body>
+
+</html>
