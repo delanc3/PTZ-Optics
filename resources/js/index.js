@@ -43,7 +43,7 @@ function delay(URL) {
 	}, 500);
 }
 
-requirejs(['jquery', 'mousetrap.min', 'cookies.min'], function ($, Mousetrap, Cookies) {
+requirejs(['../vendors/js/jquery', '../vendors/js/mousetrap.min', '../vendors/jscookies.min'], function ($, Mousetrap, Cookies) {
 
 	document.documentElement.setAttribute('data-theme', 'dark');
 
