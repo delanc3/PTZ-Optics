@@ -2,6 +2,20 @@
 /*----BASIC SETUP-----*/
 /*--------------------*/
 
+/* Dark Theme */
+
+html[data-theme="dark"]{
+  --document-background-color: #242424;
+  --textCol: rgb(235, 233, 217); 
+  --section-bg-col: #2e2e2e;
+  --button-bg-col: #353535;
+  --padding-bg-col: #363636;
+  --button-hover-col: #242121;
+  --invCol: invert(100%);
+}
+
+/* Light Theme */
+
 * {
   margin: 0;
   padding: 0;
@@ -27,16 +41,6 @@ html {
   
 }
 
-html[data-theme="dark"]{
-  --document-background-color: #242424;
-  --textCol: rgb(235, 233, 217); 
-  --section-bg-col: #2e2e2e;
-  --button-bg-col: #353535;
-  --padding-bg-col: #363636;
-  --button-hover-col: #242121;
-  --invCol: invert(100%);
-}
-
 body {
   background-color: var(--document-background-color);
   overflow: hidden;
@@ -45,17 +49,6 @@ body {
   height: 100%;
   -webkit-touch-callout: none;
   user-select: none;
-}
-
-.clearfix {
-  zoom: 1;
-}
-.clearfix:after {
-  content: ".";
-  clear: both;
-  display: block;
-  height: 0;
-  visibility: hidden;
 }
 
 /*--------------------*/
@@ -113,6 +106,7 @@ p {
 /*----------*/
 
 /*-------HEADER--------*/
+
 #header {
   display: flex;
   width: 100%;
@@ -125,6 +119,7 @@ p {
   border: 5px solid #000;
 }
 
+/* Page Links */
 #assignLinkContainer,
 #preferenceLinkContainer {
   display: flex  !important;
@@ -167,6 +162,8 @@ p {
   -o-transform: scale(1.1);
 }
 
+/* Logo */
+
 #logoBox {
   display: flex;
   justify-content: center;
@@ -186,6 +183,8 @@ p {
   margin-left: 15px;
   text-shadow: 0 5px 5px #000;
 }
+
+/* About Box */
 
 #infoLink {
   position: absolute;
@@ -270,10 +269,6 @@ p {
   padding: 2px;
 }
 
-#a {
-  margin-top: 30px !important;
-}
-
 #aboutBox p {
   margin-top: 20px;
 }
@@ -282,6 +277,9 @@ p {
   opacity: 0;
 }
 
+#a {
+  margin-top: 30px !important;
+}
 
 /* -------Main container------- */
 
@@ -334,6 +332,8 @@ p {
   flex-direction: column;
   border: 5px solid #000;
 }
+
+/* Camera Preview */
 
 #camFeed {
   width: 500px;
@@ -391,6 +391,8 @@ p {
   justify-content: center;
   align-items: center;
 }
+
+/* PTZ Controls */
 
 #padding {
   display: flex;
@@ -490,6 +492,8 @@ p {
   border-bottom-left-radius: 15px;
   border-bottom-right-radius: 15px;
 }
+
+/* Sliders */
 
 #zoom,
 #focus {
@@ -865,7 +869,7 @@ input[type="range"]::-webkit-slider-runnable-track {
 #titleDiv {
   display: flex;
   width: 100%;
-  margin-top: 20px;
+  height: 20%;
   justify-content: space-between;
   align-items: center;
   flex-direction: row;
@@ -914,7 +918,7 @@ input[type="range"]::-webkit-slider-runnable-track {
 }
 
 #contentDiv {
-  margin-top: 20px;
+  height: 20%;
 }
 
 #one {
@@ -925,8 +929,15 @@ input[type="range"]::-webkit-slider-runnable-track {
 
 #buttonsContainer {
   display: flex;
-  margin-top: 30px;
   width: 80%;
+  justify-content: center;
+  align-content: center;
+  flex-direction: column;
+}
+
+#buttonsContainerPRST {
+  display: flex;
+  width: 60%;
   justify-content: center;
   align-content: center;
   flex-direction: column;
@@ -970,16 +981,22 @@ input[type="range"]::-webkit-slider-runnable-track {
   -moz-border-radius: 30px;
   -ms-border-radius: 30px;
   -o-border-radius: 30px;
-  transition: all 0.2s;
-  -webkit-transition: all 0.2s;
-  -moz-transition: all 0.2s;
-  -ms-transition: all 0.2s;
-  -o-transition: all 0.2s;
+  transition: all 0.5s;
+  -webkit-transition: all 0.5s;
+  -moz-transition: all 0.5s;
+  -ms-transition: all 0.5s;
+  -o-transition: all 0.5s;
 }
 
 .asgnBtn:hover,
 .prefBtn:hover {
   background-color: var(--button-hover-col);
+  width: 70px;
+  border-radius: 100px;
+  -webkit-border-radius: 100px;
+  -moz-border-radius: 100px;
+  -ms-border-radius: 100px;
+  -o-border-radius: 100px;
 }
 
 .asgnBtn:active {
@@ -1061,7 +1078,7 @@ label {
 }
 
 #themeToggle {
-  cursor: auto;
+  cursor: pointer;
 }
 
 input[type="checkbox"] {

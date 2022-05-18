@@ -27,7 +27,6 @@ let sliderClasses = ['.zoom.plus', '.zoom.minus', '.focus.plus', '.focus.minus']
 let actions = ['flip','mirror','invertcontrols', 'infinitypt', 'infinityzoom','infinityfocus'];
 let slideKeyNums = [1000, 0, 1000, 0];
 let previewing = true;
-let dark = true;
 let activePreset;
 
 function preview(e) {
@@ -53,29 +52,19 @@ requirejs.config({
 });
 
 requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) {
-
-	document.documentElement.setAttribute('data-theme', 'dark');
-
+	
+	activeTheme = 'light';
+	
 	window.oncontextmenu = function() {
 		if (event.button != 2 && !(event.clientX == event.clientY == 1)) {
 			event.preventDefault();
 		}
 	}
 
-	// let counter = 1;
-
-	// function camFeed(){
-	// 	document.getElementById('camFeed').src='http://192.168.0.190/snapshot.jpg';
-	// 	if (counter != -1) {
-	// 		setTimeout(function() {
-	// 			camFeed();
-	// 		},100);
-	// 	}
-	// }
-
-	// camFeed()
-
-
+	$('#themeToggle').on('click', function(){
+		ToggleTheme();
+	})
+	
 	SetTheme();
 
 	function SetTheme() {
@@ -102,7 +91,7 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 			$('#switch').addClass('switched');
 		}
 	}
-
+	
 	let alreadyPanning = false;
 
 	arrowKeys.forEach(function (x) {
