@@ -167,7 +167,13 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 			}
 		}, 'keydown');
 		Mousetrap.bind(x, function (e) {
-			lerp(500, `.${x}`, 'up');
+			stop_autopan();
+			if (x == 'q') {
+				lerp(500, '#zoomSlider', 'down');
+			}
+			else if (x == 'a') {
+				lerp(500, '#zoomSlider', 'up');
+			}
 			cam_zoom(1, 'zoomstop');
 		}, 'keyup');
 	});
