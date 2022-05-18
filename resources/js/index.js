@@ -156,17 +156,18 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 
 	sliderKeys.forEach(function (x, i) {
 		Mousetrap.bind(x, function (e) {
-			$(`.${x}`).val(slideKeyNums[i]);
 			stop_autopan();
 			if (x == 'q') {
+				lerp(1000, '#zoomSlider', 'up');
 				cam_zoom(1, 'zoomin');
 			}
 			else if (x == 'a') {
+				lerp(0, '#zoomSlider', 'down');
 				cam_zoom(1, 'zoomout');
 			}
 		}, 'keydown');
 		Mousetrap.bind(x, function (e) {
-			$(`.${x}`).val(500);
+			lerp(500, `.${x}`, 'up');
 			cam_zoom(1, 'zoomstop');
 		}, 'keyup');
 	});
