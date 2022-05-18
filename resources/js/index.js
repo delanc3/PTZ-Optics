@@ -2,7 +2,7 @@ let camera_ip = "192.168.0.190";
 let base_url = "http://" + camera_ip + "/cgi-bin";
 
 // config defaults
-	let defaults = {
+let defaults = {
 	ip: camera_ip,
 	flip: 0,
 	mirror: 0,
@@ -15,7 +15,7 @@ let base_url = "http://" + camera_ip + "/cgi-bin";
 	tiltspeed: 8,
 	focusspeed: 5,
 	autopaninterval: 30,
-	};
+};
 
 let config = defaults;
 config.ip = camera_ip;
@@ -43,7 +43,16 @@ function delay(URL) {
 	}, 500);
 }
 
-requirejs(['../vendors/js/jquery', '../vendors/js/mousetrap.min', '../vendors/jscookies.min'], function ($, Mousetrap, Cookies) {
+requirejs.config({
+	baseUrl: './resources/js',
+	paths: {
+		jquery: 'jquery-3.6.0',
+		mousetrap: 'mousetrap.min',
+		jscookie: 'js.cookie'
+	}
+});
+
+requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) {
 
 	document.documentElement.setAttribute('data-theme', 'dark');
 
@@ -93,14 +102,6 @@ requirejs(['../vendors/js/jquery', '../vendors/js/mousetrap.min', '../vendors/js
 			$('#switch').addClass('switched');
 		}
 	}
-	
-	$('#switch').on('click', 'touchstart', function() {
-		ToggleTheme();
-	})
-
-	$('#themeToggle').on('click', 'touchstart', function() {
-		ToggleTheme();
-	})
 
 	let alreadyPanning = false;
 
