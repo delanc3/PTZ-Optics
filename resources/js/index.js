@@ -65,6 +65,12 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 		ToggleTheme();
 	})
 	
+	let toggler = document.getElementById('#themeToggle');
+	
+	toggler.addEventListener('touchstart', function(){
+		ToggleTheme();
+	})
+	
 	SetTheme();
 
 	function SetTheme() {
