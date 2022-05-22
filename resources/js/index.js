@@ -65,11 +65,16 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 		ToggleTheme();
 	})
 	
-	let toggler = document.getElementById('#themeToggle');
+	let toggler = document.getElementById('themeToggle');
 	
-	toggler.addEventListener('touchstart', function(){
-		ToggleTheme();
-	})
+	if (toggler == null){
+		console.log('cannot find toggler');
+	}
+	else {
+		toggler.addEventListener('touchstart', function(){
+			ToggleTheme();
+		})
+	}
 	
 	SetTheme();
 
@@ -110,9 +115,14 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 				$(`#${x}`).addClass('pressed');
 				stop_autopan();
 				if (x === 'esc') {
-					stop_autopan();
-					cam_pantilt(1, 'home');
-					console.log('Reset pantilt');
+					if(document.title == 'PTZ-Optics - Main') {
+						stop_autopan();
+						cam_pantilt(1, 'home');
+						console.log('Reset pantilt');
+					}
+					else {
+						document.getElementById('closeLink').click();
+					}
 				}
 				else {
 					stop_autopan();

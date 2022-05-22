@@ -151,14 +151,23 @@
     
     #assignTitle {
         text-align: center;
+        font-size: 30px;
+        white-space: nowrap;
     }
 
     #contentDiv {
+        display:flex;
+        height: 35%;
         text-align: center;
+        align-items:center;
+        flex-direction:column;
+        justify-content:center;
     }
 
     #buttonsContainer {
         margin-top: 5px;
+        height: 95%;
+        width: 100%;
     }
 
     #prefMenuBox {
@@ -171,12 +180,12 @@
     }
 
     #titleDiv {
-        height: 5%;
+        height: 15%;
     }
 
-    #buttonsContainer {
-        height: 95%;
-        width: 100%;
+    #buttonsContainerPRST {
+        height: 50%;
+        width: 95%;
     }
 
     #flip,
