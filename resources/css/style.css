@@ -298,6 +298,10 @@ p {
   border-top: none;
 }
 
+#wrapper.transition {
+  opacity: 0;
+}
+
 /* -------Preview section------- */
 
 #prevContainer {

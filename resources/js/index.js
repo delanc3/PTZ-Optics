@@ -36,7 +36,7 @@ function preview(e) {
 }
 
 function delay(URL) {
-	$('#main').addClass('transition');
+	document.getElementById('wrapper').classList.add('transition');
 	setTimeout(function () {
 		window.location = URL
 	}, 500);
