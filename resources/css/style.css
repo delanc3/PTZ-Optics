@@ -426,8 +426,8 @@ p {
 .btn1:link,
 .btn1:visited {
   display: flex;
-  width: 45px;
-  height: 45px;
+  width: 65px;
+  height: 65px;
   background-color: #8F9183;
   text-decoration: none;
   color: var(--textCol);
@@ -452,7 +452,7 @@ p {
 
 .btn1:active,
 .btn1.pressed {
-  background-color: var(--button-bg-col);
+  background-color: #5b5d50;
   transform: scale(0.9);
   -webkit-transform: scale(0.9);
   -moz-transform: scale(0.9);
@@ -497,7 +497,7 @@ p {
   height: 100%;
   justify-content: center;
   align-items: center;
-  flex-direction: row;
+  flex-direction: column;
 }
 
 #zoom img,
@@ -535,14 +535,71 @@ p {
   -o-transition: all 0.4s;
 }
 
-input[type=range][orient=vertical] {
+#zoomSlider,
+#focusSlider {
   display: flex;
-  writing-mode: tb-lr;
-  -webkit-appearance: slider-vertical;
-  pointer-events: none;
-  width: 10px !important;
-  height: 180px;
-  
+  width: 130px !important;
+  height: 8px;
+  border-radius: 20px;
+  pointer-events:none;
+  -webkit-appearance: none;
+  transform: rotate(-90deg);
+  -webkit-transform: rotate(-90deg);
+  -moz-transform: rotate(-90deg);
+  -ms-transform: rotate(-90deg);
+  -o-transform: rotate(-90deg);
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  -ms-border-radius: 20px;
+  -o-border-radius: 20px;
+  background-color: var(--document-background-color);
+}
+
+#zoomSlider::-webkit-slider-thumb,
+#focusSlider::-webkit-slider-thumb{
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  background-size: contain;
+  background-position: center center;
+  border-radius: 20px;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  -ms-border-radius: 20px;
+  -o-border-radius: 20px;
+  box-shadow: -4px 0px 4px rgba(0, 0, 0, 0.5);
+}
+
+#zoomSlider::-moz-range-thumb,
+#focusSlider::-moz-range-thumb{
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  background-size: contain;
+  background-position: center center;
+  border-radius: 20px;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  -ms-border-radius: 20px;
+  -o-border-radius: 20px;
+  box-shadow: -4px 0px 4px rgba(0, 0, 0, 0.5);
+  border: none;
+}
+
+#zoomSlider::-webkit-slider-thumb {
+  background-image: url("../images/zoom.svg");
+}
+
+#focusSlider::-webkit-slider-thumb {
+  background-image: url("../images/focus.svg");
+}
+
+#zoomSlider::-moz-range-thumb {
+  background-image: url("../images/zoom.svg");
+}
+
+#focusSlider::-moz-range-thumb {
+  background-image: url("../images/focus.svg");
 }
 
 

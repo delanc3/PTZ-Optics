@@ -67,15 +67,15 @@
     border-bottom-right-radius: 8px;
     }
 
-    /* #up,
+    #up,
     #left,
     #right,
     #down,
     #esc {
-        width: 90%;
-        height: auto;
+        width: 45px;
+        height: 45px;
         aspect-ratio: 1/1;
-    } */
+    }
 
     #zoom img,
     #focus img {
@@ -288,7 +288,8 @@
     #right,
     #down,
     #esc {
-        height: auto;
+        width: 45px;
+        height: 45px;
         aspect-ratio: 1/1;
     }
 

@@ -173,6 +173,7 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 	sliderKeys.forEach(function (x, i) {
 		Mousetrap.bind(x, function (e) {
 			stop_autopan();
+			e.preventDefault();
 			if (x == 'q') {
 				lerp(1000, '#zoomSlider', 'up');
 				cam_zoom(1, 'zoomin');
@@ -181,14 +182,29 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 				lerp(0, '#zoomSlider', 'down');
 				cam_zoom(1, 'zoomout');
 			}
+			else if (x == 'w') {
+				lerp(1000, '#focusSlider', 'up');
+				cam_zoom(1, 'focusin');
+			}
+			else if (x == 's') {
+				lerp(0, '#focusSlider', 'down');
+				cam_zoom(1, 'focusout');
+			}
 		}, 'keydown');
 		Mousetrap.bind(x, function (e) {
 			stop_autopan();
+			e.preventDefault();
 			if (x == 'q') {
 				lerp(500, '#zoomSlider', 'down');
 			}
 			else if (x == 'a') {
 				lerp(500, '#zoomSlider', 'up');
+			}
+			else if (x == 'w') {
+				lerp(500, '#focusSlider', 'down');
+			}
+			else if (x == 's') {
+				lerp(500, '#focusSlider', 'up');
 			}
 			cam_zoom(1, 'zoomstop');
 		}, 'keyup');
