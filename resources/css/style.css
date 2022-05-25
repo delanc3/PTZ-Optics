@@ -187,6 +187,42 @@ p {
 
 /* About Box */
 
+#pageLeft,
+#pageRight {
+  position: absolute;
+  display: flex;
+  height: 100%;
+  width: 100px;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  z-index: 1000;
+}
+
+#leftLink,
+#rightLink {
+  display: flex;
+  color: #fff;
+  padding: 20px;
+  aspect-ratio: 1/1;
+  width: 20px;
+  height: 20px;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  border-radius: 20px;
+  background-color: var(--section-bg-col)
+}
+
+#leftLink:hover,
+#rightLink:hover {
+  transform: scale(1.2);
+}
+
+#pageRight {
+  right: 0;
+}
+
 #infoLink {
   position: absolute;
   bottom: 20px;
