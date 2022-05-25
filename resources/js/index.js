@@ -48,6 +48,7 @@ requirejs.config({
 		jquery: 'jquery-3.6.0',
 		mousetrap: 'mousetrap.min',
 		jscookie: 'js.cookie'
+		jwerty: 'jwerty'
 	}
 });
 
