@@ -20,13 +20,15 @@ let defaults = {
 let config = defaults;
 config.ip = camera_ip;
 
-let arrowKeys = ['up', 'down', 'left', 'right', 'esc'];
-let numKeys = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
-let sliderKeys = ['w', 's', 'q', 'a'];
-let sliderClasses = ['.zoom.plus', '.zoom.minus', '.focus.plus', '.focus.minus'];
-let actions = ['flip','mirror','invertcontrols', 'infinitypt', 'infinityzoom','infinityfocus'];
-let slideKeyNums = [1000, 0, 1000, 0];
-let previewing = true;
+let variables = {
+	arrowKeys: ['up', 'down', 'left', 'right', 'esc'], 
+	numKeys:  ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
+	sliderKeys: ['w', 's', 'q', 'a'], 
+	sliderClasses: ['.zoom.plus', '.zoom.minus', '.focus.plus', '.focus.minus'], 
+	slideKeyNums: [1000, 0, 1000, 0],
+	previewing: true
+};
+
 let activePreset;
 
 function preview(e) {
@@ -48,7 +50,6 @@ requirejs.config({
 		jquery: 'jquery-3.6.0',
 		mousetrap: 'mousetrap.min',
 		jscookie: 'js.cookie'
-		jwerty: 'jwerty'
 	}
 });
 
@@ -106,7 +107,7 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 	
 	let alreadyPanning = false;
 
-	arrowKeys.forEach(function (x) {
+	variables.arrowKeys.forEach(function (x) {
 		Mousetrap.bind(x, function (e) {
 			if(alreadyPanning) {
 				return;
@@ -158,7 +159,7 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 		});
 	});
 
-	numKeys.forEach(function (x) {
+	variables.numKeys.forEach(function (x) {
 		Mousetrap.bind(x, function (e) {
 			$(`#pst${x}`).focus();
 			activePreset = $(`#pst${x}`).html();
@@ -171,7 +172,7 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 		});
 	});
 
-	sliderKeys.forEach(function (x, i) {
+	variables.sliderKeys.forEach(function (x, i) {
 		Mousetrap.bind(x, function (e) {
 			stop_autopan();
 			e.preventDefault();
@@ -241,7 +242,7 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 		// document.getElementById('camFeed').src=`./resources/images/${i}.jpg`;
 	});
 
-	sliderClasses.forEach(function (x, i) {
+	variables.sliderClasses.forEach(function (x, i) {
 		let split = x.split('.');
 		$('body').on('mousedown', `.${split[1]}.plus`, function (e) {
 			if (x === '.zoom.plus') {
