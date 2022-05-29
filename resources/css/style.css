@@ -656,7 +656,7 @@ p {
   align-items: center;
   animation: inRight 1s 0.2s 1 ease-out forwards;
   -webkit-animation: inRight 1s 0.2s 1 ease-out forwards;
-  transition: all 1s;
+  transition: all 1s !important;
   -webkit-transition: all 1s;
   -moz-transition: all 1s;
   -ms-transition: all 1s;
@@ -1152,6 +1152,22 @@ input[type="checkbox"] {
 
 .switched {
   background-color: #51aebe !important;
+}
+
+.rightTransition {
+  transform: translateX(-2%) scaleX(102%)!important;
+}
+
+.leftTransition {
+  transform: translateX(2%) scaleX(102%)!important;
+}
+
+.activeRightTransition {
+  transform: translateX(110%) scaleX(105%)!important;
+}
+
+.activeLeftTransition {
+  transform: translateX(-110%) scaleX(105%)!important;
 }
 
 /*---------------------*/

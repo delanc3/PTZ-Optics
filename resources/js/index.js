@@ -44,6 +44,20 @@ function delay(URL) {
 	}, 500);
 }
 
+function transLeft(URL) {
+	document.getElementById('wrapper').classList.add('activeRightTransition');
+	setTimeout(function () {
+		window.location = URL
+	}, 500);
+}
+
+function transRight(URL) {
+	document.getElementById('wrapper').classList.add('activeLeftTransition');
+	setTimeout(function () {
+		window.location = URL
+	}, 500);
+}
+
 requirejs.config({
 	baseUrl: './resources/js',
 	paths: {
@@ -105,6 +119,22 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 		}
 	}
 	
+	$('#rightLink').on('mouseover', function(){
+		$('#wrapper').addClass('rightTransition');
+	})
+
+	$('#rightLink').on('mouseout', function() {
+		$('#wrapper').removeClass('rightTransition');
+	})
+
+	$('#leftLink').on('mouseover', function(){
+		$('#wrapper').addClass('leftTransition');
+	})
+
+	$('#leftLink').on('mouseout', function() {
+		$('#wrapper').removeClass('leftTransition');
+	})
+
 	let alreadyPanning = false;
 
 	variables.arrowKeys.forEach(function (x) {
