@@ -34,7 +34,7 @@ html {
   --button-hover-col: #A8A2A0;
   --invCol: none;
   height: 100%;
-  font-family: "Montserrat", "Arial", sans-serif;
+  font-family: "Quicksand", "Arial", sans-serif;
   font-weight: 400;
   font-size: 20px;
   text-rendering: optimizeLegibility;
@@ -211,7 +211,7 @@ p {
   align-items: center;
   flex-direction: row;
   border-radius: 20px;
-  background-color: var(--section-bg-col)
+  background-color: var(--button-bg-col)
 }
 
 #leftLink:hover,
@@ -507,7 +507,7 @@ p {
 }
 
 #esc img {
-  height: 55px;
+  height: 40px;
 }
 
 #up {
@@ -1077,6 +1077,8 @@ p {
 label {
   font-size: 20px;
   margin-bottom: 10px;
+  color: var(--textCol);
+  font-weight: 500;
 }
 
 .prefBtn:link,

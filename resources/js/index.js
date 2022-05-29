@@ -68,9 +68,10 @@ requirejs.config({
 });
 
 requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) {
-	
-	activeTheme = 'light';
-	
+
+
+	SetTheme();
+
 	window.oncontextmenu = function() {
 		if (event.button != 2 && !(event.clientX == event.clientY == 1)) {
 			event.preventDefault();
@@ -91,8 +92,6 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 			ToggleTheme();
 		})
 	}
-	
-	SetTheme();
 
 	function SetTheme() {
 		activeTheme = Cookies.get('theme');
