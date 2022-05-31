@@ -17,25 +17,20 @@ let defaults = {
 	autopaninterval: 30,
 };
 
-let config = defaults;
-config.ip = camera_ip;
-
+// global variable dictionary
 let variables = {
 	arrowKeys: ['up', 'down', 'left', 'right', 'esc'], 
 	numKeys:  ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
 	sliderKeys: ['w', 's', 'q', 'a'], 
 	sliderClasses: ['.zoom.plus', '.zoom.minus', '.focus.plus', '.focus.minus'], 
 	slideKeyNums: [1000, 0, 1000, 0],
-	previewing: true
+	previewing: true,
 };
 
-let activePreset;
+let config = defaults;
+config.ip = camera_ip;
 
-function preview(e) {
-	number = $(e).html();
-	$('#camTitle').html(`Preset Preview: ${activePreset}`);
-	console.log(activePreset);
-}
+let activePreset;
 
 function delay(URL) {
 	document.getElementById('wrapper').classList.add('transition');
@@ -68,7 +63,6 @@ requirejs.config({
 });
 
 requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) {
-
 
 	SetTheme();
 
@@ -241,36 +235,6 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 		}, 'keyup');
 	});
 
-	$('.btn').click(function (e) {
-		activePreset = $(this).html();
-
-		stop_autopan();
-		cam_preset(1, activePreset, 'poscall');
-
-		console.log(`Called preset ${activePreset}`);
-		$('#camTitle').html(`Active Preset: ${Cookies.get(`${activePreset}`)}`);
-	});
-	
-	$('.btn').on('mouseout', function(e) {
-		let i = activePreset;
-		if (typeof activePreset == 'undefined') {
-			$('#camTitle').html(`Active Preset: No Preset Active`);
-		}
-		else {
-			$('#camTitle').html(`Active Preset: ${Cookies.get(`${i}`)}`);
-		}
-		$('#presetTitle1').html(`Presets`);
-		previewing = true;
-	});
-
-	$('.btn').on('mouseover', function(e) {
-		previewing = false;
-		let i = $(this).html();
-		$('#camTitle').html(`Preset Preview: ${Cookies.get(`${i}`)}`);
-		$('#presetTitle1').html(`${Cookies.get(`${i}`)}`);
-		// document.getElementById('camFeed').src=`./resources/images/${i}.jpg`;
-	});
-
 	variables.sliderClasses.forEach(function (x, i) {
 		let split = x.split('.');
 		$('body').on('mousedown', `.${split[1]}.plus`, function (e) {
@@ -324,6 +288,36 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 				lerp(500, '#focusSlider', 'up');
 			};
 		});
+	});
+
+	$('.btn').click(function (e) {
+		activePreset = $(this).html();
+
+		stop_autopan();
+		cam_preset(1, activePreset, 'poscall');
+
+		console.log(`Called preset ${activePreset}`);
+		$('#camTitle').html(`Active Preset: ${Cookies.get(`${activePreset}`)}`);
+	});
+
+	$('.btn').on('mouseout', function(e) {
+		let i = activePreset;
+		if (typeof activePreset == 'undefined') {
+			$('#camTitle').html(`Active Preset: No Preset Active`);
+		}
+		else {
+			$('#camTitle').html(`Active Preset: ${Cookies.get(`${i}`)}`);
+		}
+		$('#presetTitle1').html(`Presets`);
+		previewing = true;
+	});
+
+	$('.btn').on('mouseover', function(e) {
+		previewing = false;
+		let i = $(this).html();
+		$('#camTitle').html(`Preset Preview: ${Cookies.get(`${i}`)}`);
+		$('#presetTitle1').html(`${Cookies.get(`${i}`)}`);
+		// document.getElementById('camFeed').src=`./resources/images/${i}.jpg`;
 	});
 
 	const timer = ms => new Promise(res => setTimeout(res, ms))
