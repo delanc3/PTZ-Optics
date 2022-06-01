@@ -24,7 +24,6 @@ let variables = {
 	sliderKeys: ['w', 's', 'q', 'a'], 
 	sliderClasses: ['.zoom.plus', '.zoom.minus', '.focus.plus', '.focus.minus'], 
 	slideKeyNums: [1000, 0, 1000, 0],
-	previewing: true,
 };
 
 let config = defaults;
@@ -64,53 +63,41 @@ requirejs.config({
 
 requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) {
 
-	SetTheme();
+	Theme('set');
+	Theme('check');
 
-	window.oncontextmenu = function() {
-		if (event.button != 2 && !(event.clientX == event.clientY == 1)) {
-			event.preventDefault();
+	function Theme(func) {
+		switch (func) {
+			case 'set':
+				activeTheme = Cookies.get('theme');
+				document.documentElement.setAttribute('data-theme', activeTheme);
+				break;
+			
+			case 'toggle':
+				if (activeTheme == 'light') {
+					document.cookie = `theme = dark; expires=Fri, 01 Jan 2100 00:00:00 UTC;`;
+				}
+				else if (activeTheme == 'dark') {
+					document.cookie = `theme = light; expires=Fri, 01 Jan 2100 00:00:00 UTC;`;
+				}
+				break;
+			
+			case 'check':
+				if (activeTheme == 'light') {
+					$('#switch').removeClass('switched');
+				}
+				else if (activeTheme == 'dark') {
+					$('#switch').addClass('switched');
+				}
+				break;
 		}
 	}
 
 	$('#themeToggle').on('click', function(){
-		ToggleTheme();
+		Theme('toggle');
+		Theme('set')
+		Theme('check');
 	})
-	
-	let toggler = document.getElementById('themeToggle');
-	
-	if (toggler == null){
-		console.log('cannot find toggler');
-	}
-	else {
-		toggler.addEventListener('touchstart', function(){
-			ToggleTheme();
-		})
-	}
-
-	function SetTheme() {
-		activeTheme = Cookies.get('theme');
-		document.documentElement.setAttribute('data-theme', activeTheme);
-		CheckMark();
-	}
-	
-	function ToggleTheme() {
-		if (activeTheme == 'light') {
-			document.cookie = `theme = dark; expires=Fri, 01 Jan 2100 00:00:00 UTC;`;
-		}
-		else if (activeTheme == 'dark') {
-			document.cookie = `theme = light; expires=Fri, 01 Jan 2100 00:00:00 UTC;`;
-		}
-		SetTheme();
-	}
-
-	function CheckMark() {
-		if (activeTheme == 'light') {
-			$('#switch').removeClass('switched');
-		}
-		else if (activeTheme == 'dark') {
-			$('#switch').addClass('switched');
-		}
-	}
 	
 	$('#rightLink').on('mouseover', function(){
 		$('#wrapper').addClass('rightTransition');
@@ -309,15 +296,12 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 			$('#camTitle').html(`Active Preset: ${Cookies.get(`${i}`)}`);
 		}
 		$('#presetTitle1').html(`Presets`);
-		previewing = true;
 	});
 
 	$('.btn').on('mouseover', function(e) {
-		previewing = false;
 		let i = $(this).html();
 		$('#camTitle').html(`Preset Preview: ${Cookies.get(`${i}`)}`);
 		$('#presetTitle1').html(`${Cookies.get(`${i}`)}`);
-		// document.getElementById('camFeed').src=`./resources/images/${i}.jpg`;
 	});
 
 	const timer = ms => new Promise(res => setTimeout(res, ms))
@@ -543,27 +527,20 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 	}
 
 	function reload_cam() {
-
 		config.ip = $('#cameraIP').val();
 		if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(config.ip)) {
 
 			config.ip = config.ip;
 			save_config();
-
 			alert("New IP address saved.");
-
 		} else {
-
 			alert("IP address entered is invalid! Re-enter camera IP address.");
 		}
 	}
 
 	function adjust_setting(action) {
-
 		switch (action) {
-
 			case 'flip':
-
 				switch (config.flip) {
 					case 0:
 						var loc = base_url + "/param.cgi?post_image_value&flip&1";
@@ -572,7 +549,6 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 						save_config();
 						update_labels();
 						break;
-
 					case 1:
 						var loc = base_url + "/param.cgi?post_image_value&flip&0";
 						run_action(loc);
@@ -582,7 +558,6 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 						break;
 				}
 				break;
-
 			case 'mirror':
 				switch (config.mirror) {
 					case 0:
@@ -592,7 +567,6 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 						save_config();
 						update_labels();
 						break;
-
 					case 1:
 						var loc = base_url + "/param.cgi?post_image_value&mirror&0";
 						run_action(loc);
@@ -602,16 +576,13 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 						break;
 				}
 				break;
-
 			case 'invertcontrols':
-
 				switch (config.invertcontrols) {
 					case 0:
 						config.invertcontrols = 1;
 						save_config();
 						update_labels();
 						break;
-
 					case 1:
 						config.invertcontrols = 0;
 						save_config();
@@ -619,9 +590,7 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 						break;
 				}
 				break;
-
 			case 'infinitypt':
-
 				switch (config.infinitypt) {
 					case 0:
 						config.infinitypt = 1;
@@ -630,7 +599,6 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 						save_config();
 						update_labels();
 						break;
-
 					case 1:
 						config.infinitypt = 0;
 						$('#pt_infinity').hide();
@@ -640,10 +608,8 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 						break;
 				}
 				break;
-
 			case 'infinityzoom':
-
-				// console.log("Adjusting Infinity Zoom", config.infinityzoom);
+				//console.log("Adjusting Infinity Zoom", config.infinityzoom);
 				switch (config.infinityzoom) {
 					case 0:
 						config.infinityzoom = 1;
@@ -653,7 +619,6 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 						save_config();
 						update_labels();
 						break;
-
 					case 1:
 						config.infinityzoom = 0;
 						$('#cam_zoom_infinity').hide();
@@ -664,9 +629,7 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 						break;
 				}
 				break;
-
 			case 'infinityfocus':
-
 				switch (config.infinityfocus) {
 					case 0:
 						config.infinityfocus = 1;
@@ -676,7 +639,6 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 						save_config();
 						update_labels();
 						break;
-
 					case 1:
 						config.infinityfocus = 0;
 						$('#cam_focus_infinity').hide();
@@ -692,28 +654,22 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 
 	// used for loading existing settings
 	function update_settings() {
-
 		switch (config.flip) {
-
 			case 0:
 				var loc = base_url + "/param.cgi?post_image_value&flip&0";
 				run_action(loc);
 				break;
-
 			case 1:
 				var loc = base_url + "/param.cgi?post_image_value&flip&1";
 				run_action(loc);
 				break;
 		}
-
 		switch (config.mirror) {
-
 			case 0:
 				var loc = base_url + "/param.cgi?post_image_value&mirror&0";
 				run_action(loc);
 				update_labels();
 				break;
-
 			case 1:
 				var loc = base_url + "/param.cgi?post_image_value&mirror&1";
 				run_action(loc);
@@ -762,81 +718,64 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 	}
 
 	function cam_pantilt(camera, action) {
-
 		switch (action) {
-
 			case 'left':
-
 				if (config.invertcontrols == "1") {
 					var loc = base_url + "/ptzctrl.cgi?ptzcmd&right&" + config.panspeed + "&" + config.tiltspeed + "";
 				} else {
 					var loc = base_url + "/ptzctrl.cgi?ptzcmd&left&" + config.panspeed + "&" + config.tiltspeed + "";
 				}
 				break;
-
 			case 'right':
-
 				if (config.invertcontrols == "1") {
 					var loc = base_url + "/ptzctrl.cgi?ptzcmd&left&" + config.panspeed + "&" + config.tiltspeed + "";
 				} else {
 					var loc = base_url + "/ptzctrl.cgi?ptzcmd&right&" + config.panspeed + "&" + config.tiltspeed + "";
 				}
 				break;
-
 			case 'up':
-
 				if (config.invertcontrols == "1") {
 					var loc = base_url + "/ptzctrl.cgi?ptzcmd&down&" + config.panspeed + "&" + config.tiltspeed + "";
 				} else {
 					var loc = base_url + "/ptzctrl.cgi?ptzcmd&up&" + config.panspeed + "&" + config.tiltspeed + "";
 				}
 				break;
-
 			case 'down':
-
 				if (config.invertcontrols == "1") {
 					var loc = base_url + "/ptzctrl.cgi?ptzcmd&up&" + config.panspeed + "&" + config.tiltspeed + "";
 				} else {
 					var loc = base_url + "/ptzctrl.cgi?ptzcmd&down&" + config.panspeed + "&" + config.tiltspeed + "";
 				}
 				break;
-
 			case 'home':
-
 				var loc = base_url + "/ptzctrl.cgi?ptzcmd&home&" + config.panspeed + "&" + config.tiltspeed + "";
 				break;
-
 			case 'ptzstop':
-
 				var loc = base_url + "/ptzctrl.cgi?ptzcmd&ptzstop&" + config.panspeed + "&" + config.tiltspeed + "";
 				break;
 		}
-
 		run_action(loc);
 	}
 
 	function cam_zoom(camera, action) {
-
 		var loc = base_url + "/ptzctrl.cgi?ptzcmd&" + action + "&" + config.zoomspeed + "";
 		run_action(loc);
 	}
 
 	function cam_focus(camera, action) {
-
 		var loc = base_url + "/ptzctrl.cgi?ptzcmd&" + action + "&" + config.focusspeed + "";
 		run_action(loc);
 	}
 
 	function cam_preset(camera, positionnum, action) {
-
 		var loc = base_url + "/ptzctrl.cgi?ptzcmd&" + action + "&" + positionnum + "";
 		run_action(loc);
 	}
 
-	var autoInterval;
-	var panInterval;
-	var panning;
-	var autopanning = false;
+	let autoInterval;
+	let panInterval;
+	let panning;
+	let autopanning = false;
 
 	function autopan() {
 
@@ -941,8 +880,7 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 		return false;
 	});
 
-	/* ------------------------------------ Mouse Events & Clicks
-	*/
+	/* Mouse Events & Clicks */
 
 	$('body').on('click', '.adjust_setting', function (e) {
 		e.preventDefault();
