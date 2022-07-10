@@ -30,6 +30,7 @@ let config = defaults;
 config.ip = camera_ip;
 
 let activePreset;
+let lerping = false;
 
 function delay(URL) {
 	document.getElementById('wrapper').classList.add('transition');
@@ -228,12 +229,24 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 			if (x === '.zoom.plus') {
 				cam_zoom(1, `${split[1]}in`);
 				console.log(`${split[1]}ing in`);
-				lerp(1000, '#zoomSlider', 'up');
+				if (lerping) {
+					console.log("Error: Already Lerping");
+					return;
+				}
+				else if (!lerping) {
+					lerp(1000, '#zoomSlider', 'up');
+				}
 			}
 			else if (x === '.focus.plus') {
 				cam_focus(1, `${split[1]}in`);
 				console.log(`${split[1]}ing in`);
-				lerp(1000, '#focusSlider', 'up');
+				if (lerping) {
+					console.log("Error: Already Lerping");
+					return;
+				}
+				else if (!lerping) {
+					lerp(1000, '#focusSlider', 'up');
+				}
 			};
 		});
 
@@ -241,12 +254,24 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 			if (x === '.zoom.plus') {
 				cam_zoom(1, 'zoomstop');
 				console.log('stopped');
-				lerp(500, '#zoomSlider', 'down');
+				if (lerping) {
+					console.log("Error: Already Lerping");
+					return;
+				}
+				else if (!lerping) {
+					lerp(500, '#zoomSlider', 'down');
+				}
 			}
 			else if (x === '.focus.plus') {
 				cam_focus(1, 'focusstop');
 				console.log('stopped');
-				lerp(500, '#focusSlider', 'down');
+				if (lerping) {
+					console.log("Error: Already Lerping");
+					return;
+				}
+				else if (!lerping) {
+					lerp(500, '#focusSlider', 'down');
+				}
 			};
 		});
 
@@ -254,12 +279,24 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 			if (x === '.zoom.minus') {
 				cam_zoom(1, `${split[1]}out`);
 				console.log(`${split[1]}ing out`);
-				lerp(1, '#zoomSlider', 'down');
+				if (lerping) {
+					console.log("Error: Already Lerping");
+					return;
+				}
+				else if (!lerping) {
+					lerp(1, '#zoomSlider', 'down');
+				}
 			}
 			else if (x === '.focus.minus') {
 				cam_focus(1, `${split[1]}out`);
 				console.log(`${split[1]}ing out`);
-				lerp(1, '#focusSlider', 'down');
+				if (lerping) {
+					console.log("Error: Already Lerping");
+					return;
+				}
+				else if (!lerping) {
+					lerp(1, '#focusSlider', 'down');
+				}
 			};
 		});
 		
@@ -267,12 +304,24 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 			if (x === '.zoom.minus') {
 				cam_zoom(1, 'zoomstop');
 				console.log('stopped');
-				lerp(500, '#zoomSlider', 'up');
+				if (lerping) {
+					console.log("Error: Already Lerping");
+					return;
+				}
+				if (!lerping) {
+					lerp(500, '#zoomSlider', 'up');
+				}
 			}
 			else if (x === '.focus.minus') {
 				cam_focus(1, 'focusstop');
 				console.log('stopped');
-				lerp(500, '#focusSlider', 'up');
+				if (lerping) {
+					console.log("Error: Already Lerping");
+					return;
+				}
+				else if (!lerping) {
+					lerp(500, '#focusSlider', 'up');
+				}
 			};
 		});
 	});
@@ -308,18 +357,13 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 
 	async function lerp(targetValue, sliderClass, lerpFunction) {
 		let currentValue= Number($(sliderClass).val());
-		
+		lerping = true;
 		if (lerpFunction === "up") {
-			console.log("Lerping: UP");
-			console.log("Initial value: " + currentValue);
-			console.log("Target value: " + targetValue);
-			console.log(" ");
 			while(currentValue < targetValue) {
 				if(currentValue < (targetValue - 0.8)) {
 					let lerpValue = (targetValue - currentValue) / 10;
 					currentValue = currentValue + lerpValue;
 					$(sliderClass).val(currentValue);
-					console.log("Current value: " + currentValue);
 				}
 				if(currentValue >= (targetValue - 0.8)) {
 					currentValue = targetValue;
@@ -329,16 +373,11 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 		}
 
 		if (lerpFunction === "down") {
-			console.log("Lerping: DOWN");
-			console.log("Initial value: " + currentValue);
-			console.log("Target value: " + targetValue);
-			console.log(" ");
 			while(currentValue > targetValue) {
 				if(currentValue > (targetValue + 0.8)) {
 					let lerpValue = (targetValue - currentValue) / 10;
 					currentValue = currentValue + lerpValue;
 					$(sliderClass).val(currentValue);
-					console.log("Current value: " + currentValue);
 				}
 				if(currentValue <= (targetValue + 0.8)) {
 					currentValue = targetValue;
@@ -346,6 +385,7 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 				await timer(5);
 			}
 		}
+		lerping = false;
 	}
 
 	$('#infoLink').click(function(e) {
