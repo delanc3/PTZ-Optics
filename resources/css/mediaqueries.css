@@ -209,9 +209,14 @@
 
 }
 
-@media (max-width: 412px) {
+@media (max-width: 360px) and (max-height: 780px) {
     body {
         overflow: hidden;
+    }
+
+    #pageLeft,
+    #pageRight {
+        visibility: hidden;
     }
 
     #wrapper {
@@ -225,32 +230,22 @@
     }
     
     #presets {
-        width: 85%;
+        width: 90%;
         height: 90%;
     }
 
     .btn {
-        width: 70px;
+        width: 80px;
         height: auto;
         aspect-ratio: 1/1;
     }
 
-    .pstBtn {
-        font-size: 10px;
-    }
-
-    #panBtn,
-    #clearBtn {
-        padding: 5px;
-        font-size: 15px;
-    }
-
     #title {
-        font-size: 12px;
+        font-size: 10px !important;
     }
 
     #logo {
-        width: 25px !important;
+        width: 40px !important;
     }
 
     #presetTitle {
@@ -265,7 +260,7 @@
 
     .ptzBtnRow {
         height: 33.333%;
-        width: 33.333%;
+        width: 100%;
     }
 
     #up {
@@ -304,27 +299,13 @@
         cursor: pointer;
     }
 
-    input[type="range"]::-webkit-slider-thumb {
-        width: 20px;
-        height: 20px;
-        border: 2px solid #000;
-    }
-
-    .plus {
-        margin-bottom: 10px;
-    }
-
-    .minus {
-        margin-top: 10px;
-    }
-
     #controls {
-        width: 85%;
+        width: 80%;
     }
 
     #zoom input,
     #focus input{
-        width: 100px;
+        width: 160px;
     }
 
     .btn1 img {
@@ -343,14 +324,14 @@
 
     #assignLinkContainer,
     #preferenceLinkContainer {
-        width: 130px !important;
+        width: 150px !important;
     }
 
     #assignLink:link,
     #assignLink:visited,
     #preferenceLink:link,
     #preferenceLink:visited {
-        font-size: 10px;
+        font-size: 12px;
     }
 
     #ctrlContainer {
@@ -386,30 +367,23 @@
     
     #assignTitle {
         text-align: center;
-    }
-
-    .asgnBtn:link,
-    .asgnBtn:visited {
-        width: 100px;
-        margin-bottom: 5px;
-        font-size: 10px;
-    }
-
-    #assignTitle {
-        font-size: 20px;
+        font-size: 30px;
+        white-space: nowrap;
     }
 
     #contentDiv {
+        display:flex;
+        height: 35%;
         text-align: center;
-        
-    }
-
-    #contentDiv p {
-        font-size: 15px;
+        align-items:center;
+        flex-direction:column;
+        justify-content:center;
     }
 
     #buttonsContainer {
         margin-top: 5px;
+        height: 95%;
+        width: 100%;
     }
 
     #prefMenuBox {
@@ -422,12 +396,12 @@
     }
 
     #titleDiv {
-        height: 5%;
+        height: 15%;
     }
 
-    #buttonsContainer {
-        height: 95%;
-        width: 100%;
+    #buttonsContainerPRST {
+        height: 50%;
+        width: 95%;
     }
 
     #flip,
@@ -440,12 +414,7 @@
     #reloadcamera,
     .dropDown,
     #cameraIP {
-        width: 170px;
+        width: 200px;
         font-size: 15px;
-    }
-
-    #infoLink {
-        bottom: 10px;
-        right: 15px;
     }
 }

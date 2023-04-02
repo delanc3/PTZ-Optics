@@ -1,3 +1,12 @@
+requirejs.config({
+	baseUrl: './resources/js',
+	paths: {
+		jquery: 'jquery-3.6.0',
+		mousetrap: 'mousetrap.min',
+		jscookie: 'js.cookie'
+	}
+});
+
 let camera_ip = "192.168.0.190";
 let base_url = "http://" + camera_ip + "/cgi-bin";
 
@@ -17,20 +26,50 @@ let defaults = {
 	autopaninterval: 30,
 };
 
-// global variable dictionary
 let variables = {
 	arrowKeys: ['up', 'down', 'left', 'right', 'esc'], 
 	numKeys:  ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
 	sliderKeys: ['w', 's', 'q', 'a'], 
 	sliderClasses: ['.zoom.plus', '.zoom.minus', '.focus.plus', '.focus.minus'], 
 	slideKeyNums: [1000, 0, 1000, 0],
+	actions: {
+		up: function() {
+			stop_autopan();
+			cam_pantilt(1, 'up');
+			console.log(`Panned up`);
+		},
+		down: function() {
+			stop_autopan();
+			cam_pantilt(1, 'down');
+			console.log(`Panned down`);
+		},
+		left: function() {
+			stop_autopan();
+			cam_pantilt(1, 'left');
+			console.log(`Panned left`);
+		},
+		right: function() {
+			stop_autopan();
+			cam_pantilt(1, 'right');
+			console.log(`Panned right`);
+		},
+		esc: function() {
+			if(document.title == 'PTZ-Optics - Main') {
+				stop_autopan();
+				cam_pantilt(1, 'home');
+				console.log('Reset pantilt');
+			}
+			else {
+				document.getElementById('closeLink').click();
+			}
+		}
+	}
 };
 
 let config = defaults;
 config.ip = camera_ip;
 
 let activePreset;
-let lerping = false;
 
 function delay(URL) {
 	document.getElementById('wrapper').classList.add('transition');
@@ -53,102 +92,31 @@ function transRight(URL) {
 	}, 500);
 }
 
-requirejs.config({
-	baseUrl: './resources/js',
-	paths: {
-		jquery: 'jquery-3.6.0',
-		mousetrap: 'mousetrap.min',
-		jscookie: 'js.cookie'
-	}
-});
 
-requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) {
+let alreadyPanning = false;
 
-	Theme('set');
-	Theme('check');
-
-	function Theme(func) {
-		switch (func) {
-			case 'set':
-				activeTheme = Cookies.get('theme');
-				document.documentElement.setAttribute('data-theme', activeTheme);
-				break;
-			
-			case 'toggle':
-				if (activeTheme == 'light') {
-					document.cookie = `theme = dark; expires=Fri, 01 Jan 2100 00:00:00 UTC;`;
-				}
-				else if (activeTheme == 'dark') {
-					document.cookie = `theme = light; expires=Fri, 01 Jan 2100 00:00:00 UTC;`;
-				}
-				break;
-			
-			case 'check':
-				if (activeTheme == 'light') {
-					$('#switch').removeClass('switched');
-				}
-				else if (activeTheme == 'dark') {
-					$('#switch').addClass('switched');
-				}
-				break;
+function handleKeyEvent(eventType, x) {
+	if (eventType === 'keydown') {
+		if (x === 'esc') {
+			variables.actions.esc();
+		} else {
+			variables.actions[x]();
 		}
+	} else if (eventType === 'keyup') {
+		cam_pantilt(1, 'ptzstop');
 	}
+}
 
-	$('#themeToggle').on('click', function(){
-		Theme('toggle');
-		Theme('set')
-		Theme('check');
-	})
-	
-	$('#rightLink').on('mouseover', function(){
-		$('#wrapper').addClass('rightTransition');
-	})
-
-	$('#rightLink').on('mouseout', function() {
-		$('#wrapper').removeClass('rightTransition');
-	})
-
-	$('#leftLink').on('mouseover', function(){
-		$('#wrapper').addClass('leftTransition');
-	})
-
-	$('#leftLink').on('mouseout', function() {
-		$('#wrapper').removeClass('leftTransition');
-	})
-
-	let alreadyPanning = false;
+function keybinds() {
 
 	variables.arrowKeys.forEach(function (x) {
 		Mousetrap.bind(x, function (e) {
-			if(alreadyPanning) {
-				return;
-			}
-			else if (!alreadyPanning) {
-				alreadyPanning = true;
-				$(`#${x}`).addClass('pressed');
-				stop_autopan();
-				if (x === 'esc') {
-					if(document.title == 'PTZ-Optics - Main') {
-						stop_autopan();
-						cam_pantilt(1, 'home');
-						console.log('Reset pantilt');
-					}
-					else {
-						document.getElementById('closeLink').click();
-					}
-				}
-				else {
-					stop_autopan();
-					cam_pantilt(1, x);
-					console.log(`Panned ${x}`);
-				}
-			}
+			if (e.repeat) return;
+			handleKeyEvent('keydown', x);
 		}, 'keydown');
-
+	
 		Mousetrap.bind(x, function (e) {
-			alreadyPanning = false;
-			$(`#${x}`).removeClass('pressed');
-			cam_pantilt(1, 'ptzstop');
+			handleKeyEvent('keyup', x);
 		}, 'keyup');
 
 		$(`#${x}`).on('mousedown', function (e) {
@@ -174,10 +142,10 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 		Mousetrap.bind(x, function (e) {
 			$(`#pst${x}`).focus();
 			activePreset = $(`#pst${x}`).html();
-
+	
 			stop_autopan();
 			cam_preset(1, x, 'poscall');
-
+	
 			console.log(`Called preset ${x}`);
 			$('#camTitle').html(`Active Preset: ${activePreset}`);
 		});
@@ -185,8 +153,9 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 
 	variables.sliderKeys.forEach(function (x, i) {
 		Mousetrap.bind(x, function (e) {
-			stop_autopan();
+			if (e.repeat) return;
 			e.preventDefault();
+			stop_autopan();
 			if (x == 'q') {
 				lerp(1000, '#zoomSlider', 'up');
 				cam_zoom(1, 'zoomin');
@@ -208,9 +177,11 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 			stop_autopan();
 			e.preventDefault();
 			if (x == 'q') {
+				lerpCancelled = true;
 				lerp(500, '#zoomSlider', 'down');
 			}
 			else if (x == 'a') {
+				lerpCancelled = true;
 				lerp(500, '#zoomSlider', 'up');
 			}
 			else if (x == 'w') {
@@ -325,17 +296,559 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 			};
 		});
 	});
+}
+
+let lerping = false;
+let lerpCancelled = false;
+
+const timer = ms => new Promise(res => setTimeout(res, ms));
+
+async function lerp(targetValue, sliderClass, lerpFunction) {
+  let currentValue = Number($(sliderClass).val());
+  lerping = true;
+  lerpCancelled = false;
+
+  // Start the lerp process
+  while (lerping) {
+    if (lerpFunction === "up") {
+      // Lerp up
+      if (currentValue < targetValue) {
+        if (currentValue < targetValue - 0.8) {
+          let lerpValue = (targetValue - currentValue) / 10;
+          currentValue += lerpValue;
+          $(sliderClass).val(currentValue);
+        } else {
+          currentValue = targetValue;
+        }
+      } else {
+        lerping = false;
+      }
+    } else if (lerpFunction === "down") {
+      // Lerp down
+      if (currentValue > targetValue) {
+        if (currentValue > targetValue + 0.8) {
+          let lerpValue = (targetValue - currentValue) / 10;
+          currentValue += lerpValue;
+          $(sliderClass).val(currentValue);
+        } else {
+          currentValue = targetValue;
+        }
+      } else {
+        lerping = false;
+      }
+    }
+
+    // Check if the lerp action has been cancelled
+    if (lerpCancelled) {
+		$(sliderClass).val(currentValue);
+      	lerping = false;
+    }
+    await timer(5);
+  }
+}
+
+// Function to cancel the current lerp action
+function cancelLerp() {
+  lerpCancelled = true;
+}
+
+
+
+function get_config() {
+	let result = localStorage.getItem('configStorage');
+	if (!result) {
+		return config;
+	} else {
+		return JSON.parse(result);
+	}
+}
+
+function save_config() {
+	localStorage.setItem('configStorage', JSON.stringify(config));
+	console.log(config);
+}
+
+function run_action(action_url) {
+	// $.get(url);
+	$.ajax({
+		url: action_url,
+		type: 'GET',
+	})
+		.done(function () {
+			// console.log("success");
+		})
+		.fail(function (jqXHR, responseText, errorThrown) {
+			console.log("error");
+		})
+		.always(function () {
+			// console.log("complete");
+		});
+}
+
+// setup all the initial configuration and standard settings
+function config_init() {
+
+	config = get_config();
+	console.log(config);
+
+	// set the initial IP value for the camera ip input
+	$("#cameraIP").val(config.ip);
+	base_url = "http://" + config.ip + "/cgi-bin";
+
+	// set the camera's initial configuration for each value in the saved config object
+	config_setting("flip", config.flip);
+	config_setting("mirror", config.mirror);
+	config_setting("invertcontrols", config.invertcontrols);
+	config_setting("infinitypt", config.infinitypt);
+	config_setting("infinityzoom", config.infinityzoom);
+	config_setting("infinityfocus", config.infinityfocus);
+
+	// set the initial values for each select dropdown
+	$("#panSpeed").val(config.panspeed);
+	$("#zoomSpeed").val(config.zoomspeed);
+	$("#tiltSpeed").val(config.tiltspeed);
+	$("#focusSpeed").val(config.focusspeed);
+	$("#panInterval").val(config.autopaninterval);
+
+	// save_config();
+
+	if (config.infinitypt == 1) {
+		$('#infPT').html('Infinity Pan/Tilt - Yes');
+	} else {
+		$('#infPT').html('Infinity Pan/Tilt - No');
+	}
+
+	if (config.infinityzoom == 1) {
+		$('#cam_zoom_infinity').show();
+		$('#cam_zoom_standard').hide();
+	} else {
+		$('#cam_zoom_infinity').hide();
+		$('#cam_zoom_standard').show();
+	}
+
+	if (config.infinityfocus == 1) {
+		$('#cam_focus_infinity').show();
+		$('#cam_focus_standard').hide();
+	} else {
+		$('#cam_focus_infinity').hide();
+		$('#cam_focus_standard').show();
+	}
+
+	update_labels();
+}
+
+function config_setting(action, value) {
+	let loc = base_url + "/param.cgi?post_image_value&" + action + "&" + value;
+	run_action(loc);
+}
+
+function update_labels() {
+
+	switch (config.flip) {
+		case 0:
+			$('#flip').html("Flip - No");
+			break;
+		case 1:
+			$('#flip').html("Flip - Yes");
+			break;
+	}
+
+	switch (config.mirror) {
+		case 0:
+			$('#mirror').html("Mirror - No");
+			break;
+		case 1:
+			$('#mirror').html("Mirror - Yes");
+			break;
+	}
+
+	switch (config.invertcontrols) {
+		case 0:
+			$('#invertcontrols').html("Invert Controls - No");
+			break;
+		case 1:
+			$('#invertcontrols').html("Invert Controls - Yes");
+			break;
+	}
+
+	switch (config.infinitypt) {
+		case 0:
+			$('#infinitypt').html("Infinity Pan/Tilt-No");
+			break;
+		case 1:
+			$('#infinitypt').html("Infinity Pan/Tilt-Yes");
+			break;
+	}
+
+	switch (config.infinityzoom) {
+		case 0:
+			$('#infinityzoom').html("Infinity Zoom-No");
+			break;
+		case 1:
+			$('#infinityzoom').html("Infinity Zoom-Yes");
+			break;
+	}
+
+	switch (config.infinityfocus) {
+		case 0:
+			$('#infinityfocus').html("Infinity Focus-No");
+			break;
+		case 1:
+			$('#infinityfocus').html("Infinity Focus-Yes");
+			break;
+	}
+
+	config.ip = $('#cameraIP').val();
+}
+
+// function to reload camera IP address
+function reload_cam() {
+	// get the value of the camera IP address input field
+	let cameraIP = $('#cameraIP').val();
+
+	// regular expression to check if the entered IP address is valid
+	let isValidIP = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+
+	// check if the entered IP address is valid
+	if (isValidIP.test(cameraIP)) {
+		// update the config object with the new IP address
+		config.ip = cameraIP;
+
+		// save the updated config object
+		save_config();
+
+		// show success message
+		alert("New IP address saved.");
+	} else {
+		// show error message
+		alert("IP address entered is invalid! Please re-enter the camera IP address.");
+	}
+}
+  
+
+// Function to adjust camera settings based on the provided action
+function adjust_setting(action) {
+	// Variables to store the URL for flip and mirror actions
+	let flipUrl, mirrorUrl;
+
+	// Check the value of action and update the URL and config values accordingly
+	switch (action) {
+		case 'flip':
+			flipUrl = (config.flip === 0) ? base_url + "/param.cgi?post_image_value&flip&1" : base_url + "/param.cgi?post_image_value&flip&0";
+			run_action(flipUrl);
+			config.flip = (config.flip === 0) ? 1 : 0;
+			break;
+		case 'mirror':
+			mirrorUrl = (config.mirror === 0) ? base_url + "/param.cgi?post_image_value&mirror&1" : base_url + "/param.cgi?post_image_value&mirror&0";
+			run_action(mirrorUrl);
+			config.mirror = (config.mirror === 0) ? 1 : 0;
+			break;
+		case 'invertcontrols':
+			config.invertcontrols = (config.invertcontrols === 0) ? 1 : 0;
+			break;
+		case 'infinitypt':
+			config.infinitypt = (config.infinitypt === 0) ? 1 : 0;
+			$('#pt_infinity').toggle();
+			break;
+		case 'infinityzoom':
+			config.infinityzoom = (config.infinityzoom === 0) ? 1 : 0;
+			$('#cam_zoom_infinity').toggle();
+			$('#cam_zoom_standard').toggle();
+			break;
+		case 'infinityfocus':
+			config.infinityfocus = (config.infinityfocus === 0) ? 1 : 0;
+			$('#cam_focus_infinity').toggle();
+			$('#cam_focus_standard').toggle();
+			break;
+	}
+
+	// Save the updated config and update the labels
+	save_config();
+	update_labels();
+}
+
+
+// used for loading existing settings
+function update_settings() {
+	// Check the value of `config.flip` and call `run_action` with the appropriate URL
+	if (config.flip === 0) {
+		run_action(`${base_url}/param.cgi?post_image_value&flip&0`);
+	} else if (config.flip === 1) {
+		run_action(`${base_url}/param.cgi?post_image_value&flip&1`);
+	}
+
+	// Check the value of `config.mirror` and call `run_action` with the appropriate URL
+	if (config.mirror === 0) {
+		run_action(`${base_url}/param.cgi?post_image_value&mirror&0`);
+	} else if (config.mirror === 1) {
+		run_action(`${base_url}/param.cgi?post_image_value&mirror&1`);
+	}
+
+	// Check the value of `config.infinitypt` and hide/show the `#pt_infinity` element
+	if (config.infinitypt === 0) {
+		$('#pt_infinity').hide();
+	} else if (config.infinitypt === 1) {
+		$('#pt_infinity').show();
+	}
+
+	// Check the value of `config.infinityzoom` and hide/show the `#cam_zoom_infinity` and `#cam_zoom_standard` elements
+	if (config.infinityzoom === 0) {
+		$('#cam_zoom_infinity').hide();
+		$('#cam_zoom_standard').show();
+	} else if (config.infinityzoom === 1) {
+		$('#cam_zoom_infinity').show();
+		$('#cam_zoom_standard').hide();
+	}
+
+	// Check the value of `config.infinityfocus` and hide/show the `#cam_focus_infinity` and `#cam_focus_standard` elements
+	if (config.infinityfocus === 1) {
+		$('#cam_focus_infinity').hide();
+		$('#cam_focus_standard').show();
+	} else if (config.infinityfocus === 0) {
+		$('#cam_focus_infinity').show();
+		$('#cam_focus_standard').hide();
+	}
+
+	update_labels();
+}
+
+// Function to control the camera's pan and tilt action
+// Function to control the camera pan/tilt
+function cam_pantilt(camera, action) {
+	// Get the direction to move the camera
+	const direction = getDirection(action);
+	
+	// Build the URL for the camera control action, including the direction and pan/tilt speed
+	const loc = `${base_url}/ptzctrl.cgi?ptzcmd&${direction}&${config.panspeed}&${config.tiltspeed}`;
+
+	// Run the action to move the camera
+	run_action(loc);
+}
+
+// Helper function to get the direction based on the action and the inversion setting
+function getDirection(action) {
+	if (config.invertcontrols === "1") {
+		switch (action) {
+			// If the action is 'left', return 'right'
+			case 'left':
+				return 'right';
+			// If the action is 'right', return 'left'
+			case 'right':
+				return 'left';
+			// If the action is 'up', return 'down'
+			case 'up':
+				return 'down';
+			// If the action is 'down', return 'up'
+			case 'down':
+				return 'up';
+			// For any other action, return the action
+			default:
+				return action;
+		}
+	}
+	// Return the original action if the inversion setting is not set
+	return action;
+}
+
+// Function to control the camera zoom
+function cam_zoom(camera, action) {
+	// Build the URL for the camera control action, including the zoom speed
+	const loc = `${base_url}/ptzctrl.cgi?ptzcmd&${action}&${config.zoomspeed}`;
+	
+	// Run the action to zoom the camera
+	run_action(loc);
+}
+
+// Function to control the camera focus
+function cam_focus(camera, action) {
+	// Build the URL for the camera control action, including the focus speed
+	const loc = `${base_url}/ptzctrl.cgi?ptzcmd&${action}&${config.focusspeed}`;
+	
+	// Run the action to focus the camera
+	run_action(loc);
+}
+
+// Function to control the camera preset
+function cam_preset(camera, positionnum, action) {
+	// Build the URL for the camera control action, including the position number
+	const loc = `${base_url}/ptzctrl.cgi?ptzcmd&${action}&${positionnum}`;
+	
+	// Run the action to set the camera preset
+	run_action(loc);
+}
+
+let autoInterval;
+let panInterval;
+let panning;
+let autopanning = false;
+
+function autopan() {
+
+	var seconds = config.autopaninterval;
+	autopanning = true;
+
+	// preset 11 is the autopan start preset
+	cam_preset(1, 11, 'poscall');
+
+	// wait 1 second before starting the pan
+	// this should give the camera enough time to pan to start position
+	setTimeout(function () {
+
+		console.log("start panning right");
+		pan('right');
+
+		autoInterval = setInterval(function () {
+
+			if (panning == 'left') {
+
+				clearInterval(panInterval);
+				console.log("start panning right");
+				pan('right');
+
+			} else if (panning == 'right') {
+
+				clearInterval(panInterval);
+				console.log("start panning left");
+				pan('left');
+			}
+
+		}, seconds * 1000);
+
+	}, 1000);
+}
+
+function pan(direction) {
+
+	var panspeed = 10;
+	var tiltspeed = 10;
+
+	panInterval = setInterval(function () {
+
+		if (direction == 'left') {
+
+			panning = 'left';
+
+			if (config.invertcontrols == "1") {
+				var loc = base_url + "/ptzctrl.cgi?ptzcmd&right&" + panspeed + "&" + tiltspeed;
+			} else {
+				var loc = base_url + "/ptzctrl.cgi?ptzcmd&left&" + panspeed + "&" + tiltspeed;
+			}
+			console.log("...pan left");
+
+		} else if (direction == 'right') {
+
+			panning = 'right';
+
+			if (config.invertcontrols == "1") {
+				var loc = base_url + "/ptzctrl.cgi?ptzcmd&left&" + panspeed + "&" + tiltspeed;
+			} else {
+				var loc = base_url + "/ptzctrl.cgi?ptzcmd&right&" + panspeed + "&" + tiltspeed;
+			}
+			console.log("...pan right");
+		}
+		run_action(loc);
+
+	}, 1000);
+}
+
+function stop_autopan() {
+	if (autoInterval) {
+		clearInterval(autoInterval);
+	}
+	if (panInterval) {
+		clearInterval(panInterval);
+	}
+	autopanning = false;
+	$('#panBtn').removeClass('pressed');
+	cam_pantilt(1, "ptzstop");
+	$('.autopan').removeClass('active');
+}
+
+requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) {
+
+	window.keybinds = keybinds;
+	window.lerp = lerp;
+	window.get_config = get_config;
+	window.save_config = save_config;
+	window.run_action = run_action;
+	window.config_init = config_init;
+	window.config_setting = config_setting;
+	window.update_labels = update_labels;
+	window.reload_cam = reload_cam;
+	window.adjust_setting = adjust_setting;
+	window.update_settings = update_settings;
+	window.cam_pantilt = cam_pantilt;
+	window.cam_zoom = cam_zoom;
+	window.cam_focus = cam_focus;
+	window.cam_preset = cam_preset;
+
+	config_init();
+	keybinds();
+
+	// Check if the theme cookie exists
+	if (!Cookies.get('theme')) {
+		// Set the default theme to light
+		document.cookie = `theme = light; expires=Fri, 01 Jan 2100 00:00:00 UTC;`;
+	}
+
+	document.documentElement.setAttribute('data-theme', Cookies.get('theme'));
+
+	// Add a click event listener to the toggle button
+	$('#themeToggle').click(function() {
+		// Get the current theme from the cookie
+		var currentTheme = Cookies.get('theme');
+	
+		// If the current theme is light, set the theme to dark
+		if (currentTheme === 'light') {
+			document.cookie = `theme = dark; expires=Fri, 01 Jan 2100 00:00:00 UTC;`;
+		}
+		// If the current theme is dark, set the theme to light
+		else if (currentTheme === 'dark') {
+			document.cookie = `theme = light; expires=Fri, 01 Jan 2100 00:00:00 UTC;`;
+		}
+	
+		// Set the data-theme attribute on the document element to the current theme
+		document.documentElement.setAttribute('data-theme', Cookies.get('theme'));
+	});
+
+	$('#parent-element').on('mousedown', function (e) {
+		let x = e.target.id;
+		if (variables.arrowKeys.includes(x)) {
+			variables.actions[x]();
+		}
+	});
+	
+	$('#parent-element').on('mouseup', function (e) {
+		cam_pantilt(1, 'ptzstop');
+		console.log(`Stopped Panning`);
+	});
+	
+	$('#rightLink').on('mouseover', function(){
+		$('#wrapper').addClass('rightTransition');
+	})
+	
+	$('#rightLink').on('mouseout', function() {
+		$('#wrapper').removeClass('rightTransition');
+	})
+	
+	$('#leftLink').on('mouseover', function(){
+		$('#wrapper').addClass('leftTransition');
+	})
+	
+	$('#leftLink').on('mouseout', function() {
+		$('#wrapper').removeClass('leftTransition');
+	})
 
 	$('.btn').click(function (e) {
 		activePreset = $(this).html();
-
+	
 		stop_autopan();
 		cam_preset(1, activePreset, 'poscall');
-
+	
 		console.log(`Called preset ${activePreset}`);
 		$('#camTitle').html(`Active Preset: ${Cookies.get(`${activePreset}`)}`);
 	});
-
+	
 	$('.btn').on('mouseout', function(e) {
 		let i = activePreset;
 		if (typeof activePreset == 'undefined') {
@@ -346,48 +859,13 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 		}
 		$('#presetTitle1').html(`Presets`);
 	});
-
+	
 	$('.btn').on('mouseover', function(e) {
 		let i = $(this).html();
 		$('#camTitle').html(`Preset Preview: ${Cookies.get(`${i}`)}`);
 		$('#presetTitle1').html(`${Cookies.get(`${i}`)}`);
 	});
-
-	const timer = ms => new Promise(res => setTimeout(res, ms))
-
-	async function lerp(targetValue, sliderClass, lerpFunction) {
-		let currentValue= Number($(sliderClass).val());
-		lerping = true;
-		if (lerpFunction === "up") {
-			while(currentValue < targetValue) {
-				if(currentValue < (targetValue - 0.8)) {
-					let lerpValue = (targetValue - currentValue) / 10;
-					currentValue = currentValue + lerpValue;
-					$(sliderClass).val(currentValue);
-				}
-				if(currentValue >= (targetValue - 0.8)) {
-					currentValue = targetValue;
-				}
-				await timer(5);
-			}
-		}
-
-		if (lerpFunction === "down") {
-			while(currentValue > targetValue) {
-				if(currentValue > (targetValue + 0.8)) {
-					let lerpValue = (targetValue - currentValue) / 10;
-					currentValue = currentValue + lerpValue;
-					$(sliderClass).val(currentValue);
-				}
-				if(currentValue <= (targetValue + 0.8)) {
-					currentValue = targetValue;
-				}
-				await timer(5);
-			}
-		}
-		lerping = false;
-	}
-
+	
 	$('#infoLink').click(function(e) {
 		$('#about').toggleClass('show');
 	});
@@ -406,498 +884,6 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 		document.cookie = `${pstNum} = ${presetName}; expires=Fri, 01 Jan 2100 00:00:00 UTC;`;
 	});
 	
-	// function clear_cookies() {
-	// 	var i = 1;
-	// 	while (i <= 9) {
-	// 		var name = 'presetname' + i.toString();
-	// 		var actualname = eval('name');
-	// 		Cookies.remove(actualname)
-	// 		i++;
-	// 	}
-	// 	location.reload();
-	// }
-
-	function get_config() {
-		let result = localStorage.getItem('configStorage');
-		if (!result) {
-			return config;
-		} else {
-			return JSON.parse(result);
-		}
-	}
-
-	function save_config() {
-		localStorage.setItem('configStorage', JSON.stringify(config));
-		console.log(config);
-	}
-
-	function run_action(action_url) {
-		// $.get(url);
-		$.ajax({
-			url: action_url,
-			type: 'GET',
-		})
-			.done(function () {
-				// console.log("success");
-			})
-			.fail(function (jqXHR, responseText, errorThrown) {
-				console.log("error");
-			})
-			.always(function () {
-				// console.log("complete");
-			});
-	}
-
-	// setup all the initial configuration and standard settings
-	function config_init() {
-
-		config = get_config();
-		console.log(config);
-
-		// set the initial IP value for the camera ip input
-		$("#cameraIP").val(config.ip);
-		base_url = "http://" + config.ip + "/cgi-bin";
-
-		// set the camera's initial configuration for each value in the saved config object
-		config_setting("flip", config.flip);
-		config_setting("mirror", config.mirror);
-		config_setting("invertcontrols", config.invertcontrols);
-		config_setting("infinitypt", config.infinitypt);
-		config_setting("infinityzoom", config.infinityzoom);
-		config_setting("infinityfocus", config.infinityfocus);
-
-		// set the initial values for each select dropdown
-		$("#panSpeed").val(config.panspeed);
-		$("#zoomSpeed").val(config.zoomspeed);
-		$("#tiltSpeed").val(config.tiltspeed);
-		$("#focusSpeed").val(config.focusspeed);
-		$("#panInterval").val(config.autopaninterval);
-
-		// save_config();
-
-		if (config.infinitypt == 1) {
-			$('#infPT').html('Infinity Pan/Tilt - Yes');
-		} else {
-			$('#infPT').html('Infinity Pan/Tilt - No');
-		}
-
-		if (config.infinityzoom == 1) {
-			$('#cam_zoom_infinity').show();
-			$('#cam_zoom_standard').hide();
-		} else {
-			$('#cam_zoom_infinity').hide();
-			$('#cam_zoom_standard').show();
-		}
-
-		if (config.infinityfocus == 1) {
-			$('#cam_focus_infinity').show();
-			$('#cam_focus_standard').hide();
-		} else {
-			$('#cam_focus_infinity').hide();
-			$('#cam_focus_standard').show();
-		}
-
-		update_labels();
-	}
-
-	config_init();
-
-	function config_setting(action, value) {
-		let loc = base_url + "/param.cgi?post_image_value&" + action + "&" + value;
-		run_action(loc);
-	}
-
-	function update_labels() {
-
-		switch (config.flip) {
-			case 0:
-				$('#flip').html("Flip - No");
-				break;
-			case 1:
-				$('#flip').html("Flip - Yes");
-				break;
-		}
-
-		switch (config.mirror) {
-			case 0:
-				$('#mirror').html("Mirror - No");
-				break;
-			case 1:
-				$('#mirror').html("Mirror - Yes");
-				break;
-		}
-
-		switch (config.invertcontrols) {
-			case 0:
-				$('#invertcontrols').html("Invert Controls - No");
-				break;
-			case 1:
-				$('#invertcontrols').html("Invert Controls - Yes");
-				break;
-		}
-
-		switch (config.infinitypt) {
-			case 0:
-				$('#infinitypt').html("Infinity Pan/Tilt-No");
-				break;
-			case 1:
-				$('#infinitypt').html("Infinity Pan/Tilt-Yes");
-				break;
-		}
-
-		switch (config.infinityzoom) {
-			case 0:
-				$('#infinityzoom').html("Infinity Zoom-No");
-				break;
-			case 1:
-				$('#infinityzoom').html("Infinity Zoom-Yes");
-				break;
-		}
-
-		switch (config.infinityfocus) {
-			case 0:
-				$('#infinityfocus').html("Infinity Focus-No");
-				break;
-			case 1:
-				$('#infinityfocus').html("Infinity Focus-Yes");
-				break;
-		}
-
-		config.ip = $('#cameraIP').val();
-	}
-
-	function reload_cam() {
-		config.ip = $('#cameraIP').val();
-		if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(config.ip)) {
-
-			config.ip = config.ip;
-			save_config();
-			alert("New IP address saved.");
-		} else {
-			alert("IP address entered is invalid! Re-enter camera IP address.");
-		}
-	}
-
-	function adjust_setting(action) {
-		switch (action) {
-			case 'flip':
-				switch (config.flip) {
-					case 0:
-						var loc = base_url + "/param.cgi?post_image_value&flip&1";
-						run_action(loc);
-						config.flip = 1;
-						save_config();
-						update_labels();
-						break;
-					case 1:
-						var loc = base_url + "/param.cgi?post_image_value&flip&0";
-						run_action(loc);
-						config.flip = 0;
-						save_config();
-						update_labels();
-						break;
-				}
-				break;
-			case 'mirror':
-				switch (config.mirror) {
-					case 0:
-						var loc = base_url + "/param.cgi?post_image_value&mirror&1";
-						run_action(loc);
-						config.mirror = 1;
-						save_config();
-						update_labels();
-						break;
-					case 1:
-						var loc = base_url + "/param.cgi?post_image_value&mirror&0";
-						run_action(loc);
-						config.mirror = 0;
-						save_config();
-						update_labels();
-						break;
-				}
-				break;
-			case 'invertcontrols':
-				switch (config.invertcontrols) {
-					case 0:
-						config.invertcontrols = 1;
-						save_config();
-						update_labels();
-						break;
-					case 1:
-						config.invertcontrols = 0;
-						save_config();
-						update_labels();
-						break;
-				}
-				break;
-			case 'infinitypt':
-				switch (config.infinitypt) {
-					case 0:
-						config.infinitypt = 1;
-						$('#pt_infinity').show();
-						config.infinitypt = 1;
-						save_config();
-						update_labels();
-						break;
-					case 1:
-						config.infinitypt = 0;
-						$('#pt_infinity').hide();
-						config.infinitypt = 0;
-						save_config();
-						update_labels();
-						break;
-				}
-				break;
-			case 'infinityzoom':
-				//console.log("Adjusting Infinity Zoom", config.infinityzoom);
-				switch (config.infinityzoom) {
-					case 0:
-						config.infinityzoom = 1;
-						$('#cam_zoom_infinity').show();
-						$('#cam_zoom_standard').hide();
-						config.infinityzoom = 1;
-						save_config();
-						update_labels();
-						break;
-					case 1:
-						config.infinityzoom = 0;
-						$('#cam_zoom_infinity').hide();
-						$('#cam_zoom_standard').show();
-						config.infinityzoom = 0;
-						save_config();
-						update_labels();
-						break;
-				}
-				break;
-			case 'infinityfocus':
-				switch (config.infinityfocus) {
-					case 0:
-						config.infinityfocus = 1;
-						$('#cam_focus_infinity').show();
-						$('#cam_focus_standard').hide();
-						config.infinityfocus = 1;
-						save_config();
-						update_labels();
-						break;
-					case 1:
-						config.infinityfocus = 0;
-						$('#cam_focus_infinity').hide();
-						$('#cam_focus_standard').show();
-						config.infinityfocus = 0;
-						save_config();
-						update_labels();
-						break;
-				}
-				break;
-		}
-	}
-
-	// used for loading existing settings
-	function update_settings() {
-		switch (config.flip) {
-			case 0:
-				var loc = base_url + "/param.cgi?post_image_value&flip&0";
-				run_action(loc);
-				break;
-			case 1:
-				var loc = base_url + "/param.cgi?post_image_value&flip&1";
-				run_action(loc);
-				break;
-		}
-		switch (config.mirror) {
-			case 0:
-				var loc = base_url + "/param.cgi?post_image_value&mirror&0";
-				run_action(loc);
-				update_labels();
-				break;
-			case 1:
-				var loc = base_url + "/param.cgi?post_image_value&mirror&1";
-				run_action(loc);
-				update_labels();
-				break;
-		}
-
-		switch (config.infinitypt) {
-
-			case 0:
-				$('#pt_infinity').hide();
-				break;
-
-			case 1:
-				$('#pt_infinity').show();
-				break;
-		}
-
-		switch (config.infinityzoom) {
-
-			case 0:
-				$('#cam_zoom_infinity').hide();
-				$('#cam_zoom_standard').show();
-				break;
-
-			case 1:
-				$('#cam_zoom_infinity').show();
-				$('#cam_zoom_standard').hide();
-				break;
-		}
-
-		switch (config.infinityfocus) {
-
-			case 1:
-				$('#cam_focus_infinity').hide();
-				$('#cam_focus_standard').show();
-				break;
-
-			case 0:
-				$('#cam_focus_infinity').show();
-				$('#cam_focus_standard').hide();
-				break;
-		}
-
-		update_labels();
-	}
-
-	function cam_pantilt(camera, action) {
-		switch (action) {
-			case 'left':
-				if (config.invertcontrols == "1") {
-					var loc = base_url + "/ptzctrl.cgi?ptzcmd&right&" + config.panspeed + "&" + config.tiltspeed + "";
-				} else {
-					var loc = base_url + "/ptzctrl.cgi?ptzcmd&left&" + config.panspeed + "&" + config.tiltspeed + "";
-				}
-				break;
-			case 'right':
-				if (config.invertcontrols == "1") {
-					var loc = base_url + "/ptzctrl.cgi?ptzcmd&left&" + config.panspeed + "&" + config.tiltspeed + "";
-				} else {
-					var loc = base_url + "/ptzctrl.cgi?ptzcmd&right&" + config.panspeed + "&" + config.tiltspeed + "";
-				}
-				break;
-			case 'up':
-				if (config.invertcontrols == "1") {
-					var loc = base_url + "/ptzctrl.cgi?ptzcmd&down&" + config.panspeed + "&" + config.tiltspeed + "";
-				} else {
-					var loc = base_url + "/ptzctrl.cgi?ptzcmd&up&" + config.panspeed + "&" + config.tiltspeed + "";
-				}
-				break;
-			case 'down':
-				if (config.invertcontrols == "1") {
-					var loc = base_url + "/ptzctrl.cgi?ptzcmd&up&" + config.panspeed + "&" + config.tiltspeed + "";
-				} else {
-					var loc = base_url + "/ptzctrl.cgi?ptzcmd&down&" + config.panspeed + "&" + config.tiltspeed + "";
-				}
-				break;
-			case 'home':
-				var loc = base_url + "/ptzctrl.cgi?ptzcmd&home&" + config.panspeed + "&" + config.tiltspeed + "";
-				break;
-			case 'ptzstop':
-				var loc = base_url + "/ptzctrl.cgi?ptzcmd&ptzstop&" + config.panspeed + "&" + config.tiltspeed + "";
-				break;
-		}
-		run_action(loc);
-	}
-
-	function cam_zoom(camera, action) {
-		var loc = base_url + "/ptzctrl.cgi?ptzcmd&" + action + "&" + config.zoomspeed + "";
-		run_action(loc);
-	}
-
-	function cam_focus(camera, action) {
-		var loc = base_url + "/ptzctrl.cgi?ptzcmd&" + action + "&" + config.focusspeed + "";
-		run_action(loc);
-	}
-
-	function cam_preset(camera, positionnum, action) {
-		var loc = base_url + "/ptzctrl.cgi?ptzcmd&" + action + "&" + positionnum + "";
-		run_action(loc);
-	}
-
-	let autoInterval;
-	let panInterval;
-	let panning;
-	let autopanning = false;
-
-	function autopan() {
-
-		var seconds = config.autopaninterval;
-		autopanning = true;
-
-		// preset 11 is the autopan start preset
-		cam_preset(1, 11, 'poscall');
-
-		// wait 1 second before starting the pan
-		// this should give the camera enough time to pan to start position
-		setTimeout(function () {
-
-			console.log("start panning right");
-			pan('right');
-
-			autoInterval = setInterval(function () {
-
-				if (panning == 'left') {
-
-					clearInterval(panInterval);
-					console.log("start panning right");
-					pan('right');
-
-				} else if (panning == 'right') {
-
-					clearInterval(panInterval);
-					console.log("start panning left");
-					pan('left');
-				}
-
-			}, seconds * 1000);
-
-		}, 1000);
-	}
-
-	function pan(direction) {
-
-		var panspeed = 10;
-		var tiltspeed = 10;
-
-		panInterval = setInterval(function () {
-
-			if (direction == 'left') {
-
-				panning = 'left';
-
-				if (config.invertcontrols == "1") {
-					var loc = base_url + "/ptzctrl.cgi?ptzcmd&right&" + panspeed + "&" + tiltspeed;
-				} else {
-					var loc = base_url + "/ptzctrl.cgi?ptzcmd&left&" + panspeed + "&" + tiltspeed;
-				}
-				console.log("...pan left");
-
-			} else if (direction == 'right') {
-
-				panning = 'right';
-
-				if (config.invertcontrols == "1") {
-					var loc = base_url + "/ptzctrl.cgi?ptzcmd&left&" + panspeed + "&" + tiltspeed;
-				} else {
-					var loc = base_url + "/ptzctrl.cgi?ptzcmd&right&" + panspeed + "&" + tiltspeed;
-				}
-				console.log("...pan right");
-			}
-			run_action(loc);
-
-		}, 1000);
-	}
-
-	function stop_autopan() {
-		if (autoInterval) {
-			clearInterval(autoInterval);
-		}
-		if (panInterval) {
-			clearInterval(panInterval);
-		}
-		autopanning = false;
-		$('#panBtn').removeClass('pressed');
-		cam_pantilt(1, "ptzstop");
-		$('.autopan').removeClass('active');
-	}
 
 	$('body').on('click', '#panBtn', function (e) {
 		e.preventDefault();
@@ -913,14 +899,14 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 		return false;
 	});
 
-	$('body').on('click', '.clearpresets', function (e) {
+	$('#clearBtn').click(function(e) {
 		e.preventDefault();
-		stop_autopan()
-		// clear_cookies();
-		return false;
+		if(confirm("Are you sure you want to delete all presets (This cannot be undone!)")){
+			console.log("deleted");
+		} else {
+			console.log("canceled");
+		}
 	});
-
-	/* Mouse Events & Clicks */
 
 	$('body').on('click', '.adjust_setting', function (e) {
 		e.preventDefault();
