@@ -764,6 +764,42 @@ function stop_autopan() {
 	$('.autopan').removeClass('active');
 }
 
+// URL of the file you want to download
+const url = 'http://192.168.0.190/snapshot.jpg';
+
+// Function to download a file
+async function downloadFile(url, filename) {
+  try {
+    // Fetch the file
+    const response = await fetch(url);
+    
+    // Check if the request was successful
+    if (response.status == 200) {
+      throw new Error(`Unable to download file. HTTP status: ${response.status}`);
+    }
+
+    // Get the Blob data
+    const blob = await response.blob();
+
+    // Create a download link
+    const downloadLink = document.createElement('a');
+    downloadLink.href = URL.createObjectURL(blob);
+    downloadLink.download = filename;
+
+    // Trigger the download
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+
+    // Clean up
+    setTimeout(() => {
+      URL.revokeObjectURL(downloadLink.href);
+      document.body.removeChild(downloadLink);
+    }, 100);
+  } catch (error) {
+    console.error('Error downloading the file:', error.message);
+  }
+}
+
 requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) {
 
 	window.keybinds = keybinds;
@@ -781,6 +817,7 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 	window.cam_zoom = cam_zoom;
 	window.cam_focus = cam_focus;
 	window.cam_preset = cam_preset;
+	window.downloadFile = downloadFile;
 
 	config_init();
 	keybinds();
