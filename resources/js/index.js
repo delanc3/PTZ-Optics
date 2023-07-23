@@ -764,41 +764,24 @@ function stop_autopan() {
 	$('.autopan').removeClass('active');
 }
 
-// URL of the file you want to download
-const url = 'http://192.168.0.190/snapshot.jpg';
-
-// Function to download a file
-async function downloadFile(url, filename) {
-  try {
-    // Fetch the file
-    const response = await fetch(url);
-    
-    // Check if the request was successful
-    if (response.status == 200) {
-      throw new Error(`Unable to download file. HTTP status: ${response.status}`);
+function forceDownload(url, fileName){
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", url, true);
+    xhr.responseType = "blob";
+    xhr.onload = function(){
+        var urlCreator = window.URL || window.webkitURL;
+        var imageUrl = urlCreator.createObjectURL(this.response);
+        var tag = document.createElement('a');
+        tag.href = imageUrl;
+        tag.download = fileName;
+        document.body.appendChild(tag);
+        tag.click();
+        document.body.removeChild(tag);
     }
-
-    // Get the Blob data
-    const blob = await response.blob();
-
-    // Create a download link
-    const downloadLink = document.createElement('a');
-    downloadLink.href = URL.createObjectURL(blob);
-    downloadLink.download = filename;
-
-    // Trigger the download
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
-
-    // Clean up
-    setTimeout(() => {
-      URL.revokeObjectURL(downloadLink.href);
-      document.body.removeChild(downloadLink);
-    }, 100);
-  } catch (error) {
-    console.error('Error downloading the file:', error.message);
-  }
+    xhr.send();
 }
+
+
 
 requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) {
 
@@ -817,7 +800,7 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 	window.cam_zoom = cam_zoom;
 	window.cam_focus = cam_focus;
 	window.cam_preset = cam_preset;
-	window.downloadFile = downloadFile;
+	window.forceDownload = forceDownload;
 
 	config_init();
 	keybinds();
@@ -899,8 +882,7 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 	
 	$('.btn').on('mouseover', function(e) {
 		let i = $(this).html();
-		$('#camTitle').html(`Preset Preview: ${Cookies.get(`${i}`)}`);
-		$('#presetTitle1').html(`${Cookies.get(`${i}`)}`);
+		$('#presetPreview').attr('src',`./resources/images/${i}.jpg`)
 	});
 	
 	$('#infoLink').click(function(e) {
@@ -918,6 +900,7 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 			console.log('Set autopan start position');
 		};
 		let presetName = prompt('Enter a name for the preset:');
+		forceDownload('http://192.168.0.190/snapshot.jpg', `${pstNum}.jpg`)
 		document.cookie = `${pstNum} = ${presetName}; expires=Fri, 01 Jan 2100 00:00:00 UTC;`;
 	});
 	

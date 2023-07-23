@@ -385,6 +385,11 @@ p {
   letter-spacing: 0.2;
 }
 
+#presetPreview {
+  width: 90%;
+  height: auto;
+}
+
 /* -------Controls section------- */
 
 #ctrlContainer {
@@ -695,12 +700,13 @@ p {
 }
 
 #presetTitle {
+  display: none;
   font-size: 40px;
   font-weight: bold;
 }
 
 #presetTitle1 {
-  display: none;
+  display: block;
   font-size: 40px;
   font-weight: bold;
 }
