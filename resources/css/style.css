@@ -1011,11 +1011,9 @@ p {
   flex-direction: row;
 }
 
-.asgnBtn:link,
-.asgnBtn:visited,
-.prefBtn:link,
-.prefBtn:visited {
-  display: flex;
+.asgnBtn,
+.prefBtn{
+  display: block;
   width: 200px;
   height: 70px;
   border-radius: 30px;
@@ -1023,7 +1021,6 @@ p {
   color: var(--textCol);
   font-weight: bold;
   background-color: var(--button-bg-col);
-  text-align: center;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
   justify-content: center;
   align-content: center;
@@ -1037,6 +1034,9 @@ p {
   -moz-transition: all 0.5s;
   -ms-transition: all 0.5s;
   -o-transition: all 0.5s;
+  border: none !important;
+  outline: none !important;
+  text-align: center !important;
 }
 
 .asgnBtn:hover,
@@ -1052,6 +1052,12 @@ p {
 
 .asgnBtn:active {
   background-color: #36494d;
+}
+
+input[type="submit"] {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 @keyframes fade {

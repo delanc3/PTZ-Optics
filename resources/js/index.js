@@ -882,7 +882,8 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 	
 	$('.btn').on('mouseover', function(e) {
 		let i = $(this).html();
-		$('#presetPreview').attr('src',`./resources/images/${i}.jpg`)
+		$('#presetPreview').attr('src',`${i}.jpg`);
+		$('#presetTitle1').html(`${Cookies.get(`${i}`)}`);
 	});
 	
 	$('#infoLink').click(function(e) {
@@ -890,7 +891,7 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 	});
 	
 	$('.asgnBtn').click(function(e){
-		pstNum = $(this).html();
+		pstNum = $(this).val();
 		if (pstNum < 11){
 			cam_preset(1, pstNum, 'posset');
 			console.log(`Set preset ${pstNum}`);
@@ -900,7 +901,6 @@ requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) 
 			console.log('Set autopan start position');
 		};
 		let presetName = prompt('Enter a name for the preset:');
-		forceDownload('http://192.168.0.190/snapshot.jpg', `${pstNum}.jpg`)
 		document.cookie = `${pstNum} = ${presetName}; expires=Fri, 01 Jan 2100 00:00:00 UTC;`;
 	});
 	
