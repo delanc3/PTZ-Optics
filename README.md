@@ -1,5 +1,3 @@
-# PTZ-Optics Camera Controller
-
-## `Overview`
-
-This project was created to re-design the original web-based controller for PTZ-Optics cameras which was too clunky and unreadable to use
+# The Brief
+My goal for this project is to make an easily accessible and intuitive controller for PTZ-Optics cameras.
+The backend of the controller is mostly based off the original (IMHO messy) controller build by PTZ-Optics themselves.
