@@ -1,6 +1,6 @@
 TODO:
   - [ ] DOCUMENTATION!
-  - [ ] Move all js dependancies to js-delivr
+  - [x] Move all js dependancies to js-delivr
   - [ ] Change ionicons to script
   - [ ] Fix CORS headers
   - [ ] Make settings dropdowns actually match current camera settings
