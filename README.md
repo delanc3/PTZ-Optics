@@ -6,11 +6,12 @@ The backend of the controller is mostly based off the original (IMHO messy) cont
   - [Installation](#installation)
   - [UI Overview](#ui-overview)
   - [How it works](#how-it-works)
-    - HTTP /cgi-bin
+    - [HTTP /cgi-bin](#http-/cgi-bin)
     - Ajax
     - Keybinding
     - Preferences and settings
----
+
+___
 ### Installation
 Currently (Oct 2023) in order to use this camera controller, you will need to run a local web-server on whatever device you want to run it on, I use Apache's HTTPD server but you can use whatever one you want as long as it can interperet php[^1]. So just click the green "Code" button and select "Download ZIP"
 
@@ -28,6 +29,20 @@ I have designed the UI to be as easy to understand as possible.[^2] I've used me
 
 The "Preset" panel is used for calling presets[^3] that the user has defined. The "Preview" panel displays a preview of whichever preset is currently being hovered over in the "Preset" panel. The "PTZ" panel has controls for the camera, allowing the user to (as the name sugests) pan, tilt and zoom the camera as well as adjust the focus.
 
+The smaller version of the UI is practically identical minus the "Preview" panel as well as the "PTZ" panel being below the "Preset" panel.
+
+___
+### How It Works
+In this section i'll give a brief overview of how the backend of the controller operates and some code snippets as well.
+#### HTTP /cgi-bin
+PTZ-Optics cameras can be given isntructions by submiting an HTTP-GET request to scripts within the cgi-bin directory on the camera. There are two base paths that all the commands stem from on a PTZ camera. These are:
+```
+http://[camera ip]/cgi-bin/ptzctrl.cgi?ptzcmd&
+```
+and
+```
+http://[camera ip]/cgi-bin/param.cgi?
+```
 
 [^1]: I will most likely remove the dependancy on php sometime in the near future, it's only neccessary at the moment to allow for thumbnail downloads of preset positions
 [^2]: This section will be updated whenever significant changes to the UI are made
