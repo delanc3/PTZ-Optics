@@ -1,12 +1,3 @@
-requirejs.config({
-	baseUrl: './resources/js',
-	paths: {
-		jquery: 'jquery-3.6.0',
-		mousetrap: 'mousetrap.min',
-		jscookie: 'js.cookie'
-	}
-});
-
 let camera_ip = "192.168.0.190";
 let base_url = "http://" + camera_ip + "/cgi-bin";
 
@@ -27,34 +18,34 @@ let defaults = {
 };
 
 let variables = {
-	arrowKeys: ['up', 'down', 'left', 'right', 'esc'], 
-	numKeys:  ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
-	sliderKeys: ['w', 's', 'q', 'a'], 
-	sliderClasses: ['.zoom.plus', '.zoom.minus', '.focus.plus', '.focus.minus'], 
+	arrowKeys: ['up', 'down', 'left', 'right', 'esc'],
+	numKeys: ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
+	sliderKeys: ['w', 's', 'q', 'a'],
+	sliderClasses: ['.zoom.plus', '.zoom.minus', '.focus.plus', '.focus.minus'],
 	slideKeyNums: [1000, 0, 1000, 0],
 	actions: {
-		up: function() {
+		up: function () {
 			stop_autopan();
 			cam_pantilt(1, 'up');
 			console.log(`Panned up`);
 		},
-		down: function() {
+		down: function () {
 			stop_autopan();
 			cam_pantilt(1, 'down');
 			console.log(`Panned down`);
 		},
-		left: function() {
+		left: function () {
 			stop_autopan();
 			cam_pantilt(1, 'left');
 			console.log(`Panned left`);
 		},
-		right: function() {
+		right: function () {
 			stop_autopan();
 			cam_pantilt(1, 'right');
 			console.log(`Panned right`);
 		},
-		esc: function() {
-			if(document.title == 'PTZ-Optics - Main') {
+		esc: function () {
+			if (document.title == 'PTZ-Optics - Main') {
 				stop_autopan();
 				cam_pantilt(1, 'home');
 				console.log('Reset pantilt');
@@ -114,7 +105,7 @@ function keybinds() {
 			if (e.repeat) return;
 			handleKeyEvent('keydown', x);
 		}, 'keydown');
-	
+
 		Mousetrap.bind(x, function (e) {
 			handleKeyEvent('keyup', x);
 		}, 'keyup');
@@ -142,10 +133,10 @@ function keybinds() {
 		Mousetrap.bind(x, function (e) {
 			$(`#pst${x}`).focus();
 			activePreset = $(`#pst${x}`).html();
-	
+
 			stop_autopan();
 			cam_preset(1, x, 'poscall');
-	
+
 			console.log(`Called preset ${x}`);
 			$('#camTitle').html(`Active Preset: ${activePreset}`);
 		});
@@ -270,7 +261,7 @@ function keybinds() {
 				}
 			};
 		});
-		
+
 		$('body').on('mouseup', `.${split[1]}.minus`, function (e) {
 			if (x === '.zoom.minus') {
 				cam_zoom(1, 'zoomstop');
@@ -304,52 +295,52 @@ let lerpCancelled = false;
 const timer = ms => new Promise(res => setTimeout(res, ms));
 
 async function lerp(targetValue, sliderClass, lerpFunction) {
-  let currentValue = Number($(sliderClass).val());
-  lerping = true;
-  lerpCancelled = false;
+	let currentValue = Number($(sliderClass).val());
+	lerping = true;
+	lerpCancelled = false;
 
-  // Start the lerp process
-  while (lerping) {
-    if (lerpFunction === "up") {
-      // Lerp up
-      if (currentValue < targetValue) {
-        if (currentValue < targetValue - 0.8) {
-          let lerpValue = (targetValue - currentValue) / 10;
-          currentValue += lerpValue;
-          $(sliderClass).val(currentValue);
-        } else {
-          currentValue = targetValue;
-        }
-      } else {
-        lerping = false;
-      }
-    } else if (lerpFunction === "down") {
-      // Lerp down
-      if (currentValue > targetValue) {
-        if (currentValue > targetValue + 0.8) {
-          let lerpValue = (targetValue - currentValue) / 10;
-          currentValue += lerpValue;
-          $(sliderClass).val(currentValue);
-        } else {
-          currentValue = targetValue;
-        }
-      } else {
-        lerping = false;
-      }
-    }
+	// Start the lerp process
+	while (lerping) {
+		if (lerpFunction === "up") {
+			// Lerp up
+			if (currentValue < targetValue) {
+				if (currentValue < targetValue - 0.8) {
+					let lerpValue = (targetValue - currentValue) / 10;
+					currentValue += lerpValue;
+					$(sliderClass).val(currentValue);
+				} else {
+					currentValue = targetValue;
+				}
+			} else {
+				lerping = false;
+			}
+		} else if (lerpFunction === "down") {
+			// Lerp down
+			if (currentValue > targetValue) {
+				if (currentValue > targetValue + 0.8) {
+					let lerpValue = (targetValue - currentValue) / 10;
+					currentValue += lerpValue;
+					$(sliderClass).val(currentValue);
+				} else {
+					currentValue = targetValue;
+				}
+			} else {
+				lerping = false;
+			}
+		}
 
-    // Check if the lerp action has been cancelled
-    if (lerpCancelled) {
-		$(sliderClass).val(currentValue);
-      	lerping = false;
-    }
-    await timer(5);
-  }
+		// Check if the lerp action has been cancelled
+		if (lerpCancelled) {
+			$(sliderClass).val(currentValue);
+			lerping = false;
+		}
+		await timer(5);
+	}
 }
 
 // Function to cancel the current lerp action
 function cancelLerp() {
-  lerpCancelled = true;
+	lerpCancelled = true;
 }
 
 
@@ -373,6 +364,7 @@ function run_action(action_url) {
 	$.ajax({
 		url: action_url,
 		type: 'GET',
+		headers: { 'Access-Control-Allow-Origin': `http://${camera_ip}/` },
 	})
 		.done(function () {
 			// console.log("success");
@@ -524,7 +516,7 @@ function reload_cam() {
 		alert("IP address entered is invalid! Please re-enter the camera IP address.");
 	}
 }
-  
+
 
 // Function to adjust camera settings based on the provided action
 function adjust_setting(action) {
@@ -617,7 +609,7 @@ function update_settings() {
 function cam_pantilt(camera, action) {
 	// Get the direction to move the camera
 	const direction = getDirection(action);
-	
+
 	// Build the URL for the camera control action, including the direction and pan/tilt speed
 	const loc = `${base_url}/ptzctrl.cgi?ptzcmd&${direction}&${config.panspeed}&${config.tiltspeed}`;
 
@@ -654,7 +646,7 @@ function getDirection(action) {
 function cam_zoom(camera, action) {
 	// Build the URL for the camera control action, including the zoom speed
 	const loc = `${base_url}/ptzctrl.cgi?ptzcmd&${action}&${config.zoomspeed}`;
-	
+
 	// Run the action to zoom the camera
 	run_action(loc);
 }
@@ -663,7 +655,7 @@ function cam_zoom(camera, action) {
 function cam_focus(camera, action) {
 	// Build the URL for the camera control action, including the focus speed
 	const loc = `${base_url}/ptzctrl.cgi?ptzcmd&${action}&${config.focusspeed}`;
-	
+
 	// Run the action to focus the camera
 	run_action(loc);
 }
@@ -672,7 +664,7 @@ function cam_focus(camera, action) {
 function cam_preset(camera, positionnum, action) {
 	// Build the URL for the camera control action, including the position number
 	const loc = `${base_url}/ptzctrl.cgi?ptzcmd&${action}&${positionnum}`;
-	
+
 	// Run the action to set the camera preset
 	run_action(loc);
 }
@@ -764,182 +756,160 @@ function stop_autopan() {
 	$('.autopan').removeClass('active');
 }
 
-function forceDownload(url, fileName){
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", url, true);
-    xhr.responseType = "blob";
-    xhr.onload = function(){
-        var urlCreator = window.URL || window.webkitURL;
-        var imageUrl = urlCreator.createObjectURL(this.response);
-        var tag = document.createElement('a');
-        tag.href = imageUrl;
-        tag.download = fileName;
-        document.body.appendChild(tag);
-        tag.click();
-        document.body.removeChild(tag);
-    }
-    xhr.send();
+function forceDownload(url, fileName) {
+	var xhr = new XMLHttpRequest();
+	xhr.open("GET", url, true);
+	xhr.responseType = "blob";
+	xhr.onload = function () {
+		var urlCreator = window.URL || window.webkitURL;
+		var imageUrl = urlCreator.createObjectURL(this.response);
+		var tag = document.createElement('a');
+		tag.href = imageUrl;
+		tag.download = fileName;
+		document.body.appendChild(tag);
+		tag.click();
+		document.body.removeChild(tag);
+	}
+	xhr.send();
 }
 
+config_init();
+keybinds();
 
+// Check if the theme cookie exists
+if (!Cookies.get('theme')) {
+	// Set the default theme to light
+	Cookies.set('theme', 'light')
+}
 
-requirejs(['jquery', 'mousetrap', 'jscookie'], function ($, Mousetrap, Cookies) {
+document.documentElement.setAttribute('data-theme', Cookies.get('theme'));
 
-	window.keybinds = keybinds;
-	window.lerp = lerp;
-	window.get_config = get_config;
-	window.save_config = save_config;
-	window.run_action = run_action;
-	window.config_init = config_init;
-	window.config_setting = config_setting;
-	window.update_labels = update_labels;
-	window.reload_cam = reload_cam;
-	window.adjust_setting = adjust_setting;
-	window.update_settings = update_settings;
-	window.cam_pantilt = cam_pantilt;
-	window.cam_zoom = cam_zoom;
-	window.cam_focus = cam_focus;
-	window.cam_preset = cam_preset;
-	window.forceDownload = forceDownload;
+// Add a click event listener to the toggle button
+$('#themeToggle').click(function () {
+	// Get the current theme from the cookie
+	var currentTheme = Cookies.get('theme');
 
-	config_init();
-	keybinds();
-
-	// Check if the theme cookie exists
-	if (!Cookies.get('theme')) {
-		// Set the default theme to light
-		document.cookie = `theme = light; expires=Fri, 01 Jan 2100 00:00:00 UTC;`;
+	// If the current theme is light, set the theme to dark
+	if (currentTheme === 'light') {
+		Cookies.set('theme', 'dark');
+	}
+	// If the current theme is dark, set the theme to light
+	else if (currentTheme === 'dark') {
+		Cookies.set('theme', 'light');
 	}
 
+	// Set the data-theme attribute on the document element to the current theme
 	document.documentElement.setAttribute('data-theme', Cookies.get('theme'));
+});
 
-	// Add a click event listener to the toggle button
-	$('#themeToggle').click(function() {
-		// Get the current theme from the cookie
-		var currentTheme = Cookies.get('theme');
-	
-		// If the current theme is light, set the theme to dark
-		if (currentTheme === 'light') {
-			document.cookie = `theme = dark; expires=Fri, 01 Jan 2100 00:00:00 UTC;`;
-		}
-		// If the current theme is dark, set the theme to light
-		else if (currentTheme === 'dark') {
-			document.cookie = `theme = light; expires=Fri, 01 Jan 2100 00:00:00 UTC;`;
-		}
-	
-		// Set the data-theme attribute on the document element to the current theme
-		document.documentElement.setAttribute('data-theme', Cookies.get('theme'));
-	});
+$('#parent-element').on('mousedown', function (e) {
+	let x = e.target.id;
+	if (variables.arrowKeys.includes(x)) {
+		variables.actions[x]();
+	}
+});
 
-	$('#parent-element').on('mousedown', function (e) {
-		let x = e.target.id;
-		if (variables.arrowKeys.includes(x)) {
-			variables.actions[x]();
-		}
-	});
-	
-	$('#parent-element').on('mouseup', function (e) {
-		cam_pantilt(1, 'ptzstop');
-		console.log(`Stopped Panning`);
-	});
-	
-	$('#rightLink').on('mouseover', function(){
-		$('#wrapper').addClass('rightTransition');
-	})
-	
-	$('#rightLink').on('mouseout', function() {
-		$('#wrapper').removeClass('rightTransition');
-	})
-	
-	$('#leftLink').on('mouseover', function(){
-		$('#wrapper').addClass('leftTransition');
-	})
-	
-	$('#leftLink').on('mouseout', function() {
-		$('#wrapper').removeClass('leftTransition');
-	})
+$('#parent-element').on('mouseup', function (e) {
+	cam_pantilt(1, 'ptzstop');
+	console.log(`Stopped Panning`);
+});
 
-	$('.btn').click(function (e) {
-		activePreset = $(this).html();
-	
+$('#rightLink').on('mouseover', function () {
+	$('#wrapper').addClass('rightTransition');
+})
+
+$('#rightLink').on('mouseout', function () {
+	$('#wrapper').removeClass('rightTransition');
+})
+
+$('#leftLink').on('mouseover', function () {
+	$('#wrapper').addClass('leftTransition');
+})
+
+$('#leftLink').on('mouseout', function () {
+	$('#wrapper').removeClass('leftTransition');
+})
+
+$('.btn').click(function (e) {
+	activePreset = $(this).html();
+
+	stop_autopan();
+	cam_preset(1, activePreset, 'poscall');
+
+	console.log(`Called preset ${activePreset}`);
+	$('#camTitle').html(`Active Preset: ${Cookies.get(`${activePreset}`)}`);
+});
+
+$('.btn').on('mouseout', function (e) {
+	let i = activePreset;
+	if (typeof activePreset == 'undefined') {
+		$('#camTitle').html(`Active Preset: No Preset Active`);
+	}
+	else {
+		$('#camTitle').html(`Active Preset: ${Cookies.get(`${i}`)}`);
+	}
+	$('#presetTitle1').html(`Presets`);
+});
+
+$('.btn').on('mouseover', function (e) {
+	let i = $(this).html();
+	$('#presetPreview').attr('src', `${i}.jpg`);
+	$('#presetTitle1').html(`${Cookies.get(`${i}`)}`);
+});
+
+$('#infoLink').click(function (e) {
+	$('#about').toggleClass('show');
+});
+
+$('.asgnBtn').click(function (e) {
+	pstNum = $(this).val();
+	if (pstNum < 11) {
+		cam_preset(1, pstNum, 'posset');
+		console.log(`Set preset ${pstNum}`);
+	}
+	else {
+		cam_preset(1, 11, 'posset');
+		console.log('Set autopan start position');
+	};
+	let presetName = prompt('Enter a name for the preset:');
+	Cookies.set(`${pstNum}`, `${presetName}`);
+});
+
+
+$('body').on('click', '#panBtn', function (e) {
+	e.preventDefault();
+	$(this).toggleClass('pressed');
+	cam_pantilt(1, "ptzstop");
+
+	if (autopanning == false) {
+		autopan();
+		$(this).addClass('active');
+	} else {
 		stop_autopan();
-		cam_preset(1, activePreset, 'poscall');
-	
-		console.log(`Called preset ${activePreset}`);
-		$('#camTitle').html(`Active Preset: ${Cookies.get(`${activePreset}`)}`);
-	});
-	
-	$('.btn').on('mouseout', function(e) {
-		let i = activePreset;
-		if (typeof activePreset == 'undefined') {
-			$('#camTitle').html(`Active Preset: No Preset Active`);
-		}
-		else {
-			$('#camTitle').html(`Active Preset: ${Cookies.get(`${i}`)}`);
-		}
-		$('#presetTitle1').html(`Presets`);
-	});
-	
-	$('.btn').on('mouseover', function(e) {
-		let i = $(this).html();
-		$('#presetPreview').attr('src',`${i}.jpg`);
-		$('#presetTitle1').html(`${Cookies.get(`${i}`)}`);
-	});
-	
-	$('#infoLink').click(function(e) {
-		$('#about').toggleClass('show');
-	});
-	
-	$('.asgnBtn').click(function(e){
-		pstNum = $(this).val();
-		if (pstNum < 11){
-			cam_preset(1, pstNum, 'posset');
-			console.log(`Set preset ${pstNum}`);
-		}
-		else {
-			cam_preset(1, 11, 'posset');
-			console.log('Set autopan start position');
-		};
-		let presetName = prompt('Enter a name for the preset:');
-		document.cookie = `${pstNum} = ${presetName}; expires=Fri, 01 Jan 2100 00:00:00 UTC;`;
-	});
-	
+	}
+	return false;
+});
 
-	$('body').on('click', '#panBtn', function (e) {
-		e.preventDefault();
-		$(this).toggleClass('pressed');
-		cam_pantilt(1, "ptzstop");
+$('#clearBtn').click(function (e) {
+	e.preventDefault();
+	if (confirm("Are you sure you want to delete all presets (This cannot be undone!)")) {
+		console.log("deleted");
+	} else {
+		console.log("canceled");
+	}
+});
 
-		if (autopanning == false) {
-			autopan();
-			$(this).addClass('active');
-		} else {
-			stop_autopan();
-		}
-		return false;
-	});
+$('body').on('click', '.adjust_setting', function (e) {
+	e.preventDefault();
+	var action = this.id
+	adjust_setting(action);
+	return false;
+});
 
-	$('#clearBtn').click(function(e) {
-		e.preventDefault();
-		if(confirm("Are you sure you want to delete all presets (This cannot be undone!)")){
-			console.log("deleted");
-		} else {
-			console.log("canceled");
-		}
-	});
-
-	$('body').on('click', '.adjust_setting', function (e) {
-		e.preventDefault();
-		var action = this.id
-		adjust_setting(action);
-		return false;
-	});
-
-	$('body').on('change', 'select', function (e) {
-		e.preventDefault();
-		var action = $(this).attr('id');
-		config[action] = $(this).val();
-		save_config();
-		return false;
-	});
+$('body').on('change', 'select', function (e) {
+	e.preventDefault();
+	var action = $(this).attr('id').toLowerCase();
+	config[action] = parseInt($(this).val());
+	save_config();
+	return false;
 });

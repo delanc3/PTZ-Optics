@@ -2,7 +2,6 @@
 <html lang="eu" data-theme="light">
 
 <head>
-    <link rel="stylesheet" type="text/css" href="resources/css/normalize.css">
     <link rel="stylesheet" type="text/css" href="resources/css/grid.css">
     <link rel="stylesheet" type="text/css" href="resources/css/ionicons.min.css">
     <link rel="stylesheet" type="text/css" href="resources/css/style.css">
@@ -11,9 +10,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
 
-    <script data-main="./resources/js/index.js" src="./resources/js/require.js"></script>
+    <script src="./resources/js/jquery-3.6.0.js"></script>
+    <script src="./resources/js/mousetrap.min.js"></script>
+    <script src="./resources/js/js.cookie.js"></script>
+    <script src="./resources/js/index.js"></script>
     <title>PTZ-Optics - Main</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0">
 </head>
 
 <body ondragstart="return false">
