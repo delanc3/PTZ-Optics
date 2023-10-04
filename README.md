@@ -6,7 +6,7 @@ The backend of the controller is mostly based off the original (IMHO messy) cont
   - [Installation](#installation)
   - [UI Overview](#ui-overview)
   - [How it works](#how-it-works)
-    - [HTTP /cgi-bin](#http-/cgi-bin)
+    - [HTTP and cgi-bin](#http-and-cgi-bin)
     - Ajax
     - Keybinding
     - Preferences and settings
@@ -34,7 +34,7 @@ The smaller version of the UI is practically identical minus the "Preview" panel
 ___
 ### How It Works
 In this section i'll give a brief overview of how the backend of the controller operates and some code snippets as well.
-#### HTTP /cgi-bin
+#### HTTP and cgi-bin
 PTZ-Optics cameras can be given isntructions by submiting an HTTP-GET request to scripts within the cgi-bin directory on the camera. There are two base paths that all the commands stem from on a PTZ camera. These are:
 ```
 http://[camera ip]/cgi-bin/ptzctrl.cgi?ptzcmd&
