@@ -102,8 +102,7 @@ I also hope to eventually transition this entire project over to electron-react 
 ## Issues
 - CORS headers don't seem to be working properly
 - Lerp function is jittery when the zoom or focus buttons are presesed and then released in quick succession
-- Dropdowns on the settings page don't update to match the current settings of the camera.
-- 'Reload Camera' button doesn't actually do anything.
+
 [^1]: I will most likely remove the dependancy on php sometime in the near future, it's only neccessary at the moment to allow for thumbnail downloads of preset positions
 [^2]: This section will be updated whenever significant changes to the UI are made
 [^3]: Setting presets currently requires going to a different page but I'll eventually change this to just a toggle to switch between calling and setting
