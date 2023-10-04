@@ -3,7 +3,7 @@ TODO:
   - [x] ~Move all js dependancies to js-delivr~
   - [ ] Change ionicons to script
   - [ ] Fix CORS headers
-  - [ ] Make settings dropdowns actually match current camera settings
+  - [x] Make settings dropdowns actually match current camera settings
   - [ ] General code refactoring
     - [ ] Streamline cgi-bin url resolving
     - [ ] Clean up keybinding
