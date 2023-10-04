@@ -5,7 +5,7 @@ The backend of the controller is mostly based off the original (IMHO messy) cont
 ### Contents:
   - [Installation](#installation)
   - [UI Overview](#ui-overview)
-  - How it works
+  - [How it works](#how-it-works)
     - HTTP /cgi-bin
     - Ajax
     - Keybinding
@@ -26,7 +26,9 @@ I have designed the UI to be as easy to understand as possible.[^2] I've used me
 
 <img src="https://github.com/j-trueman/PTZ-Optics/assets/82833724/bd2bbce4-6168-4db5-a95c-f136fbc83b50" width="500">
 
+The "Preset" panel is used for calling presets[^3] that the user has defined. The "Preview" panel displays a preview of whichever preset is currently being hovered over in the "Preset" panel. The "PTZ" panel has controls for the camera, allowing the user to (as the name sugests) pan, tilt and zoom the camera as well as adjust the focus.
 
 
 [^1]: I will most likely remove the dependancy on php sometime in the near future, it's only neccessary at the moment to allow for thumbnail downloads of preset positions
 [^2]: This section will be updated whenever significant changes to the UI are made
+[^3]: Setting presets currently requires going to a different page but I'll eventually change this to just a toggle to switch between calling and setting
