@@ -18,6 +18,15 @@ Currently (Oct 2023) in order to use this camera controller, you will need to ru
 
 Then unzip and place all the files in the document root of your web-server
 
+<img src="https://github.com/j-trueman/PTZ-Optics/assets/82833724/1c35f67b-e99f-4a2d-94c3-3ae00561ec0b" width="300">
+
+___
+### UI Overview
+I have designed the UI to be as easy to understand as possible.[^2] I've used mediaqueries to create 2 slightly different UIs for the controller. The first has 3 main sections:
+
+<img src="https://github.com/j-trueman/PTZ-Optics/assets/82833724/bd2bbce4-6168-4db5-a95c-f136fbc83b50" width="500">
+
 
 
 [^1]: I will most likely remove the dependancy on php sometime in the near future, it's only neccessary at the moment to allow for thumbnail downloads of preset positions
+[^2]: This section will be updated whenever significant changes to the UI are made
