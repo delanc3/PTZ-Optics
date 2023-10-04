@@ -95,6 +95,9 @@ Cookies.get('cookie-name')
 ```
 Alternatively, you can just call `Cookies.get()` with no arguments to fetch the values and names of all cookies in the document.
 
+## Note:
+I also hope to eventually transition this entire project over to electron-react so that I can just package it as an executable so this may all be deprecated within a year or two.
+
 ---
 ## Issues
 - CORS headers don't seem to be working properly
