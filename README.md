@@ -4,7 +4,7 @@ The backend of the controller is mostly based off the original (IMHO messy) cont
 
 ### Contents:
   - [Installation](#Installation)
-  - [UI Overview](#UI Overview)
+  - [UI Overview](#UIOverview)
   - How it works
     - HTTP /cgi-bin
     - Ajax
