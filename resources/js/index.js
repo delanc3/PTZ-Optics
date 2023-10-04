@@ -771,11 +771,11 @@ $(document).ready(function () {
 
 		// If the current theme is light, set the theme to dark
 		if (currentTheme === 'light') {
-			Cookies.set('theme', 'dark');
+			Cookies.set('theme', 'dark', { expires: 1000 });
 		}
 		// If the current theme is dark, set the theme to light
 		else if (currentTheme === 'dark') {
-			Cookies.set('theme', 'light');
+			Cookies.set('theme', 'light', { expires: 1000 });
 		}
 
 		// Set the data-theme attribute on the document element to the current theme
@@ -852,7 +852,7 @@ $(document).ready(function () {
 			console.log('Set autopan start position');
 		};
 		let presetName = prompt('Enter a name for the preset:');
-		Cookies.set(`${pstNum}`, `${presetName}`);
+		Cookies.set(`${pstNum}`, `${presetName}`, { expires: 1000 });
 	});
 
 
@@ -898,7 +898,7 @@ $(document).ready(function () {
 // Check if the theme cookie exists
 if (!Cookies.get('theme')) {
 	// Set the default theme to light
-	Cookies.set('theme', 'light')
+	Cookies.set('theme', 'light', { expires: 1000 })
 }
 
 document.documentElement.setAttribute('data-theme', Cookies.get('theme'));
