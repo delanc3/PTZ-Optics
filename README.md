@@ -3,7 +3,7 @@ My goal for this project is to make an easily accessible and intuitive controlle
 The backend of the controller is mostly based off the original (IMHO messy) controller build by PTZ-Optics themselves.
 
 ### Contents:
-  - [Installation](###Installation)
+  - [Installation](#Installation)
   - [UI Overview](#UI Overview)
   - How it works
     - HTTP /cgi-bin
