@@ -370,7 +370,7 @@ function run_action(action_url) {
 			// console.log("success");
 		})
 		.fail(function (jqXHR, responseText, errorThrown) {
-			console.log("error");
+			console.log(`error fetching ${action_url}`);
 		})
 		.always(function () {
 			// console.log("complete");
