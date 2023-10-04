@@ -1,3 +1,16 @@
+TODO:
+  - [ ] DOCUMENTATION!
+  - [ ] Move all js dependancies to js-delivr
+  - [ ] Change ionicons to script
+  - [ ] Fix CORS headers
+  - [ ] Make settings dropdowns actually match current camera settings
+  - [ ] General code refactoring
+    - [ ] Streamline cgi-bin url resolving
+    - [ ] Clean up keybinding
+    - [ ] Probably use classes somewhere 🤷
+ 
+---
+
 # Welcome!
 My goal for this project is to make an easily accessible and intuitive controller for PTZ-Optics cameras.
 The backend of the controller is mostly based off the original (IMHO messy) controller build by PTZ-Optics themselves.
@@ -9,7 +22,8 @@ The backend of the controller is mostly based off the original (IMHO messy) cont
     - [HTTP and cgi-bin](#http-and-cgi-bin)
     - [Ajax](#ajax)
     - [Keybinding](#keybinding)
-    - Preferences and settings
+    - [Preferences and settings](#preferences-and-settings)
+  - [Issues](#issues)
 
 ___
 ## Installation
@@ -62,13 +76,31 @@ $.ajax({
 Where `action_url` is the url of the command we want to execute within the cgi-bin directory
 
 ### Keybinding
-For keybinding, I currently use the [Mousetrap](https://www.jsdelivr.com/package/npm/mousetrap) library which has a simple function for making keybinds. For example: 
+For keybinding, I currently use the [Mousetrap](https://www.npmjs.com/package/mousetrap) library which has a simple function for making keybinds. For example: 
 ```javascript
 Mousetrap.bind(x, function (e) {
   Console.log('Key Pressed');
 }, 'keydown');
 ```
 Where `x` is the key you want to detect in string form
+
+### Preferences and Settings
+I use local document cookies for saving and fetching preferences like the document theme and preset names. To make this easier i use the [js-cookie](https://www.npmjs.com/package/js-cookie) library. Here's an example of how to set a cookie using js-cookie:
+```javascript
+Cookies.set('cookie-name', 'value')
+```
+And here's how would then fetch the value of that cookie:
+```javascript
+Cookies.get('cookie-name')
+```
+Alternatively, you can just call `Cookies.get()` with no arguments to fetch the values and names of all cookies in the document.
+
+---
+## Issues
+- CORS headers don't seem to be working properly
+- Lerp function is jittery when the zoom or focus buttons are presesed and then released in quick succession
+- Dropdowns on the settings page don't update to match the current settings of the camera.
+- 'Reload Camera' button doesn't actually do anything.
 [^1]: I will most likely remove the dependancy on php sometime in the near future, it's only neccessary at the moment to allow for thumbnail downloads of preset positions
 [^2]: This section will be updated whenever significant changes to the UI are made
 [^3]: Setting presets currently requires going to a different page but I'll eventually change this to just a toggle to switch between calling and setting
