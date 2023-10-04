@@ -58,7 +58,6 @@ let variables = {
 };
 
 let config = defaults;
-config.ip = camera_ip;
 
 let activePreset;
 
@@ -89,11 +88,14 @@ let alreadyPanning = false;
 function handleKeyEvent(eventType, x) {
 	if (eventType === 'keydown') {
 		if (x === 'esc') {
+			$(`#esc`).addClass('pressed')
 			variables.actions.esc();
 		} else {
+			$(`#${x}`).addClass('pressed')
 			variables.actions[x]();
-		}
+		} up
 	} else if (eventType === 'keyup') {
+		$(`#${x}`).removeClass('pressed')
 		cam_pantilt(1, 'ptzstop');
 	}
 }
@@ -496,25 +498,10 @@ function update_labels() {
 // function to reload camera IP address
 function reload_cam() {
 	// get the value of the camera IP address input field
-	let cameraIP = $('#cameraIP').val();
+	config['ip'] = $('#cameraIP').val();
 
-	// regular expression to check if the entered IP address is valid
-	let isValidIP = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
-
-	// check if the entered IP address is valid
-	if (isValidIP.test(cameraIP)) {
-		// update the config object with the new IP address
-		config.ip = cameraIP;
-
-		// save the updated config object
-		save_config();
-
-		// show success message
-		alert("New IP address saved.");
-	} else {
-		// show error message
-		alert("IP address entered is invalid! Please re-enter the camera IP address.");
-	}
+	save_config();
+	update_labels();
 }
 
 
@@ -773,8 +760,140 @@ function forceDownload(url, fileName) {
 	xhr.send();
 }
 
-config_init();
-keybinds();
+$(document).ready(function () {
+	config_init();
+	keybinds();
+
+	// Add a click event listener to the toggle button
+	$('#themeToggle').click(function () {
+		// Get the current theme from the cookie
+		var currentTheme = Cookies.get('theme');
+
+		// If the current theme is light, set the theme to dark
+		if (currentTheme === 'light') {
+			Cookies.set('theme', 'dark');
+		}
+		// If the current theme is dark, set the theme to light
+		else if (currentTheme === 'dark') {
+			Cookies.set('theme', 'light');
+		}
+
+		// Set the data-theme attribute on the document element to the current theme
+		document.documentElement.setAttribute('data-theme', Cookies.get('theme'));
+	});
+
+	$('#parent-element').on('mousedown', function (e) {
+		let x = e.target.id;
+		if (variables.arrowKeys.includes(x)) {
+			variables.actions[x]();
+		}
+	});
+
+	$('#parent-element').on('mouseup', function (e) {
+		cam_pantilt(1, 'ptzstop');
+		console.log(`Stopped Panning`);
+	});
+
+	$('#rightLink').on('mouseover', function () {
+		$('#wrapper').addClass('rightTransition');
+	})
+
+	$('#rightLink').on('mouseout', function () {
+		$('#wrapper').removeClass('rightTransition');
+	})
+
+	$('#leftLink').on('mouseover', function () {
+		$('#wrapper').addClass('leftTransition');
+	})
+
+	$('#leftLink').on('mouseout', function () {
+		$('#wrapper').removeClass('leftTransition');
+	})
+
+	$('.btn').click(function (e) {
+		activePreset = $(this).html();
+
+		stop_autopan();
+		cam_preset(1, activePreset, 'poscall');
+
+		console.log(`Called preset ${activePreset}`);
+		$('#camTitle').html(`Active Preset: ${Cookies.get(`${activePreset}`)}`);
+	});
+
+	$('.btn').on('mouseout', function (e) {
+		let i = activePreset;
+		if (typeof activePreset == 'undefined') {
+			$('#camTitle').html(`Active Preset: No Preset Active`);
+		}
+		else {
+			$('#camTitle').html(`Active Preset: ${Cookies.get(`${i}`)}`);
+		}
+		$('#presetTitle1').html(`Presets`);
+	});
+
+	$('.btn').on('mouseover', function (e) {
+		let i = $(this).html();
+		$('#presetPreview').attr('src', `${i}.jpg`);
+		$('#presetTitle1').html(`${Cookies.get(`${i}`)}`);
+	});
+
+	$('#infoLink').click(function (e) {
+		$('#about').toggleClass('show');
+	});
+
+	$('.asgnBtn').click(function (e) {
+		pstNum = $(this).val();
+		if (pstNum < 11) {
+			cam_preset(1, pstNum, 'posset');
+			console.log(`Set preset ${pstNum}`);
+		}
+		else {
+			cam_preset(1, 11, 'posset');
+			console.log('Set autopan start position');
+		};
+		let presetName = prompt('Enter a name for the preset:');
+		Cookies.set(`${pstNum}`, `${presetName}`);
+	});
+
+
+	$('body').on('click', '#panBtn', function (e) {
+		e.preventDefault();
+		$(this).toggleClass('pressed');
+		cam_pantilt(1, "ptzstop");
+
+		if (autopanning == false) {
+			autopan();
+			$(this).addClass('active');
+		} else {
+			stop_autopan();
+		}
+		return false;
+	});
+
+	$('#clearBtn').click(function (e) {
+		e.preventDefault();
+		if (confirm("Are you sure you want to delete all presets (This cannot be undone!)")) {
+			console.log("deleted");
+		} else {
+			console.log("canceled");
+		}
+	});
+
+	$('body').on('click', '.adjust_setting', function (e) {
+		e.preventDefault();
+		var action = this.id
+		adjust_setting(action);
+		return false;
+	});
+
+	$('body').on('change', 'select', function (e) {
+		e.preventDefault();
+		var action = $(this).attr('id').toLowerCase();
+		config[action] = parseInt($(this).val());
+		save_config();
+		return false;
+	});
+})
 
 // Check if the theme cookie exists
 if (!Cookies.get('theme')) {
@@ -783,133 +902,3 @@ if (!Cookies.get('theme')) {
 }
 
 document.documentElement.setAttribute('data-theme', Cookies.get('theme'));
-
-// Add a click event listener to the toggle button
-$('#themeToggle').click(function () {
-	// Get the current theme from the cookie
-	var currentTheme = Cookies.get('theme');
-
-	// If the current theme is light, set the theme to dark
-	if (currentTheme === 'light') {
-		Cookies.set('theme', 'dark');
-	}
-	// If the current theme is dark, set the theme to light
-	else if (currentTheme === 'dark') {
-		Cookies.set('theme', 'light');
-	}
-
-	// Set the data-theme attribute on the document element to the current theme
-	document.documentElement.setAttribute('data-theme', Cookies.get('theme'));
-});
-
-$('#parent-element').on('mousedown', function (e) {
-	let x = e.target.id;
-	if (variables.arrowKeys.includes(x)) {
-		variables.actions[x]();
-	}
-});
-
-$('#parent-element').on('mouseup', function (e) {
-	cam_pantilt(1, 'ptzstop');
-	console.log(`Stopped Panning`);
-});
-
-$('#rightLink').on('mouseover', function () {
-	$('#wrapper').addClass('rightTransition');
-})
-
-$('#rightLink').on('mouseout', function () {
-	$('#wrapper').removeClass('rightTransition');
-})
-
-$('#leftLink').on('mouseover', function () {
-	$('#wrapper').addClass('leftTransition');
-})
-
-$('#leftLink').on('mouseout', function () {
-	$('#wrapper').removeClass('leftTransition');
-})
-
-$('.btn').click(function (e) {
-	activePreset = $(this).html();
-
-	stop_autopan();
-	cam_preset(1, activePreset, 'poscall');
-
-	console.log(`Called preset ${activePreset}`);
-	$('#camTitle').html(`Active Preset: ${Cookies.get(`${activePreset}`)}`);
-});
-
-$('.btn').on('mouseout', function (e) {
-	let i = activePreset;
-	if (typeof activePreset == 'undefined') {
-		$('#camTitle').html(`Active Preset: No Preset Active`);
-	}
-	else {
-		$('#camTitle').html(`Active Preset: ${Cookies.get(`${i}`)}`);
-	}
-	$('#presetTitle1').html(`Presets`);
-});
-
-$('.btn').on('mouseover', function (e) {
-	let i = $(this).html();
-	$('#presetPreview').attr('src', `${i}.jpg`);
-	$('#presetTitle1').html(`${Cookies.get(`${i}`)}`);
-});
-
-$('#infoLink').click(function (e) {
-	$('#about').toggleClass('show');
-});
-
-$('.asgnBtn').click(function (e) {
-	pstNum = $(this).val();
-	if (pstNum < 11) {
-		cam_preset(1, pstNum, 'posset');
-		console.log(`Set preset ${pstNum}`);
-	}
-	else {
-		cam_preset(1, 11, 'posset');
-		console.log('Set autopan start position');
-	};
-	let presetName = prompt('Enter a name for the preset:');
-	Cookies.set(`${pstNum}`, `${presetName}`);
-});
-
-
-$('body').on('click', '#panBtn', function (e) {
-	e.preventDefault();
-	$(this).toggleClass('pressed');
-	cam_pantilt(1, "ptzstop");
-
-	if (autopanning == false) {
-		autopan();
-		$(this).addClass('active');
-	} else {
-		stop_autopan();
-	}
-	return false;
-});
-
-$('#clearBtn').click(function (e) {
-	e.preventDefault();
-	if (confirm("Are you sure you want to delete all presets (This cannot be undone!)")) {
-		console.log("deleted");
-	} else {
-		console.log("canceled");
-	}
-});
-
-$('body').on('click', '.adjust_setting', function (e) {
-	e.preventDefault();
-	var action = this.id
-	adjust_setting(action);
-	return false;
-});
-
-$('body').on('change', 'select', function (e) {
-	e.preventDefault();
-	var action = $(this).attr('id').toLowerCase();
-	config[action] = parseInt($(this).val());
-	save_config();
-	return false;
-});
