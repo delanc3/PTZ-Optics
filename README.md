@@ -2,6 +2,7 @@ _**TODO:**_
   - [ ] DOCUMENTATION!
   - [x] ~Move all js dependancies to js-delivr~
   - [x] ~Migrate ionicons to fontawesome~
+  - [x] ~Fix sliders~
   - [ ] Fix CORS headers
   - [x] ~Make settings dropdowns actually match current camera settings~
   - [ ] General code refactoring
@@ -101,7 +102,7 @@ I also hope to eventually transition this entire project over to electron-react 
 ---
 ## Issues
 - CORS headers don't seem to be working properly
-- Lerp function is jittery when the zoom or focus buttons are presesed and then released in quick succession
+- ~Lerp function is jittery when the zoom or focus buttons are presesed and then released in quick succession~
 
 [^1]: I will most likely remove the dependancy on php sometime in the near future, it's only neccessary at the moment to allow for thumbnail downloads of preset positions
 [^2]: This section will be updated whenever significant changes to the UI are made
