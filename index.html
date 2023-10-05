@@ -18,36 +18,29 @@
 </head>
 
 <body ondragstart="return false">
-    <!--Header Section-->
     <section id='header'>
         <div id='assignLinkContainer'>
-            <a href='javascript:delay("./assignPresets.php")' id='assignLink'>Assign Presets</a>
+            <a href='javascript:transition("none","./assignPresets.php")' id='assignLink'>Assign Presets</a>
         </div>
         <div id='logoBox'>
             <img src='./resources/images/PTZ-Logo.svg' id='logo'>
             <h1 id='title'>PTZ-OPTICS</h1>
         </div>
         <div id='preferenceLinkContainer'>
-            <a href='javascript:delay("./preferenceMenu.html")' id='preferenceLink'>Preferences</a>
+            <a href='javascript:transition("none","./preferenceMenu.html")' id='preferenceLink'>Preferences</a>
         </div>
     </section>
-    <!--End of Header Section-->
 
-    <!--Link to open "About" box-->
     <a href='#' id='infoLink'><i class='ion-ios-information'></i></a>
 
-    <div id="pageLeft"><a href="#" id="leftLink" onClick="javascript:transLeft('./assignPresets.php')"><i class="ion-chevron-left"></i></a></div>
-    <div id="pageRight"><a href="#" id="rightLink" onClick="javascript:transRight('./preferenceMenu.html')"><i class="ion-chevron-right"></i></a></div>
+    <div id="pageLeft"><a href="#" id="leftLink" onClick="javascript:transition('left','./assignPresets.php')"><i class="ion-chevron-left"></i></a></div>
+    <div id="pageRight"><a href="#" id="rightLink" onClick="javascript:transition('right','./preferenceMenu.html')"><i class="ion-chevron-right"></i></a></div>
     <section id='wrapper'>
-        <!--Container for the "About" box-->
         <section id='about'>
-            <!--The "About" box itself-->
             <div id='aboutBox'>
                 <div id='aboutTitleBox'>
-                    <!--Title for the "About" box-->
                     <h1 id='aboutTitle'>About</h1>
                 </div>
-                <!--Container for content in the "About" box-->
                 <div id="aboutContent">
                     <p id='a'>This is a controller for PTZ-OPTICS cameras that I designed and developed. It took me
                         quite a while to make!</p>
@@ -61,7 +54,6 @@
             </div>
         </section>
 
-        <!--Preview section-->
         <section id='prevContainer'>
             <div id='preview'>
                 <img id="presetPreview">

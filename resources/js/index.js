@@ -17,6 +17,9 @@ let defaults = {
 	autopaninterval: 30,
 };
 
+let config = defaults;
+let activePreset;
+
 let variables = {
 	arrowKeys: ['up', 'down', 'left', 'right', 'esc'],
 	numKeys: ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
@@ -51,57 +54,44 @@ let variables = {
 				console.log('Reset pantilt');
 			}
 			else {
-				document.getElementById('closeLink').click();
+				transition('none', '../../index.html')
 			}
 		}
 	}
 };
 
-let config = defaults;
-
-let activePreset;
-
-function delay(URL) {
-	document.getElementById('wrapper').classList.add('transition');
-	setTimeout(function () {
-		window.location = URL
-	}, 500);
-}
-
-function transLeft(URL) {
-	document.getElementById('wrapper').classList.add('activeRightTransition');
-	setTimeout(function () {
-		window.location = URL
-	}, 500);
-}
-
-function transRight(URL) {
-	document.getElementById('wrapper').classList.add('activeLeftTransition');
-	setTimeout(function () {
-		window.location = URL
-	}, 500);
-}
-
-
-let alreadyPanning = false;
-
-function handleKeyEvent(eventType, x) {
+function handleKeyEvent(eventType, pressedKey) {
 	if (eventType === 'keydown') {
-		if (x === 'esc') {
+		if (pressedKey === 'esc') {
 			$(`#esc`).addClass('pressed')
 			variables.actions.esc();
 		} else {
-			$(`#${x}`).addClass('pressed')
-			variables.actions[x]();
-		} up
+			$(`#${pressedKey}`).addClass('pressed')
+			variables.actions[pressedKey]();
+		}
 	} else if (eventType === 'keyup') {
-		$(`#${x}`).removeClass('pressed')
+		$(`#${pressedKey}`).removeClass('pressed')
 		cam_pantilt(1, 'ptzstop');
 	}
 }
 
-function keybinds() {
+function transition(direction, targetURL) {
+	switch (direction) {
+		case 'left':
+			$('#wrapper').addClass('activeLeftTransition');
+			break;
+		case 'right':
+			$('#wrapper').addClass('activeRightTransition');
+			break;
+		case 'none':
+			$('#wrapper').addClass('transition');
+	}
+	setTimeout(function () {
+		window.location = targetURL
+	}, 500)
+}
 
+function keybinds() {
 	variables.arrowKeys.forEach(function (x) {
 		Mousetrap.bind(x, function (e) {
 			if (e.repeat) return;
@@ -741,23 +731,6 @@ function stop_autopan() {
 	$('#panBtn').removeClass('pressed');
 	cam_pantilt(1, "ptzstop");
 	$('.autopan').removeClass('active');
-}
-
-function forceDownload(url, fileName) {
-	var xhr = new XMLHttpRequest();
-	xhr.open("GET", url, true);
-	xhr.responseType = "blob";
-	xhr.onload = function () {
-		var urlCreator = window.URL || window.webkitURL;
-		var imageUrl = urlCreator.createObjectURL(this.response);
-		var tag = document.createElement('a');
-		tag.href = imageUrl;
-		tag.download = fileName;
-		document.body.appendChild(tag);
-		tag.click();
-		document.body.removeChild(tag);
-	}
-	xhr.send();
 }
 
 $(document).ready(function () {

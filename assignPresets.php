@@ -28,13 +28,12 @@
             <h1 id='title'>PTZ-OPTICS</h1>
         </div>
         <div id='preferenceLinkContainer'>
-            <a href='javascript:delay("./preferenceMenu.html")' id='preferenceLink'>Preferences</a>
+            <a href='javascript:transition("none","./preferenceMenu.html")' id='preferenceLink'>Preferences</a>
         </div>
 
     </section>
 
-    <!-- <div id="pageLeft"><a href="#" id="leftLink" onClick="javascript:transLeft('./assignPresets.html')"><i class="ion-chevron-left"></i></a></div> -->
-    <div id="pageRight"><a href="#" id="rightLink" onClick="javascript:transRight('./index.html')"><i class="ion-chevron-right"></i></a></div>
+    <div id="pageRight"><a href="#" id="rightLink" onClick="javascript:transition('right','./index.html')"><i class="ion-chevron-right"></i></a></div>
     <section id='wrapper'>
         <section id='assignPresets'>
             <div id='assignPresetsBox'>
@@ -43,7 +42,7 @@
                     <div id='div2'>
                         <h1 id='assignTitle'>Assign Presets</h1>
                     </div>
-                    <div id='div3'><a href='javascript:delay("./index.html")' id='closeLink'><i
+                    <div id='div3'><a href='javascript:transition("none","./index.html")' id='closeLink'><i
                                 class="icon ion-close-round"></i></a></div>
                 </div>
                 <div id='contentDiv'>
