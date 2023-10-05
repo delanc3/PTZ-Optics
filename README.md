@@ -8,7 +8,6 @@ _**TODO:**_
   - [ ] General code refactoring
     - [ ] Streamline cgi-bin url resolving
     - [x] ~Clean up keybinding~
-    - [ ] Probably use classes somewhere 🤷
  
 ---
 
