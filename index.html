@@ -3,16 +3,13 @@
 
 <head>
     <link rel="stylesheet" type="text/css" href="resources/css/grid.css">
-    <!-- <link rel="stylesheet" type="text/css" href="resources/css/ionicons.min.css"> -->
     <link rel="stylesheet" type="text/css" href="resources/css/style.css">
     <link rel="stylesheet" type="text/css" href="resources/css/mediaqueries.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mousetrap@1.6.5/mousetrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toolcool-range-slider@4.0.28/dist/toolcool-range-slider.min.js"></script>
     <script src="https://kit.fontawesome.com/cc9f7fa694.js" crossorigin="anonymous"></script>
     <script src="./resources/js/index.js"></script>
     <title>PTZ-Optics - Main</title>
@@ -65,36 +62,57 @@
             <div id='controls'>
                 <div id='slidersContainer'>
                     <div id='zoom'>
-                        <a href='#' class='zoom plus'><img src='./resources/images/plus.svg'></a>
-                        <input type="range" min="1" max="1000" value="500" class='q a' id="zoomSlider">
-                        <a href='#' class='zoom minus'><img src='./resources/images/minus.svg'></a>
+                        <a href='#' class='zoom plus'><i class="fa-solid fa-plus fa-xl" style="color: #91a0a8"></i></a>
+                        <tc-range-slider class="q a"
+                            theme="slider"
+                            css-links="./resources/css/style.css"
+                            type="vertical"
+                            btt="true"
+                            slider-width="10px"
+                            slider-height="150px"
+                            pointer-width="30px"
+                            pointer-height="30px"
+                            pointer-bg="#fff url(./resources/images/zoom.svg)  no-repeat 50% 50%"
+                            generate-labels="true"
+                            value="50"
+                            id="zoomSlider">
+                        </tc-range-slider>
+                        <a href='#' class='zoom minus'><i class="fa-solid fa-minus fa-xl" style="color: #91a0a8"></i></a>
                     </div>
                     <div id='focus'>
-                        <a href='#' class='focus plus'><img src='./resources/images/plus.svg'></a>
-                        <input type="range" min="1" max="1000" value="500" class='w s' id="focusSlider">
-                        <a href='#' class='focus minus'><img src='./resources/images/minus.svg'></a>
+                        <a href='#' class='focus plus'><i class="fa-solid fa-plus fa-xl" style="color: #91a0a8"></i></a>
+                        <tc-range-slider class="w s"
+                            theme="slider"
+                            css-links="./resources/css/style.css"
+                            type="vertical"
+                            btt="true"
+                            slider-width="10px"
+                            slider-height="150px"
+                            pointer-width="30px"
+                            pointer-height="30px"
+                            pointer-bg="#fff url(./resources/images/focus.svg)  no-repeat 50% 50%"
+                            generate-labels="true"
+                            value="50"
+                            id="focusSlider">
+                        </tc-range-slider>
+                        <a href='#' class='focus minus'><i class="fa-solid fa-minus fa-xl" style="color: #91a0a8"></i></a>
                     </div>
                 </div>
                 <div id='ptzContainer'>
                     <div id='padding'>
                         <div class='row ptzBtnRow'>
                             <div class='col span-1-of-3 ctrlBtn'></div>
-                            <div class='col span-1-of-3 ctrlBtn'><a href='#' class='btn1' id='up'><img
-                                        src='./resources/images/up.svg'></a></div>
+                            <div class='col span-1-of-3 ctrlBtn'><a href='#' class='btn1' id='up'><i class="fa-solid fa-caret-up fa-3x"></i></a></div>
                             <div class='col span-1-of-3 ctrlBtn'></div>
                         </div>
                         <div class='row ptzBtnRow'>
-                            <div class='col span-1-of-3 ctrlBtn'><a href='#' class='btn1' id='left'><img
-                                        src='./resources/images/left.svg'></a></div>
-                            <div class='col span-1-of-3 ctrlBtn'><a href='#' class='btn1' id='esc'><img
-                                        src='./resources/images/home.svg'></a></div>
-                            <div class='col span-1-of-3 ctrlBtn'><a href='#' class='btn1' id='right'><img
-                                        src='./resources/images/right.svg'></a></div>
+                            <div class='col span-1-of-3 ctrlBtn'><a href='#' class='btn1' id='left'><i class="fa-solid fa-caret-left fa-3x"></i></a></div>
+                            <div class='col span-1-of-3 ctrlBtn'><a href='#' class='btn1' id='esc'><i class="fa-solid fa-house fa-2x"></i></a></div>
+                            <div class='col span-1-of-3 ctrlBtn'><a href='#' class='btn1' id='right'><i class="fa-solid fa-caret-right fa-3x"></i></a></div>
                         </div>
                         <div class='row ptzBtnRow'>
                             <div class='col span-1-of-3 ctrlBtn'></div>
-                            <div class='col span-1-of-3 ctrlBtn'><a href='#' class='btn1' id='down'><img
-                                        src='./resources/images/down.svg'></a></div>
+                            <div class='col span-1-of-3 ctrlBtn'><a href='#' class='btn1' id='down'><i class="fa-solid fa-caret-down fa-3x"></i></a></div>
                             <div class='col span-1-of-3 ctrlBtn'></div>
                         </div>
                     </div>

@@ -78,10 +78,10 @@ function handleKeyEvent(eventType, pressedKey) {
 function transition(direction, targetURL) {
 	switch (direction) {
 		case 'left':
-			$('#wrapper').addClass('activeLeftTransition');
+			$('#wrapper').addClass('activeRightTransition');
 			break;
 		case 'right':
-			$('#wrapper').addClass('activeRightTransition');
+			$('#wrapper').addClass('activeLeftTransition');
 			break;
 		case 'none':
 			$('#wrapper').addClass('transition');
@@ -130,7 +130,7 @@ function keybinds() {
 			cam_preset(1, x, 'poscall');
 
 			console.log(`Called preset ${x}`);
-			$('#camTitle').html(`Active Preset: ${activePreset}`);
+			$('#presetTitle1').html(`${Cookies.get(activePreset)}`);
 		});
 	});
 
@@ -140,19 +140,19 @@ function keybinds() {
 			e.preventDefault();
 			stop_autopan();
 			if (x == 'q') {
-				lerp(1000, '#zoomSlider', 'up');
+				$('#zoomSlider').val(100)
 				cam_zoom(1, 'zoomin');
 			}
 			else if (x == 'a') {
-				lerp(0, '#zoomSlider', 'down');
+				$('#zoomSlider').val(0)
 				cam_zoom(1, 'zoomout');
 			}
 			else if (x == 'w') {
-				lerp(1000, '#focusSlider', 'up');
+				$('#focusSlider').val(100)
 				cam_zoom(1, 'focusin');
 			}
 			else if (x == 's') {
-				lerp(0, '#focusSlider', 'down');
+				$('#focusSlider').val(0)
 				cam_zoom(1, 'focusout');
 			}
 		}, 'keydown');
@@ -160,18 +160,16 @@ function keybinds() {
 			stop_autopan();
 			e.preventDefault();
 			if (x == 'q') {
-				lerpCancelled = true;
-				lerp(500, '#zoomSlider', 'down');
+				$('#zoomSlider').val(50)
 			}
 			else if (x == 'a') {
-				lerpCancelled = true;
-				lerp(500, '#zoomSlider', 'up');
+				$('#zoomSlider').val(50)
 			}
 			else if (x == 'w') {
-				lerp(500, '#focusSlider', 'down');
+				$('#focusSlider').val(50)
 			}
 			else if (x == 's') {
-				lerp(500, '#focusSlider', 'up');
+				$('#focusSlider').val(50)
 			}
 			cam_zoom(1, 'zoomstop');
 		}, 'keyup');
@@ -183,24 +181,10 @@ function keybinds() {
 			if (x === '.zoom.plus') {
 				cam_zoom(1, `${split[1]}in`);
 				console.log(`${split[1]}ing in`);
-				if (lerping) {
-					console.log("Error: Already Lerping");
-					return;
-				}
-				else if (!lerping) {
-					lerp(1000, '#zoomSlider', 'up');
-				}
+				$('#zoomSlider').val(100)
 			}
 			else if (x === '.focus.plus') {
-				cam_focus(1, `${split[1]}in`);
-				console.log(`${split[1]}ing in`);
-				if (lerping) {
-					console.log("Error: Already Lerping");
-					return;
-				}
-				else if (!lerping) {
-					lerp(1000, '#focusSlider', 'up');
-				}
+				$('#focusSlider').val(100)
 			};
 		});
 
@@ -208,24 +192,12 @@ function keybinds() {
 			if (x === '.zoom.plus') {
 				cam_zoom(1, 'zoomstop');
 				console.log('stopped');
-				if (lerping) {
-					console.log("Error: Already Lerping");
-					return;
-				}
-				else if (!lerping) {
-					lerp(500, '#zoomSlider', 'down');
-				}
+				$('#zoomSlider').val(50)
 			}
 			else if (x === '.focus.plus') {
 				cam_focus(1, 'focusstop');
 				console.log('stopped');
-				if (lerping) {
-					console.log("Error: Already Lerping");
-					return;
-				}
-				else if (!lerping) {
-					lerp(500, '#focusSlider', 'down');
-				}
+				$('#focusSlider').val(50)
 			};
 		});
 
@@ -233,24 +205,12 @@ function keybinds() {
 			if (x === '.zoom.minus') {
 				cam_zoom(1, `${split[1]}out`);
 				console.log(`${split[1]}ing out`);
-				if (lerping) {
-					console.log("Error: Already Lerping");
-					return;
-				}
-				else if (!lerping) {
-					lerp(1, '#zoomSlider', 'down');
-				}
+				$('#zoomSlider').val(0)
 			}
 			else if (x === '.focus.minus') {
 				cam_focus(1, `${split[1]}out`);
 				console.log(`${split[1]}ing out`);
-				if (lerping) {
-					console.log("Error: Already Lerping");
-					return;
-				}
-				else if (!lerping) {
-					lerp(1, '#focusSlider', 'down');
-				}
+				$('#focusSlider').val(0)
 			};
 		});
 
@@ -258,84 +218,16 @@ function keybinds() {
 			if (x === '.zoom.minus') {
 				cam_zoom(1, 'zoomstop');
 				console.log('stopped');
-				if (lerping) {
-					console.log("Error: Already Lerping");
-					return;
-				}
-				if (!lerping) {
-					lerp(500, '#zoomSlider', 'up');
-				}
+				$('#zoomSlider').val(50)
 			}
 			else if (x === '.focus.minus') {
 				cam_focus(1, 'focusstop');
 				console.log('stopped');
-				if (lerping) {
-					console.log("Error: Already Lerping");
-					return;
-				}
-				else if (!lerping) {
-					lerp(500, '#focusSlider', 'up');
-				}
+				$('#focusSlider').val(50)
 			};
 		});
 	});
 }
-
-let lerping = false;
-let lerpCancelled = false;
-
-const timer = ms => new Promise(res => setTimeout(res, ms));
-
-async function lerp(targetValue, sliderClass, lerpFunction) {
-	let currentValue = Number($(sliderClass).val());
-	lerping = true;
-	lerpCancelled = false;
-
-	// Start the lerp process
-	while (lerping) {
-		if (lerpFunction === "up") {
-			// Lerp up
-			if (currentValue < targetValue) {
-				if (currentValue < targetValue - 0.8) {
-					let lerpValue = (targetValue - currentValue) / 10;
-					currentValue += lerpValue;
-					$(sliderClass).val(currentValue);
-				} else {
-					currentValue = targetValue;
-				}
-			} else {
-				lerping = false;
-			}
-		} else if (lerpFunction === "down") {
-			// Lerp down
-			if (currentValue > targetValue) {
-				if (currentValue > targetValue + 0.8) {
-					let lerpValue = (targetValue - currentValue) / 10;
-					currentValue += lerpValue;
-					$(sliderClass).val(currentValue);
-				} else {
-					currentValue = targetValue;
-				}
-			} else {
-				lerping = false;
-			}
-		}
-
-		// Check if the lerp action has been cancelled
-		if (lerpCancelled) {
-			$(sliderClass).val(currentValue);
-			lerping = false;
-		}
-		await timer(5);
-	}
-}
-
-// Function to cancel the current lerp action
-function cancelLerp() {
-	lerpCancelled = true;
-}
-
-
 
 function get_config() {
 	let result = localStorage.getItem('configStorage');
@@ -796,12 +688,11 @@ $(document).ready(function () {
 	$('.btn').on('mouseout', function (e) {
 		let i = activePreset;
 		if (typeof activePreset == 'undefined') {
-			$('#camTitle').html(`Active Preset: No Preset Active`);
+			$('#presetTitle1').html(`Presets`);
 		}
 		else {
-			$('#camTitle').html(`Active Preset: ${Cookies.get(`${i}`)}`);
+			$('#presetTitle1').html(`${Cookies.get(`${i}`)}`);
 		}
-		$('#presetTitle1').html(`Presets`);
 	});
 
 	$('.btn').on('mouseover', function (e) {
