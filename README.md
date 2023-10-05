@@ -5,9 +5,9 @@ _**TODO:**_
   - [x] ~Fix sliders~
   - [ ] Fix CORS headers
   - [x] ~Make settings dropdowns actually match current camera settings~
-  - [ ] General code refactoring
-    - [ ] Streamline cgi-bin url resolving
-    - [x] ~Clean up keybinding~
+  - [x] ~General code refactoring~
+  - [ ] Streamline cgi-bin url resolving
+  - [x] ~Clean up keybinding~
  
 ---
 
