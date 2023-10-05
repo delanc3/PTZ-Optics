@@ -1,4 +1,4 @@
-__**TODO:**__
+_**TODO:**_
   - [ ] DOCUMENTATION!
   - [x] ~Move all js dependancies to js-delivr~
   - [ ] Migrate ionicons to fontawesome
