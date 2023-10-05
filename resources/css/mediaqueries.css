@@ -17,7 +17,7 @@
         height: 70%;
         order: 1;
     }
-    
+
     #presets {
         width: 80%;
         height: 90%;
@@ -56,20 +56,20 @@
         border-top-left-radius: 8px;
         border-top-right-radius: 8px;
     }
-      
+
     #left {
-    border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px;
+        border-top-left-radius: 8px;
+        border-bottom-left-radius: 8px;
     }
-    
+
     #right {
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
+        border-top-right-radius: 8px;
+        border-bottom-right-radius: 8px;
     }
-    
+
     #down {
-    border-bottom-left-radius: 8px;
-    border-bottom-right-radius: 8px;
+        border-bottom-left-radius: 8px;
+        border-bottom-right-radius: 8px;
     }
 
     #up,
@@ -93,7 +93,7 @@
     }
 
     #zoom input,
-    #focus input{
+    #focus input {
         width: 160px;
     }
 
@@ -135,7 +135,7 @@
 
     #aboutBox {
         width: 80%;
-        height: 40%; 
+        height: 40%;
         overflow: hidden;
     }
 
@@ -153,7 +153,7 @@
         padding-inline: 10px;
         justify-content: center;
     }
-    
+
     #assignTitle {
         text-align: center;
         font-size: 30px;
@@ -161,12 +161,12 @@
     }
 
     #contentDiv {
-        display:flex;
+        display: flex;
         height: 35%;
         text-align: center;
-        align-items:center;
-        flex-direction:column;
-        justify-content:center;
+        align-items: center;
+        flex-direction: column;
+        justify-content: center;
     }
 
     #buttonsContainer {
@@ -179,7 +179,7 @@
         width: 90%;
         height: auto;
     }
-    
+
     #prefTitle {
         font-size: 20px;
     }
@@ -228,7 +228,7 @@
         height: 70%;
         order: 1;
     }
-    
+
     #presets {
         width: 90%;
         height: 90%;
@@ -267,20 +267,20 @@
         border-top-left-radius: 8px;
         border-top-right-radius: 8px;
     }
-      
+
     #left {
-    border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px;
+        border-top-left-radius: 8px;
+        border-bottom-left-radius: 8px;
     }
-    
+
     #right {
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
+        border-top-right-radius: 8px;
+        border-bottom-right-radius: 8px;
     }
-    
+
     #down {
-    border-bottom-left-radius: 8px;
-    border-bottom-right-radius: 8px;
+        border-bottom-left-radius: 8px;
+        border-bottom-right-radius: 8px;
     }
 
     #up,
@@ -301,10 +301,11 @@
 
     #controls {
         width: 80%;
+        height: 98%;
     }
 
     #zoom input,
-    #focus input{
+    #focus input {
         width: 160px;
     }
 
@@ -346,7 +347,7 @@
 
     #aboutBox {
         width: 80%;
-        height: 40%; 
+        height: 40%;
         overflow: hidden;
     }
 
@@ -364,7 +365,7 @@
         padding-inline: 10px;
         justify-content: center;
     }
-    
+
     #assignTitle {
         text-align: center;
         font-size: 30px;
@@ -372,12 +373,12 @@
     }
 
     #contentDiv {
-        display:flex;
+        display: flex;
         height: 35%;
         text-align: center;
-        align-items:center;
-        flex-direction:column;
-        justify-content:center;
+        align-items: center;
+        flex-direction: column;
+        justify-content: center;
     }
 
     #buttonsContainer {
@@ -390,7 +391,7 @@
         width: 90%;
         height: auto;
     }
-    
+
     #prefTitle {
         font-size: 20px;
     }
