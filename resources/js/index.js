@@ -1,9 +1,13 @@
-let camera_ip = "192.168.0.190";
-let base_url = "http://" + camera_ip + "/cgi-bin";
+let cameraIP = "192.168.0.190";
+let baseURL = "http://" + cameraIP + "/cgi-bin";
+let activePreset;
+let arrowKeys = ['up', 'down', 'left', 'right', 'esc'];
+let numKeys = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
+let sliderKeys = ['q', 'a', 'w', 's'];
 
 // config defaults
 let defaults = {
-	ip: camera_ip,
+	ip: cameraIP,
 	flip: 0,
 	mirror: 0,
 	invertcontrols: 0,
@@ -18,44 +22,36 @@ let defaults = {
 };
 
 let config = defaults;
-let activePreset;
 
-let variables = {
-	arrowKeys: ['up', 'down', 'left', 'right', 'esc'],
-	numKeys: ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
-	sliderKeys: ['w', 's', 'q', 'a'],
-	sliderClasses: ['.zoom.plus', '.zoom.minus', '.focus.plus', '.focus.minus'],
-	slideKeyNums: [1000, 0, 1000, 0],
-	actions: {
-		up: function () {
+let keyActions = {
+	up: function () {
+		stop_autopan();
+		cam_pantilt(1, 'up');
+		console.log(`Panned up`);
+	},
+	down: function () {
+		stop_autopan();
+		cam_pantilt(1, 'down');
+		console.log(`Panned down`);
+	},
+	left: function () {
+		stop_autopan();
+		cam_pantilt(1, 'left');
+		console.log(`Panned left`);
+	},
+	right: function () {
+		stop_autopan();
+		cam_pantilt(1, 'right');
+		console.log(`Panned right`);
+	},
+	esc: function () {
+		if (document.title == 'PTZ-Optics - Main') {
 			stop_autopan();
-			cam_pantilt(1, 'up');
-			console.log(`Panned up`);
-		},
-		down: function () {
-			stop_autopan();
-			cam_pantilt(1, 'down');
-			console.log(`Panned down`);
-		},
-		left: function () {
-			stop_autopan();
-			cam_pantilt(1, 'left');
-			console.log(`Panned left`);
-		},
-		right: function () {
-			stop_autopan();
-			cam_pantilt(1, 'right');
-			console.log(`Panned right`);
-		},
-		esc: function () {
-			if (document.title == 'PTZ-Optics - Main') {
-				stop_autopan();
-				cam_pantilt(1, 'home');
-				console.log('Reset pantilt');
-			}
-			else {
-				transition('none', '../../index.html')
-			}
+			cam_pantilt(1, 'home');
+			console.log('Reset pantilt');
+		}
+		else {
+			transition('none', '../../index.html')
 		}
 	}
 };
@@ -64,15 +60,81 @@ function handleKeyEvent(eventType, pressedKey) {
 	if (eventType === 'keydown') {
 		if (pressedKey === 'esc') {
 			$(`#esc`).addClass('pressed')
-			variables.actions.esc();
+			keyActions.esc();
 		} else {
 			$(`#${pressedKey}`).addClass('pressed')
-			variables.actions[pressedKey]();
+			keyActions[pressedKey]();
 		}
 	} else if (eventType === 'keyup') {
 		$(`#${pressedKey}`).removeClass('pressed')
+		console.log(`Stopped Panning`);
 		cam_pantilt(1, 'ptzstop');
 	}
+}
+
+//Creating keybinds
+function createKeybinds() {
+	//Keybinds for controlling the camera with the arrow keys
+	Mousetrap.bind(arrowKeys, function (e, currentKey) {
+		if (e.repeat) return;
+		handleKeyEvent('keydown', currentKey);
+	}, 'keydown');
+
+	Mousetrap.bind(arrowKeys, function (e, currentKey) {
+		handleKeyEvent('keyup', currentKey);
+	}, 'keyup');
+
+	//Keybinds for calling presets with number keys
+	Mousetrap.bind(numKeys, function (e, currentKey) {
+		$(`#pst${currentKey}`).focus();
+		activePreset = $(`#pst${currentKey}`).html();
+
+		stop_autopan();
+		cam_preset(1, currentKey, 'poscall');
+
+		console.log(`Called preset ${currentKey}`);
+		$('#presetTitle1').html(`${Cookies.get(activePreset)}`);
+	});
+
+	//Keybinds for zooming and focusing with q,a,w,s
+	Mousetrap.bind(sliderKeys, function (e, currentKey) {
+		if (e.repeat) return;
+		e.preventDefault();
+		stop_autopan();
+		switch (currentKey) {
+			case 'q':
+				$('#zoomSlider').val(100);
+				cam_zoom(1, 'zoomin');
+				break;
+			case 'a':
+				$('#zoomSlider').val(0);
+				cam_zoom(1, 'zoomout');
+				break;
+			case 'w':
+				$('#focusSlider').val(100);
+				cam_zoom(1, 'focusin');
+				break;
+			case 's':
+				$('#focusSlider').val(0);
+				cam_zoom(1, 'focusout');
+				break;
+		}
+	}, 'keydown');
+
+	Mousetrap.bind(sliderKeys, function (e, currentKey) {
+		e.preventDefault();
+		switch (currentKey) {
+			case 'q':
+			case 'a':
+				$('#zoomSlider').val(50);
+				break;
+			case 'w':
+			case 's':
+				$('#focusSlider').val(50);
+				break;
+		}
+		cam_pantilt(1, 'ptzstop');
+	}, 'keyup');
 }
 
 function transition(direction, targetURL) {
@@ -89,144 +151,6 @@ function transition(direction, targetURL) {
 	setTimeout(function () {
 		window.location = targetURL
 	}, 500)
-}
-
-function keybinds() {
-	variables.arrowKeys.forEach(function (x) {
-		Mousetrap.bind(x, function (e) {
-			if (e.repeat) return;
-			handleKeyEvent('keydown', x);
-		}, 'keydown');
-
-		Mousetrap.bind(x, function (e) {
-			handleKeyEvent('keyup', x);
-		}, 'keyup');
-
-		$(`#${x}`).on('mousedown', function (e) {
-			stop_autopan();
-			if (x === 'esc') {
-				cam_pantilt(1, 'home');
-				console.log('Reset pantilt');
-			}
-			else {
-				cam_pantilt(1, x);
-				console.log(`Panned ${x}`);
-			}
-		});
-
-		$(`#${x}`).on('mouseup', function (e) {
-			stop_autopan();
-			cam_pantilt(1, 'ptzstop');
-			console.log(`Stopped Panning`);
-		});
-	});
-
-	variables.numKeys.forEach(function (x) {
-		Mousetrap.bind(x, function (e) {
-			$(`#pst${x}`).focus();
-			activePreset = $(`#pst${x}`).html();
-
-			stop_autopan();
-			cam_preset(1, x, 'poscall');
-
-			console.log(`Called preset ${x}`);
-			$('#presetTitle1').html(`${Cookies.get(activePreset)}`);
-		});
-	});
-
-	variables.sliderKeys.forEach(function (x, i) {
-		Mousetrap.bind(x, function (e) {
-			if (e.repeat) return;
-			e.preventDefault();
-			stop_autopan();
-			if (x == 'q') {
-				$('#zoomSlider').val(100)
-				cam_zoom(1, 'zoomin');
-			}
-			else if (x == 'a') {
-				$('#zoomSlider').val(0)
-				cam_zoom(1, 'zoomout');
-			}
-			else if (x == 'w') {
-				$('#focusSlider').val(100)
-				cam_zoom(1, 'focusin');
-			}
-			else if (x == 's') {
-				$('#focusSlider').val(0)
-				cam_zoom(1, 'focusout');
-			}
-		}, 'keydown');
-		Mousetrap.bind(x, function (e) {
-			stop_autopan();
-			e.preventDefault();
-			if (x == 'q') {
-				$('#zoomSlider').val(50)
-			}
-			else if (x == 'a') {
-				$('#zoomSlider').val(50)
-			}
-			else if (x == 'w') {
-				$('#focusSlider').val(50)
-			}
-			else if (x == 's') {
-				$('#focusSlider').val(50)
-			}
-			cam_zoom(1, 'zoomstop');
-		}, 'keyup');
-	});
-
-	variables.sliderClasses.forEach(function (x, i) {
-		let split = x.split('.');
-		$('body').on('mousedown', `.${split[1]}.plus`, function (e) {
-			if (x === '.zoom.plus') {
-				cam_zoom(1, `${split[1]}in`);
-				console.log(`${split[1]}ing in`);
-				$('#zoomSlider').val(100)
-			}
-			else if (x === '.focus.plus') {
-				$('#focusSlider').val(100)
-			};
-		});
-
-		$('body').on('mouseup', `.${split[1]}.plus`, function (e) {
-			if (x === '.zoom.plus') {
-				cam_zoom(1, 'zoomstop');
-				console.log('stopped');
-				$('#zoomSlider').val(50)
-			}
-			else if (x === '.focus.plus') {
-				cam_focus(1, 'focusstop');
-				console.log('stopped');
-				$('#focusSlider').val(50)
-			};
-		});
-
-		$('body').on('mousedown', `.${split[1]}.minus`, function (e) {
-			if (x === '.zoom.minus') {
-				cam_zoom(1, `${split[1]}out`);
-				console.log(`${split[1]}ing out`);
-				$('#zoomSlider').val(0)
-			}
-			else if (x === '.focus.minus') {
-				cam_focus(1, `${split[1]}out`);
-				console.log(`${split[1]}ing out`);
-				$('#focusSlider').val(0)
-			};
-		});
-
-		$('body').on('mouseup', `.${split[1]}.minus`, function (e) {
-			if (x === '.zoom.minus') {
-				cam_zoom(1, 'zoomstop');
-				console.log('stopped');
-				$('#zoomSlider').val(50)
-			}
-			else if (x === '.focus.minus') {
-				cam_focus(1, 'focusstop');
-				console.log('stopped');
-				$('#focusSlider').val(50)
-			};
-		});
-	});
 }
 
 function get_config() {
@@ -248,7 +172,7 @@ function run_action(action_url) {
 	$.ajax({
 		url: action_url,
 		type: 'GET',
-		headers: { 'Access-Control-Allow-Origin': `http://${camera_ip}/` },
+		headers: { 'Access-Control-Allow-Origin': `http://${cameraIP}/` },
 	})
 		.done(function () {
 			// console.log("success");
@@ -269,7 +193,7 @@ function config_init() {
 
 	// set the initial IP value for the camera ip input
 	$("#cameraIP").val(config.ip);
-	base_url = "http://" + config.ip + "/cgi-bin";
+	baseURL = "http://" + config.ip + "/cgi-bin";
 
 	// set the camera's initial configuration for each value in the saved config object
 	config_setting("flip", config.flip);
@@ -314,7 +238,7 @@ function config_init() {
 }
 
 function config_setting(action, value) {
-	let loc = base_url + "/param.cgi?post_image_value&" + action + "&" + value;
+	let loc = baseURL + "/param.cgi?post_image_value&" + action + "&" + value;
 	run_action(loc);
 }
 
@@ -389,18 +313,18 @@ function reload_cam() {
 
 // Function to adjust camera settings based on the provided action
 function adjust_setting(action) {
-	// Variables to store the URL for flip and mirror actions
+	// Variables to store the URL for flip and mirror keyActions
 	let flipUrl, mirrorUrl;
 
 	// Check the value of action and update the URL and config values accordingly
 	switch (action) {
 		case 'flip':
-			flipUrl = (config.flip === 0) ? base_url + "/param.cgi?post_image_value&flip&1" : base_url + "/param.cgi?post_image_value&flip&0";
+			flipUrl = (config.flip === 0) ? baseURL + "/param.cgi?post_image_value&flip&1" : baseURL + "/param.cgi?post_image_value&flip&0";
 			run_action(flipUrl);
 			config.flip = (config.flip === 0) ? 1 : 0;
 			break;
 		case 'mirror':
-			mirrorUrl = (config.mirror === 0) ? base_url + "/param.cgi?post_image_value&mirror&1" : base_url + "/param.cgi?post_image_value&mirror&0";
+			mirrorUrl = (config.mirror === 0) ? baseURL + "/param.cgi?post_image_value&mirror&1" : baseURL + "/param.cgi?post_image_value&mirror&0";
 			run_action(mirrorUrl);
 			config.mirror = (config.mirror === 0) ? 1 : 0;
 			break;
@@ -433,16 +357,16 @@ function adjust_setting(action) {
 function update_settings() {
 	// Check the value of `config.flip` and call `run_action` with the appropriate URL
 	if (config.flip === 0) {
-		run_action(`${base_url}/param.cgi?post_image_value&flip&0`);
+		run_action(`${baseURL}/param.cgi?post_image_value&flip&0`);
 	} else if (config.flip === 1) {
-		run_action(`${base_url}/param.cgi?post_image_value&flip&1`);
+		run_action(`${baseURL}/param.cgi?post_image_value&flip&1`);
 	}
 
 	// Check the value of `config.mirror` and call `run_action` with the appropriate URL
 	if (config.mirror === 0) {
-		run_action(`${base_url}/param.cgi?post_image_value&mirror&0`);
+		run_action(`${baseURL}/param.cgi?post_image_value&mirror&0`);
 	} else if (config.mirror === 1) {
-		run_action(`${base_url}/param.cgi?post_image_value&mirror&1`);
+		run_action(`${baseURL}/param.cgi?post_image_value&mirror&1`);
 	}
 
 	// Check the value of `config.infinitypt` and hide/show the `#pt_infinity` element
@@ -480,7 +404,7 @@ function cam_pantilt(camera, action) {
 	const direction = getDirection(action);
 
 	// Build the URL for the camera control action, including the direction and pan/tilt speed
-	const loc = `${base_url}/ptzctrl.cgi?ptzcmd&${direction}&${config.panspeed}&${config.tiltspeed}`;
+	const loc = `${baseURL}/ptzctrl.cgi?ptzcmd&${direction}&${config.panspeed}&${config.tiltspeed}`;
 
 	// Run the action to move the camera
 	run_action(loc);
@@ -514,7 +438,7 @@ function getDirection(action) {
 // Function to control the camera zoom
 function cam_zoom(camera, action) {
 	// Build the URL for the camera control action, including the zoom speed
-	const loc = `${base_url}/ptzctrl.cgi?ptzcmd&${action}&${config.zoomspeed}`;
+	const loc = `${baseURL}/ptzctrl.cgi?ptzcmd&${action}&${config.zoomspeed}`;
 
 	// Run the action to zoom the camera
 	run_action(loc);
@@ -523,7 +447,7 @@ function cam_zoom(camera, action) {
 // Function to control the camera focus
 function cam_focus(camera, action) {
 	// Build the URL for the camera control action, including the focus speed
-	const loc = `${base_url}/ptzctrl.cgi?ptzcmd&${action}&${config.focusspeed}`;
+	const loc = `${baseURL}/ptzctrl.cgi?ptzcmd&${action}&${config.focusspeed}`;
 
 	// Run the action to focus the camera
 	run_action(loc);
@@ -532,7 +456,7 @@ function cam_focus(camera, action) {
 // Function to control the camera preset
 function cam_preset(camera, positionnum, action) {
 	// Build the URL for the camera control action, including the position number
-	const loc = `${base_url}/ptzctrl.cgi?ptzcmd&${action}&${positionnum}`;
+	const loc = `${baseURL}/ptzctrl.cgi?ptzcmd&${action}&${positionnum}`;
 
 	// Run the action to set the camera preset
 	run_action(loc);
@@ -590,9 +514,9 @@ function pan(direction) {
 			panning = 'left';
 
 			if (config.invertcontrols == "1") {
-				var loc = base_url + "/ptzctrl.cgi?ptzcmd&right&" + panspeed + "&" + tiltspeed;
+				var loc = baseURL + "/ptzctrl.cgi?ptzcmd&right&" + panspeed + "&" + tiltspeed;
 			} else {
-				var loc = base_url + "/ptzctrl.cgi?ptzcmd&left&" + panspeed + "&" + tiltspeed;
+				var loc = baseURL + "/ptzctrl.cgi?ptzcmd&left&" + panspeed + "&" + tiltspeed;
 			}
 			console.log("...pan left");
 
@@ -601,9 +525,9 @@ function pan(direction) {
 			panning = 'right';
 
 			if (config.invertcontrols == "1") {
-				var loc = base_url + "/ptzctrl.cgi?ptzcmd&left&" + panspeed + "&" + tiltspeed;
+				var loc = baseURL + "/ptzctrl.cgi?ptzcmd&left&" + panspeed + "&" + tiltspeed;
 			} else {
-				var loc = base_url + "/ptzctrl.cgi?ptzcmd&right&" + panspeed + "&" + tiltspeed;
+				var loc = baseURL + "/ptzctrl.cgi?ptzcmd&right&" + panspeed + "&" + tiltspeed;
 			}
 			console.log("...pan right");
 		}
@@ -627,7 +551,27 @@ function stop_autopan() {
 
 $(document).ready(function () {
 	config_init();
-	keybinds();
+	createKeybinds();
+
+	$(`.ptzButton`).on('mousedown', function (e) {
+		stop_autopan();
+		$(this).addClass('pressed');
+		if ($(this).attr('id') === 'esc') {
+			cam_pantilt(1, 'home');
+			console.log('Reset pantilt');
+		}
+		else {
+			cam_pantilt(1, $(this).attr('id'));
+			console.log(`Panned ${$(this).attr('id')}`);
+		}
+	});
+
+	$(`.ptzButton`).on('mouseup', function (e) {
+		stop_autopan();
+		$(this).removeClass('pressed');
+		cam_pantilt(1, 'ptzstop');
+		console.log(`Stopped Panning`);
+	});
 
 	// Add a click event listener to the toggle button
 	$('#themeToggle').click(function () {
@@ -649,8 +593,8 @@ $(document).ready(function () {
 
 	$('#parent-element').on('mousedown', function (e) {
 		let x = e.target.id;
-		if (variables.arrowKeys.includes(x)) {
-			variables.actions[x]();
+		if (arrowKeys.includes(x)) {
+			keyActions[x]();
 		}
 	});
 

@@ -471,8 +471,8 @@ p {
   align-items: center;
 }
 
-.btn1:link,
-.btn1:visited {
+.ptzButton:link,
+.ptzButton:visited {
   display: flex;
   width: 65px;
   height: 65px;
@@ -489,7 +489,7 @@ p {
   -o-transition: all 0.3s;
 }
 
-.btn1:hover {
+.ptzButton:hover {
   background-color: var(--button-hover-col);
   transform: scale(0.9);
   -webkit-transform: scale(0.9);
@@ -498,22 +498,13 @@ p {
   -o-transform: scale(0.9);
 }
 
-.btn1:active,
-.btn1.pressed {
+.ptzButton.pressed {
   background-color: #61443d;
   transform: scale(0.9);
   -webkit-transform: scale(0.9);
   -moz-transform: scale(0.9);
   -ms-transform: scale(0.9);
   -o-transform: scale(0.9);
-}
-
-.btn1 img {
-  height: 40px;
-}
-
-#esc img {
-  height: 40px;
 }
 
 #up {
