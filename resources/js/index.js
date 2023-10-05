@@ -1,19 +1,9 @@
-let cameraIP = "192.168.0.190";
-let baseURL = "http://" + cameraIP + "/cgi-bin";
-let activePreset;
-let arrowKeys = ['up', 'down', 'left', 'right', 'esc'];
-let numKeys = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
-let sliderKeys = ['q', 'a', 'w', 's'];
-
 // config defaults
-let defaults = {
-	ip: cameraIP,
+let cameraConfig = {
+	ip: '192.168.0.190',
 	flip: 0,
 	mirror: 0,
 	invertcontrols: 0,
-	infinitypt: 0,
-	infinityzoom: 0,
-	infinityfocus: 0,
 	panspeed: 8,
 	zoomspeed: 5,
 	tiltspeed: 8,
@@ -21,36 +11,30 @@ let defaults = {
 	autopaninterval: 30,
 };
 
-let config = defaults;
+let baseURL = "http://" + cameraConfig.ip + "/cgi-bin";
+let activePreset;
+let arrowKeys = ['up', 'down', 'left', 'right', 'esc'];
+let numKeys = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
+let sliderKeys = ['q', 'a', 'w', 's'];
 
 let keyActions = {
 	up: function () {
-		stop_autopan();
-		cam_pantilt(1, 'up');
-		console.log(`Panned up`);
+		(cameraConfig.invertcontrols == 0) ? camPanTilt(1, 'up') : camPanTilt(1, 'down');
 	},
 	down: function () {
-		stop_autopan();
-		cam_pantilt(1, 'down');
-		console.log(`Panned down`);
+		(cameraConfig.invertcontrols == 0) ? camPanTilt(1, 'down') : camPanTilt(1, 'up');
 	},
 	left: function () {
-		stop_autopan();
-		cam_pantilt(1, 'left');
-		console.log(`Panned left`);
+		(cameraConfig.invertcontrols == 0) ? camPanTilt(1, 'left') : camPanTilt(1, 'right');
 	},
 	right: function () {
-		stop_autopan();
-		cam_pantilt(1, 'right');
-		console.log(`Panned right`);
+		(cameraConfig.invertcontrols == 0) ? camPanTilt(1, 'right') : camPanTilt(1, 'left');
 	},
 	esc: function () {
 		if (document.title == 'PTZ-Optics - Main') {
-			stop_autopan();
-			cam_pantilt(1, 'home');
+			camPanTilt(1, 'home');
 			console.log('Reset pantilt');
-		}
-		else {
+		} else {
 			transition('none', '../../index.html')
 		}
 	}
@@ -58,7 +42,7 @@ let keyActions = {
 
 function handleKeyEvent(eventType, pressedKey) {
 	if (eventType === 'keydown') {
-		if (pressedKey === 'esc') {
+		if (pressedKey == 'esc') {
 			$(`#esc`).addClass('pressed')
 			keyActions.esc();
 		} else {
@@ -68,7 +52,7 @@ function handleKeyEvent(eventType, pressedKey) {
 	} else if (eventType === 'keyup') {
 		$(`#${pressedKey}`).removeClass('pressed')
 		console.log(`Stopped Panning`);
-		cam_pantilt(1, 'ptzstop');
+		camPanTilt(1, 'ptzstop');
 	}
 }
 
@@ -89,9 +73,7 @@ function createKeybinds() {
 		$(`#pst${currentKey}`).focus();
 		activePreset = $(`#pst${currentKey}`).html();
 
-		stop_autopan();
-		cam_preset(1, currentKey, 'poscall');
-
+		presetGetSet(1, currentKey, 'poscall');
 		console.log(`Called preset ${currentKey}`);
 		$('#presetTitle1').html(`${Cookies.get(activePreset)}`);
 	});
@@ -100,23 +82,23 @@ function createKeybinds() {
 	Mousetrap.bind(sliderKeys, function (e, currentKey) {
 		if (e.repeat) return;
 		e.preventDefault();
-		stop_autopan();
+
 		switch (currentKey) {
 			case 'q':
 				$('#zoomSlider').val(100);
-				cam_zoom(1, 'zoomin');
+				camZoom(1, 'zoomin');
 				break;
 			case 'a':
 				$('#zoomSlider').val(0);
-				cam_zoom(1, 'zoomout');
+				camZoom(1, 'zoomout');
 				break;
 			case 'w':
 				$('#focusSlider').val(100);
-				cam_zoom(1, 'focusin');
+				camZoom(1, 'focusin');
 				break;
 			case 's':
 				$('#focusSlider').val(0);
-				cam_zoom(1, 'focusout');
+				camZoom(1, 'focusout');
 				break;
 		}
 	}, 'keydown');
@@ -133,8 +115,142 @@ function createKeybinds() {
 				$('#focusSlider').val(50);
 				break;
 		}
-		cam_pantilt(1, 'ptzstop');
+		camPanTilt(1, 'ptzstop');
 	}, 'keyup');
+}
+
+// setup all the initial configuration and standard settings
+function sendConfig() {
+	cameraConfig = configLocalStorage('get');
+
+	// set the initial IP value for the camera ip input
+	$("#ip").val(cameraConfig.ip);
+	baseURL = "http://" + cameraConfig.ip + "/cgi-bin";
+
+	//set the camera's initial configuration for each value in the saved config object
+	for (const [key, value] of Object.entries(cameraConfig)) {
+		if (key.includes('interval') || key.includes('speed') || key.includes('ip')) {
+			continue;
+		}
+		sendAjaxRequest(baseURL + "/param.cgi?post_image_value&" + key + "&" + value);
+	}
+	updateSettingsLabels();
+	console.log(cameraConfig);
+}
+
+//Retrieve and set camera config to and from local storage
+function configLocalStorage(action) {
+	if (action === 'get') {
+		let retrievedConfig = localStorage.getItem('configStorage');
+		if (!retrievedConfig) {
+			return cameraConfig;
+		} else {
+			return JSON.parse(retrievedConfig);
+		}
+	} else if (action === 'set') {
+		localStorage.setItem('configStorage', JSON.stringify(cameraConfig));
+		sendConfig();
+	}
+}
+
+//Update values of settings buttons to match current camera config
+function updateSettingsLabels() {
+	for (const [key, value] of Object.entries(cameraConfig)) {
+		if (key.includes('speed') || key.includes('interval') || key == 'ip') {
+			$(`#${key}`).val(value)
+		} else {
+			switch (value) {
+				case 0:
+					$(`#${key}`).html(`${key} - No`);
+					break;
+				case 1:
+					$(`#${key}`).html(`${key} - Yes`);
+					break;
+			}
+		}
+	}
+}
+
+// Function to adjust camera settings based on the provided action
+function toggleSetting(action) {
+	// Check the value of action and update the URL and config values accordingly
+	switch (action) {
+		case 'flip':
+			cameraConfig.flip = (cameraConfig.flip === 0) ? 1 : 0;
+			break;
+		case 'mirror':
+			cameraConfig.mirror = (cameraConfig.mirror === 0) ? 1 : 0;
+			break;
+		case 'invertcontrols':
+			cameraConfig.invertcontrols = (cameraConfig.invertcontrols === 0) ? 1 : 0;
+			break;
+	}
+
+	// Save the updated config and update the labels
+	configLocalStorage('set');
+	updateSettingsLabels();
+}
+
+//Send HTTP-GET request to the correct url on the camera
+function sendAjaxRequest(action_url) {
+	$.ajax({
+		url: action_url,
+		type: 'GET',
+		headers: { 'Access-Control-Allow-Origin': `http://${cameraConfig.ip}/` },
+	})
+		.done(function () {
+			// console.log("success");
+		})
+		.fail(function () {
+			console.log(`error fetching ${action_url}`);
+		})
+		.always(function () {
+			// console.log("complete");
+		});
+}
+
+// function to reload camera IP address
+function refreshCameraIP() {
+	// get the value of the camera IP address input field
+	cameraConfig.ip = $('#ip').val();
+	configLocalStorage('set');
+}
+
+// Function to control the camera's pan and tilt action
+function camPanTilt(camera, direction) {
+	// Build the URL for the camera control action, including the direction and pan/tilt speed
+	const loc = `${baseURL}/ptzctrl.cgi?ptzcmd&${direction}&${cameraConfig.panspeed}&${cameraConfig.tiltspeed}`;
+	// Run the action to move the camera
+	sendAjaxRequest(loc);
+
+	if (direction == 'ptzstop') {
+		return;
+	}
+	console.log(`Panning ${direction}`);
+}
+
+// Function to control the camera zoom
+function camZoom(camera, action) {
+	// Build the URL for the camera control action, including the zoom speed
+	const loc = `${baseURL}/ptzctrl.cgi?ptzcmd&${action}&${cameraConfig.zoomspeed}`;
+	// Run the action to zoom the camera
+	sendAjaxRequest(loc);
+}
+
+// Function to control the camera focus
+function camFocus(camera, action) {
+	// Build the URL for the camera control action, including the focus speed
+	const loc = `${baseURL}/ptzctrl.cgi?ptzcmd&${action}&${cameraConfig.focusspeed}`;
+	// Run the action to focus the camera
+	sendAjaxRequest(loc);
+}
+
+// Function to control the camera preset
+function presetGetSet(camera, positionnum, action) {
+	// Build the URL for the camera control action, including the position number
+	const loc = `${baseURL}/ptzctrl.cgi?ptzcmd&${action}&${positionnum}`;
+	// Run the action to set the camera preset
+	sendAjaxRequest(loc);
 }
 
 function transition(direction, targetURL) {
@@ -153,423 +269,27 @@ function transition(direction, targetURL) {
 	}, 500)
 }
 
-function get_config() {
-	let result = localStorage.getItem('configStorage');
-	if (!result) {
-		return config;
-	} else {
-		return JSON.parse(result);
-	}
-}
-
-function save_config() {
-	localStorage.setItem('configStorage', JSON.stringify(config));
-	console.log(config);
-}
-
-function run_action(action_url) {
-	// $.get(url);
-	$.ajax({
-		url: action_url,
-		type: 'GET',
-		headers: { 'Access-Control-Allow-Origin': `http://${cameraIP}/` },
-	})
-		.done(function () {
-			// console.log("success");
-		})
-		.fail(function (jqXHR, responseText, errorThrown) {
-			console.log(`error fetching ${action_url}`);
-		})
-		.always(function () {
-			// console.log("complete");
-		});
-}
-
-// setup all the initial configuration and standard settings
-function config_init() {
-
-	config = get_config();
-	console.log(config);
-
-	// set the initial IP value for the camera ip input
-	$("#cameraIP").val(config.ip);
-	baseURL = "http://" + config.ip + "/cgi-bin";
-
-	// set the camera's initial configuration for each value in the saved config object
-	config_setting("flip", config.flip);
-	config_setting("mirror", config.mirror);
-	config_setting("invertcontrols", config.invertcontrols);
-	config_setting("infinitypt", config.infinitypt);
-	config_setting("infinityzoom", config.infinityzoom);
-	config_setting("infinityfocus", config.infinityfocus);
-
-	// set the initial values for each select dropdown
-	$("#panSpeed").val(config.panspeed);
-	$("#zoomSpeed").val(config.zoomspeed);
-	$("#tiltSpeed").val(config.tiltspeed);
-	$("#focusSpeed").val(config.focusspeed);
-	$("#panInterval").val(config.autopaninterval);
-
-	// save_config();
-
-	if (config.infinitypt == 1) {
-		$('#infPT').html('Infinity Pan/Tilt - Yes');
-	} else {
-		$('#infPT').html('Infinity Pan/Tilt - No');
-	}
-
-	if (config.infinityzoom == 1) {
-		$('#cam_zoom_infinity').show();
-		$('#cam_zoom_standard').hide();
-	} else {
-		$('#cam_zoom_infinity').hide();
-		$('#cam_zoom_standard').show();
-	}
-
-	if (config.infinityfocus == 1) {
-		$('#cam_focus_infinity').show();
-		$('#cam_focus_standard').hide();
-	} else {
-		$('#cam_focus_infinity').hide();
-		$('#cam_focus_standard').show();
-	}
-
-	update_labels();
-}
-
-function config_setting(action, value) {
-	let loc = baseURL + "/param.cgi?post_image_value&" + action + "&" + value;
-	run_action(loc);
-}
-
-function update_labels() {
-
-	switch (config.flip) {
-		case 0:
-			$('#flip').html("Flip - No");
-			break;
-		case 1:
-			$('#flip').html("Flip - Yes");
-			break;
-	}
-
-	switch (config.mirror) {
-		case 0:
-			$('#mirror').html("Mirror - No");
-			break;
-		case 1:
-			$('#mirror').html("Mirror - Yes");
-			break;
-	}
-
-	switch (config.invertcontrols) {
-		case 0:
-			$('#invertcontrols').html("Invert Controls - No");
-			break;
-		case 1:
-			$('#invertcontrols').html("Invert Controls - Yes");
-			break;
-	}
-
-	switch (config.infinitypt) {
-		case 0:
-			$('#infinitypt').html("Infinity Pan/Tilt-No");
-			break;
-		case 1:
-			$('#infinitypt').html("Infinity Pan/Tilt-Yes");
-			break;
-	}
-
-	switch (config.infinityzoom) {
-		case 0:
-			$('#infinityzoom').html("Infinity Zoom-No");
-			break;
-		case 1:
-			$('#infinityzoom').html("Infinity Zoom-Yes");
-			break;
-	}
-
-	switch (config.infinityfocus) {
-		case 0:
-			$('#infinityfocus').html("Infinity Focus-No");
-			break;
-		case 1:
-			$('#infinityfocus').html("Infinity Focus-Yes");
-			break;
-	}
-
-	config.ip = $('#cameraIP').val();
-}
-
-// function to reload camera IP address
-function reload_cam() {
-	// get the value of the camera IP address input field
-	config['ip'] = $('#cameraIP').val();
-
-	save_config();
-	update_labels();
-}
-
-
-// Function to adjust camera settings based on the provided action
-function adjust_setting(action) {
-	// Variables to store the URL for flip and mirror keyActions
-	let flipUrl, mirrorUrl;
-
-	// Check the value of action and update the URL and config values accordingly
-	switch (action) {
-		case 'flip':
-			flipUrl = (config.flip === 0) ? baseURL + "/param.cgi?post_image_value&flip&1" : baseURL + "/param.cgi?post_image_value&flip&0";
-			run_action(flipUrl);
-			config.flip = (config.flip === 0) ? 1 : 0;
-			break;
-		case 'mirror':
-			mirrorUrl = (config.mirror === 0) ? baseURL + "/param.cgi?post_image_value&mirror&1" : baseURL + "/param.cgi?post_image_value&mirror&0";
-			run_action(mirrorUrl);
-			config.mirror = (config.mirror === 0) ? 1 : 0;
-			break;
-		case 'invertcontrols':
-			config.invertcontrols = (config.invertcontrols === 0) ? 1 : 0;
-			break;
-		case 'infinitypt':
-			config.infinitypt = (config.infinitypt === 0) ? 1 : 0;
-			$('#pt_infinity').toggle();
-			break;
-		case 'infinityzoom':
-			config.infinityzoom = (config.infinityzoom === 0) ? 1 : 0;
-			$('#cam_zoom_infinity').toggle();
-			$('#cam_zoom_standard').toggle();
-			break;
-		case 'infinityfocus':
-			config.infinityfocus = (config.infinityfocus === 0) ? 1 : 0;
-			$('#cam_focus_infinity').toggle();
-			$('#cam_focus_standard').toggle();
-			break;
-	}
-
-	// Save the updated config and update the labels
-	save_config();
-	update_labels();
-}
-
-
-// used for loading existing settings
-function update_settings() {
-	// Check the value of `config.flip` and call `run_action` with the appropriate URL
-	if (config.flip === 0) {
-		run_action(`${baseURL}/param.cgi?post_image_value&flip&0`);
-	} else if (config.flip === 1) {
-		run_action(`${baseURL}/param.cgi?post_image_value&flip&1`);
-	}
-
-	// Check the value of `config.mirror` and call `run_action` with the appropriate URL
-	if (config.mirror === 0) {
-		run_action(`${baseURL}/param.cgi?post_image_value&mirror&0`);
-	} else if (config.mirror === 1) {
-		run_action(`${baseURL}/param.cgi?post_image_value&mirror&1`);
-	}
-
-	// Check the value of `config.infinitypt` and hide/show the `#pt_infinity` element
-	if (config.infinitypt === 0) {
-		$('#pt_infinity').hide();
-	} else if (config.infinitypt === 1) {
-		$('#pt_infinity').show();
-	}
-
-	// Check the value of `config.infinityzoom` and hide/show the `#cam_zoom_infinity` and `#cam_zoom_standard` elements
-	if (config.infinityzoom === 0) {
-		$('#cam_zoom_infinity').hide();
-		$('#cam_zoom_standard').show();
-	} else if (config.infinityzoom === 1) {
-		$('#cam_zoom_infinity').show();
-		$('#cam_zoom_standard').hide();
-	}
-
-	// Check the value of `config.infinityfocus` and hide/show the `#cam_focus_infinity` and `#cam_focus_standard` elements
-	if (config.infinityfocus === 1) {
-		$('#cam_focus_infinity').hide();
-		$('#cam_focus_standard').show();
-	} else if (config.infinityfocus === 0) {
-		$('#cam_focus_infinity').show();
-		$('#cam_focus_standard').hide();
-	}
-
-	update_labels();
-}
-
-// Function to control the camera's pan and tilt action
-// Function to control the camera pan/tilt
-function cam_pantilt(camera, action) {
-	// Get the direction to move the camera
-	const direction = getDirection(action);
-
-	// Build the URL for the camera control action, including the direction and pan/tilt speed
-	const loc = `${baseURL}/ptzctrl.cgi?ptzcmd&${direction}&${config.panspeed}&${config.tiltspeed}`;
-
-	// Run the action to move the camera
-	run_action(loc);
-}
-
-// Helper function to get the direction based on the action and the inversion setting
-function getDirection(action) {
-	if (config.invertcontrols === "1") {
-		switch (action) {
-			// If the action is 'left', return 'right'
-			case 'left':
-				return 'right';
-			// If the action is 'right', return 'left'
-			case 'right':
-				return 'left';
-			// If the action is 'up', return 'down'
-			case 'up':
-				return 'down';
-			// If the action is 'down', return 'up'
-			case 'down':
-				return 'up';
-			// For any other action, return the action
-			default:
-				return action;
-		}
-	}
-	// Return the original action if the inversion setting is not set
-	return action;
-}
-
-// Function to control the camera zoom
-function cam_zoom(camera, action) {
-	// Build the URL for the camera control action, including the zoom speed
-	const loc = `${baseURL}/ptzctrl.cgi?ptzcmd&${action}&${config.zoomspeed}`;
-
-	// Run the action to zoom the camera
-	run_action(loc);
-}
-
-// Function to control the camera focus
-function cam_focus(camera, action) {
-	// Build the URL for the camera control action, including the focus speed
-	const loc = `${baseURL}/ptzctrl.cgi?ptzcmd&${action}&${config.focusspeed}`;
-
-	// Run the action to focus the camera
-	run_action(loc);
-}
-
-// Function to control the camera preset
-function cam_preset(camera, positionnum, action) {
-	// Build the URL for the camera control action, including the position number
-	const loc = `${baseURL}/ptzctrl.cgi?ptzcmd&${action}&${positionnum}`;
-
-	// Run the action to set the camera preset
-	run_action(loc);
-}
-
-let autoInterval;
-let panInterval;
-let panning;
-let autopanning = false;
-
-function autopan() {
-
-	var seconds = config.autopaninterval;
-	autopanning = true;
-
-	// preset 11 is the autopan start preset
-	cam_preset(1, 11, 'poscall');
-
-	// wait 1 second before starting the pan
-	// this should give the camera enough time to pan to start position
-	setTimeout(function () {
-
-		console.log("start panning right");
-		pan('right');
-
-		autoInterval = setInterval(function () {
-
-			if (panning == 'left') {
-
-				clearInterval(panInterval);
-				console.log("start panning right");
-				pan('right');
-
-			} else if (panning == 'right') {
-
-				clearInterval(panInterval);
-				console.log("start panning left");
-				pan('left');
-			}
-
-		}, seconds * 1000);
-
-	}, 1000);
-}
-
-function pan(direction) {
-
-	var panspeed = 10;
-	var tiltspeed = 10;
-
-	panInterval = setInterval(function () {
-
-		if (direction == 'left') {
-
-			panning = 'left';
-
-			if (config.invertcontrols == "1") {
-				var loc = baseURL + "/ptzctrl.cgi?ptzcmd&right&" + panspeed + "&" + tiltspeed;
-			} else {
-				var loc = baseURL + "/ptzctrl.cgi?ptzcmd&left&" + panspeed + "&" + tiltspeed;
-			}
-			console.log("...pan left");
-
-		} else if (direction == 'right') {
-
-			panning = 'right';
-
-			if (config.invertcontrols == "1") {
-				var loc = baseURL + "/ptzctrl.cgi?ptzcmd&left&" + panspeed + "&" + tiltspeed;
-			} else {
-				var loc = baseURL + "/ptzctrl.cgi?ptzcmd&right&" + panspeed + "&" + tiltspeed;
-			}
-			console.log("...pan right");
-		}
-		run_action(loc);
-
-	}, 1000);
-}
-
-function stop_autopan() {
-	if (autoInterval) {
-		clearInterval(autoInterval);
-	}
-	if (panInterval) {
-		clearInterval(panInterval);
-	}
-	autopanning = false;
-	$('#panBtn').removeClass('pressed');
-	cam_pantilt(1, "ptzstop");
-	$('.autopan').removeClass('active');
-}
-
 $(document).ready(function () {
-	config_init();
+	sendConfig();
 	createKeybinds();
 
 	$(`.ptzButton`).on('mousedown', function (e) {
-		stop_autopan();
+
 		$(this).addClass('pressed');
 		if ($(this).attr('id') === 'esc') {
-			cam_pantilt(1, 'home');
+			camPanTilt(1, 'home');
 			console.log('Reset pantilt');
 		}
 		else {
-			cam_pantilt(1, $(this).attr('id'));
+			camPanTilt(1, $(this).attr('id'));
 			console.log(`Panned ${$(this).attr('id')}`);
 		}
 	});
 
 	$(`.ptzButton`).on('mouseup', function (e) {
-		stop_autopan();
+
 		$(this).removeClass('pressed');
-		cam_pantilt(1, 'ptzstop');
+		camPanTilt(1, 'ptzstop');
 		console.log(`Stopped Panning`);
 	});
 
@@ -591,18 +311,6 @@ $(document).ready(function () {
 		document.documentElement.setAttribute('data-theme', Cookies.get('theme'));
 	});
 
-	$('#parent-element').on('mousedown', function (e) {
-		let x = e.target.id;
-		if (arrowKeys.includes(x)) {
-			keyActions[x]();
-		}
-	});
-
-	$('#parent-element').on('mouseup', function (e) {
-		cam_pantilt(1, 'ptzstop');
-		console.log(`Stopped Panning`);
-	});
-
 	$('#rightLink').on('mouseover', function () {
 		$('#wrapper').addClass('rightTransition');
 	})
@@ -621,10 +329,7 @@ $(document).ready(function () {
 
 	$('.btn').click(function (e) {
 		activePreset = $(this).html();
-
-		stop_autopan();
-		cam_preset(1, activePreset, 'poscall');
-
+		presetGetSet(1, activePreset, 'poscall');
 		console.log(`Called preset ${activePreset}`);
 		$('#camTitle').html(`Active Preset: ${Cookies.get(`${activePreset}`)}`);
 	});
@@ -645,18 +350,14 @@ $(document).ready(function () {
 		$('#presetTitle1').html(`${Cookies.get(`${i}`)}`);
 	});
 
-	$('#infoLink').click(function (e) {
-		$('#about').toggleClass('show');
-	});
-
 	$('.asgnBtn').click(function (e) {
 		pstNum = $(this).val();
 		if (pstNum < 11) {
-			cam_preset(1, pstNum, 'posset');
+			presetGetSet(1, pstNum, 'posset');
 			console.log(`Set preset ${pstNum}`);
 		}
 		else {
-			cam_preset(1, 11, 'posset');
+			presetGetSet(1, 11, 'posset');
 			console.log('Set autopan start position');
 		};
 		let presetName = prompt('Enter a name for the preset:');
@@ -667,13 +368,12 @@ $(document).ready(function () {
 	$('body').on('click', '#panBtn', function (e) {
 		e.preventDefault();
 		$(this).toggleClass('pressed');
-		cam_pantilt(1, "ptzstop");
-
+		camPanTilt(1, "ptzstop");
 		if (autopanning == false) {
 			autopan();
 			$(this).addClass('active');
 		} else {
-			stop_autopan();
+
 		}
 		return false;
 	});
@@ -689,24 +389,28 @@ $(document).ready(function () {
 
 	$('body').on('click', '.adjust_setting', function (e) {
 		e.preventDefault();
-		var action = this.id
-		adjust_setting(action);
+		var action = $(this).attr('id').toLowerCase();
+		toggleSetting(action);
 		return false;
 	});
 
 	$('body').on('change', 'select', function (e) {
 		e.preventDefault();
 		var action = $(this).attr('id').toLowerCase();
-		config[action] = parseInt($(this).val());
-		save_config();
+		cameraConfig[action] = parseInt($(this).val());
+		configLocalStorage('set');
 		return false;
 	});
+
+	$('#reloadcamera').on('mousedown', function (e) {
+		refreshCameraIP();
+	})
 })
 
 // Check if the theme cookie exists
 if (!Cookies.get('theme')) {
-	// Set the default theme to light
-	Cookies.set('theme', 'light', { expires: 1000 })
+	// Set the default theme to dark
+	Cookies.set('theme', 'dark', { expires: 1000 })
 }
 
 document.documentElement.setAttribute('data-theme', Cookies.get('theme'));
