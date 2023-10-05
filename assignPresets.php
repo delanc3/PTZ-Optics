@@ -13,6 +13,7 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mousetrap@1.6.5/mousetrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+    <script src="https://kit.fontawesome.com/cc9f7fa694.js" crossorigin="anonymous"></script>
     <script src="./resources/js/index.js"></script>
     
     <title>PTZ-Optics - Presets</title>
@@ -33,7 +34,7 @@
 
     </section>
 
-    <div id="pageRight"><a href="#" id="rightLink" onClick="javascript:transition('right','./index.html')"><i class="ion-chevron-right"></i></a></div>
+    <div id="pageRight"><a href="#" id="rightLink" onClick="javascript:transition('right','./index.html')"><i class="fa-solid fa-circle-chevron-right fa-lg"></i></a></div>
     <section id='wrapper'>
         <section id='assignPresets'>
             <div id='assignPresetsBox'>
@@ -42,8 +43,7 @@
                     <div id='div2'>
                         <h1 id='assignTitle'>Assign Presets</h1>
                     </div>
-                    <div id='div3'><a href='javascript:transition("none","./index.html")' id='closeLink'><i
-                                class="icon ion-close-round"></i></a></div>
+                    <div id='div3'><a href='javascript:transition("none","./index.html")' id='closeLink'><i class="fa-solid fa-xmark fa-xl"></i></a></div>
                 </div>
                 <div id='contentDiv'>
                     <p id='one'>To assign a preset:</p>
