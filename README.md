@@ -1,7 +1,7 @@
 _**TODO:**_
   - [ ] DOCUMENTATION!
   - [x] ~Move all js dependancies to js-delivr~
-  - [ ] Migrate ionicons to fontawesome
+  - [x] ~Migrate ionicons to fontawesome~
   - [ ] Fix CORS headers
   - [x] ~Make settings dropdowns actually match current camera settings~
   - [ ] General code refactoring
