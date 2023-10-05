@@ -7,7 +7,7 @@ _**TODO:**_
   - [x] ~Make settings dropdowns actually match current camera settings~
   - [ ] General code refactoring
     - [ ] Streamline cgi-bin url resolving
-    - [ ] Clean up keybinding
+    - [x] ~Clean up keybinding~
     - [ ] Probably use classes somewhere 🤷
  
 ---
