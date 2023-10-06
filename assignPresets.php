@@ -63,12 +63,6 @@
                         <div class='col span-1-of-3 asgnCol'><input type="submit" value="8" name="button8" class="asgnBtn" id='assgn8'></div>
                         <div class='col span-1-of-3 asgnCol'><input type="submit" value="9" name="button9" class="asgnBtn" id='assgn9'></div>
                     </div>
-                    <div class='assign row'>
-                        <div class='col span-1-of-3 asgnCol'></div>
-                        <div class='col span-1-of-3 asgnCol'><a href='#' class="asgnBtn" id='assgn8'>Auto Pan Start</a>
-                        </div>
-                        <div class='col span-1-of-3 asgnCol'></div>
-                    </div>
                 </div>
             </div>
         </section>

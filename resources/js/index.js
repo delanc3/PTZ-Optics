@@ -284,13 +284,12 @@ $(document).ready(function () {
 			camPanTilt(1, $(this).attr('id'));
 			console.log(`Panned ${$(this).attr('id')}`);
 		}
-	});
+		$(`.ptzButton`).on('mouseup', function (e) {
 
-	$(`.ptzButton`).on('mouseup', function (e) {
-
-		$(this).removeClass('pressed');
-		camPanTilt(1, 'ptzstop');
-		console.log(`Stopped Panning`);
+			$(this).removeClass('pressed');
+			camPanTilt(1, 'ptzstop');
+			console.log(`Stopped Panning`);
+		});
 	});
 
 	// Add a click event listener to the toggle button
@@ -327,28 +326,28 @@ $(document).ready(function () {
 		$('#wrapper').removeClass('leftTransition');
 	})
 
-	$('.btn').click(function (e) {
+	$('.presetButton').click(function (e) {
 		activePreset = $(this).html();
 		presetGetSet(1, activePreset, 'poscall');
 		console.log(`Called preset ${activePreset}`);
 		$('#camTitle').html(`Active Preset: ${Cookies.get(`${activePreset}`)}`);
 	});
 
-	$('.btn').on('mouseout', function (e) {
-		let i = activePreset;
-		if (typeof activePreset == 'undefined') {
-			$('#presetTitle1').html(`Presets`);
-		}
-		else {
-			$('#presetTitle1').html(`${Cookies.get(`${i}`)}`);
-		}
+	$('.presetButton').on('mouseover', function (e) {
+		let presetNumber = $(this).html();
+		$('#presetPreview').attr('src', `${presetNumber}.jpg`);
+		$('#presetTitle1').html(`${Cookies.get(`${presetNumber}`)}`);
+		$('.presetButton').on('mouseout', function (e) {
+			let presetNumber = activePreset;
+			if (typeof activePreset == 'undefined') {
+				$('#presetTitle1').html(`Presets`);
+			}
+			else {
+				$('#presetTitle1').html(`${Cookies.get(`${presetNumber}`)}`);
+			}
+		});
 	});
 
-	$('.btn').on('mouseover', function (e) {
-		let i = $(this).html();
-		$('#presetPreview').attr('src', `${i}.jpg`);
-		$('#presetTitle1').html(`${Cookies.get(`${i}`)}`);
-	});
 
 	$('.asgnBtn').click(function (e) {
 		pstNum = $(this).val();

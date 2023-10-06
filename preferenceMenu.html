@@ -48,13 +48,17 @@
                         </div>
                     </div>
                     <div class='pref row'>
-                        <div class='col span-1-of-2 prefCol'><a href='#' class="adjust_setting prefBtn" id='invertcontrols'>Invert Controls - No</a></div>
+                        <div class='col span-1-of-2 prefCol'>
+                            <a href='#' class="adjust_setting prefBtn" id='invertcontrols'>Invert Controls - No<a>
+                        </div>
+                        <div class='col span-1-of-2 prefCol'>
+                            <a href='#' class="adjust_setting prefBtn" id='themeToggle'>Dark Mode<input type='checkbox' id='switch' name='toggle'></a>
+                        </div>
                     </div>
                     <div class='pref row'>
                         <div class='col span-1-of-2 prefCol'>
-                            <a href='#' class="adjust_setting prefBtn" id='themeToggle'>Dark Mode
-                                <input type='checkbox' id='switch' name='toggle'>
-                            </a>
+                            <label for='ip'>Camera IP Address</label>
+                            <input type="text" name="cameraIP" id='ip' placeholder="192.168.xxx.xxx" />
                         </div>
                         <div class='col span-1-of-2 prefCol'><a href='#' class="adjust_setting prefBtn"
                                 id='reloadcamera'>Reload Camera</a>
@@ -136,22 +140,6 @@
                                 <option value="6">6</option>
                                 <option value="7">7 (Fast)</option>
                             </select>
-                        </div>
-                    </div>
-                    <div class='pref row'>
-                        <div class='col span-1-of-2 prefCol'>
-                            <label for='autopaninterval'>Auto Pan Interval</label>
-                            <select class='dropDown' id='autopaninterval' name='autopaninterval'>
-                                <option value="30">30 Seconds</option>
-                                <option value="45">45 Seconds</option>
-                                <option value="60">1 Minute</option>
-                                <option value="90">1 Minute, 30 Seconds</option>
-                                <option value="120">2 Minutes</option>
-                            </select>
-                        </div>
-                        <div class='col span-1-of-2 prefCol'>
-                            <label for='ip'>Camera IP Address</label>
-                            <input type="text" name="cameraIP" id='ip' placeholder="192.168.xxx.xxx" />
                         </div>
                     </div>
                 </div>
