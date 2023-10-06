@@ -2,7 +2,6 @@
 <html lang="eu" data-theme="light">
 
 <head>
-    <link rel="stylesheet" type="text/css" href="resources/css/grid.css">
     <link rel="stylesheet" type="text/css" href="resources/css/style.css">
     <link rel="stylesheet" type="text/css" href="resources/css/mediaqueries.css">
     
@@ -18,20 +17,19 @@
 
 <body>
     <section id='header'>
-        <div id='assignLinkContainer'>
-            <a href='javascript:transition("none","./assignPresets.php")' id='assignLink'>Assign Presets</a>
+        <div class='linkContainer'>
+            <a href='javascript:transition("none","./assignPresets.php")' class='navLink'>Assign Presets</a>
         </div>
         <div id='logoBox'>
             <img src='./resources/images/PTZ-Logo.svg' id='logo'>
             <h1 id='title'>PTZ-OPTICS</h1>
         </div>
-        <div id='preferenceLinkContainer'>
-            <a href='#' id='preferenceLink'>Preferences</a>
+        <div class='linkContainer'>
         </div>
 
     </section>
 
-    <div id="pageLeft"><a href="#" id="leftLink" onClick="javascript:transition('left','./index.html')"><i class="fa-solid fa-circle-chevron-left fa-lg"></i></a></div>
+    <a href="#" class="transitionLink" id="leftTransitionLink" onClick="javascript:transition('left','./index.html')"><i class="fa-solid fa-circle-chevron-left fa-lg"></i></a>
     <section id='wrapper'>
         <section id='prefMenu'>
             <div id='prefMenuBox'>
@@ -41,31 +39,23 @@
                     </div>
                     <div id='div3'><a href='javascript:transition("none","./index.html")' id='closeLink'><i class="fa-solid fa-xmark fa-xl"></i></a></div>
                 </div>
-                <div id="buttonsContainer">
-                    <div class='pref row'>
-                        <div class='col span-1-of-2 prefCol'><a href='#' class="adjust_setting prefBtn" id='flip'>Flip - No</a></div>
-                        <div class='col span-1-of-2 prefCol'><a href='#' class="adjust_setting prefBtn" id='mirror'>Mirror - No</a>
+                <div class="grid-container preferences">
+                        <div class='prefCol'>
+                            <a href='#' class="adjust_setting prefBtn" id='flip'>Flip - No</a>
                         </div>
-                    </div>
-                    <div class='pref row'>
-                        <div class='col span-1-of-2 prefCol'>
-                            <a href='#' class="adjust_setting prefBtn" id='invertcontrols'>Invert Controls - No<a>
+                        <div class='prefCol'>
+                            <a href='#' class="adjust_setting prefBtn" id='mirror'>Mirror - No</a>
                         </div>
-                        <div class='col span-1-of-2 prefCol'>
-                            <a href='#' class="adjust_setting prefBtn" id='themeToggle'>Dark Mode<input type='checkbox' id='switch' name='toggle'></a>
+                        <div class='prefCol'>
+                            <a href='#' class="adjust_setting prefBtn" id='invertcontrols'>Invert Controls - No</a>
                         </div>
-                    </div>
-                    <div class='pref row'>
-                        <div class='col span-1-of-2 prefCol'>
-                            <label for='ip'>Camera IP Address</label>
-                            <input type="text" name="cameraIP" id='ip' placeholder="192.168.xxx.xxx" />
+                        <div class='prefCol'>
+                            <a href='#' class="adjust_setting prefBtn" id='themeToggle'>
+                                Dark Mode
+                                <input type='checkbox' id='switch' name='toggle'>
+                            </a>
                         </div>
-                        <div class='col span-1-of-2 prefCol'><a href='#' class="adjust_setting prefBtn"
-                                id='reloadcamera'>Reload Camera</a>
-                        </div>
-                    </div>
-                    <div class='pref row'>
-                        <div class='col span-1-of-2 prefCol'>
+                        <div class='prefCol'>
                             <label for='Pan Speed'>Pan Speed</label>
                             <select class='dropDown' id='panspeed' name='Pan Speed'>
                                 <option value="1">1 (Slow)</option>
@@ -90,7 +80,7 @@
                                 <option value="20">20 (Fast)</option>
                             </select>
                         </div>
-                        <div class='col span-1-of-2 prefCol'>
+                        <div class='prefCol'>
                             <label for='Zoom Speed'>Zoom Speed</label>
                             <select class='dropDown' id='zoomspeed' name='Zoom Speed'>
                                 <option value="1">1 (Slow)</option>
@@ -102,9 +92,7 @@
                                 <option value="7">7 (Fast)</option>
                             </select>
                         </div>
-                    </div>
-                    <div class='pref row'>
-                        <div class='col span-1-of-2 prefCol'>
+                        <div class='prefCol'>
                             <label for='Tilt Speed'>Tilt Speed</label>
                             <select class='dropDown' id='tiltspeed' name='Tilt Speed'>
                                 <option value="1">1 (Slow)</option>
@@ -129,7 +117,7 @@
                                 <option value="20">20 (Fast)</option>
                             </select>
                         </div>
-                        <div class='col span-1-of-2 prefCol'>
+                        <div class='prefCol'>
                             <label for='Focus Speed'>Focus Speed</label>
                             <select class='dropDown' id='focusspeed' name='Focus Speed'>
                                 <option value="1">1 (Slow)</option>
@@ -140,6 +128,13 @@
                                 <option value="6">6</option>
                                 <option value="7">7 (Fast)</option>
                             </select>
+                        </div>
+                        <div class='prefCol'>
+                            <label for='ip'>Camera IP Address</label>
+                            <input type="text" name="cameraIP" id='ip' placeholder="192.168.xxx.xxx" />
+                        </div>
+                        <div class='prefCol'>
+                            <a href='#' class="adjust_setting prefBtn" id='reloadcamera'>Reload Camera</a>
                         </div>
                     </div>
                 </div>

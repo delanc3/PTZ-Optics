@@ -2,7 +2,6 @@
 <html lang="eu" data-theme="light">
 
 <head>
-    <link rel="stylesheet" type="text/css" href="resources/css/grid.css">
     <link rel="stylesheet" type="text/css" href="resources/css/style.css">
     <link rel="stylesheet" type="text/css" href="resources/css/mediaqueries.css">
 
@@ -17,22 +16,22 @@
 
 <body ondragstart="return false">
     <section id='header'>
-        <div id='assignLinkContainer'>
-            <a href='javascript:transition("none","./assignPresets.php")' id='assignLink'>Assign Presets</a>
+        <div class="linkContainer">
+            <a href='javascript:transition("none","./assignPresets.php")' class="navLink">Assign Presets</a>
         </div>
         <div id='logoBox'>
             <img src='./resources/images/PTZ-Logo.svg' id='logo'>
             <h1 id='title'>PTZ-OPTICS</h1>
         </div>
-        <div id='preferenceLinkContainer'>
-            <a href='javascript:transition("none","./preferenceMenu.html")' id='preferenceLink'>Preferences</a>
+        <div class="linkContainer">
+            <a href='javascript:transition("none","./preferenceMenu.html")' class="navLink">Preferences</a>
         </div>
     </section>
 
     <a href='#' id='infoLink'><i class='ion-ios-information'></i></a>
 
-    <div id="pageLeft"><a href="#" id="leftLink" onClick="javascript:transition('left','./assignPresets.php')"><i class="fa-solid fa-circle-chevron-left fa-lg"></i></a></div>
-    <div id="pageRight"><a href="#" id="rightLink" onClick="javascript:transition('right','./preferenceMenu.html')"><i class="fa-solid fa-circle-chevron-right fa-lg"></i></a></div>
+    <a href="#" class="transitionLink" id="leftTransitionLink" onClick="javascript:transition('left','./assignPresets.php')"><i class="fa-solid fa-circle-chevron-left fa-lg"></i></a>
+    <a href="#" class="transitionLink" id="rightTransitionLink" onClick="javascript:transition('right','./preferenceMenu.html')"><i class="fa-solid fa-circle-chevron-right fa-lg"></i></a>
     <section id='wrapper'>
         <section id='prevContainer'>
             <div id='preview'>
@@ -50,8 +49,8 @@
                             css-links="./resources/css/style.css"
                             type="vertical"
                             btt="true"
-                            slider-width="10px"
-                            slider-height="150px"
+                            slider-width="8px"
+                            slider-height="140px"
                             pointer-width="30px"
                             pointer-height="30px"
                             pointer-bg="#fff url(./resources/images/zoom.svg)  no-repeat 50% 50%"
@@ -68,8 +67,8 @@
                             css-links="./resources/css/style.css"
                             type="vertical"
                             btt="true"
-                            slider-width="10px"
-                            slider-height="150px"
+                            slider-width="8px"
+                            slider-height="140px"
                             pointer-width="30px"
                             pointer-height="30px"
                             pointer-bg="#fff url(./resources/images/focus.svg)  no-repeat 50% 50%"
@@ -81,22 +80,12 @@
                     </div>
                 </div>
                 <div id='ptzContainer'>
-                    <div id='padding'>
-                        <div class='row ptzBtnRow'>
-                            <div class='col span-1-of-3 ctrlBtn'></div>
-                            <div class='col span-1-of-3 ctrlBtn'><a href='#' class='ptzButton' id='up'><i class="fa-solid fa-caret-up fa-3x"></i></a></div>
-                            <div class='col span-1-of-3 ctrlBtn'></div>
-                        </div>
-                        <div class='row ptzBtnRow'>
-                            <div class='col span-1-of-3 ctrlBtn'><a href='#' class='ptzButton' id='left'><i class="fa-solid fa-caret-left fa-3x"></i></a></div>
-                            <div class='col span-1-of-3 ctrlBtn'><a href='#' class='ptzButton' id='esc'><i class="fa-solid fa-house fa-2x"></i></a></div>
-                            <div class='col span-1-of-3 ctrlBtn'><a href='#' class='ptzButton' id='right'><i class="fa-solid fa-caret-right fa-3x"></i></a></div>
-                        </div>
-                        <div class='row ptzBtnRow'>
-                            <div class='col span-1-of-3 ctrlBtn'></div>
-                            <div class='col span-1-of-3 ctrlBtn'><a href='#' class='ptzButton' id='down'><i class="fa-solid fa-caret-down fa-3x"></i></a></div>
-                            <div class='col span-1-of-3 ctrlBtn'></div>
-                        </div>
+                    <div class="grid-container control">
+                        <div class='up ctrlBtn'><a href='#' class='ptzButton' id='up'><i class="fa-solid fa-caret-up fa-3x"></i></a></div>
+                        <div class='left ctrlBtn'><a href='#' class='ptzButton' id='left'><i class="fa-solid fa-caret-left fa-3x"></i></a></div>
+                        <div class='home ctrlBtn'><a href='#' class='ptzButton' id='esc'><i class="fa-solid fa-house fa-2x"></i></a></div>
+                        <div class='right ctrlBtn'><a href='#' class='ptzButton' id='right'><i class="fa-solid fa-caret-right fa-3x"></i></a></div>
+                        <div class='down ctrlBtn'><a href='#' class='ptzButton' id='down'><i class="fa-solid fa-caret-down fa-3x"></i></a></div>
                     </div>
                 </div>
             </div>
@@ -108,25 +97,19 @@
                     <h1 id='presetTitle1'>Presets</h1>
                 </div>
                 <div id='pstBtnContainer'>
-                    <div id='pstButtons'>
-                        <div class='row buttonRow'>
-                            <div class='col span-1-of-3 pstBtn'><a href='#' id='pst1' class='presetButton'>1</a></div>
-                            <div class='col span-1-of-3 pstBtn'><a href='#' id='pst2' class='presetButton'>2</a></div>
-                            <div class='col span-1-of-3 pstBtn'><a href='#' id='pst3' class='presetButton'>3</a></div>
-                        </div>
-                        <div class='row buttonRow'>
-                            <div class='col span-1-of-3 pstBtn'><a href='#' id='pst4' class='presetButton'>4</a></div>
-                            <div class='col span-1-of-3 pstBtn'><a href='#' id='pst5' class='presetButton'>5</a></div>
-                            <div class='col span-1-of-3 pstBtn'><a href='#' id='pst6' class='presetButton'>6</a></div>
-                        </div>
-                        <div class='row buttonRow'>
-                            <div class='col span-1-of-3 pstBtn'><a href='#' id='pst7' class='presetButton'>7</a></div>
-                            <div class='col span-1-of-3 pstBtn'><a href='#' id='pst8' class='presetButton'>8</a></div>
-                            <div class='col span-1-of-3 pstBtn'><a href='#' id='pst9' class='presetButton'>9</a></div>
-                        </div>
-                    </div>
-                    <div id='clearPresets'>
-                        <a href='#' id='clearBtn'>Clear Presets</a>
+                    <div class="grid-container presets">
+                        <div class='pstBtn'><a href='#' id='pst1' class='presetButton'>1</a></div>
+                        <div class='pstBtn'><a href='#' id='pst2' class='presetButton'>2</a></div>
+                        <div class='pstBtn'><a href='#' id='pst3' class='presetButton'>3</a></div>
+
+                        <div class='pstBtn'><a href='#' id='pst4' class='presetButton'>4</a></div>
+                        <div class='pstBtn'><a href='#' id='pst5' class='presetButton'>5</a></div>
+                        <div class='pstBtn'><a href='#' id='pst6' class='presetButton'>6</a></div>
+
+                        <div class='pstBtn'><a href='#' id='pst7' class='presetButton'>7</a></div>
+                        <div class='pstBtn'><a href='#' id='pst8' class='presetButton'>8</a></div>
+                        <div class='pstBtn'><a href='#' id='pst9' class='presetButton'>9</a></div>
+                        <div class='clearPresets'><a href='#' id='clearBtn'>Clear Presets</a></div>
                     </div>
                 </div>
             </div>

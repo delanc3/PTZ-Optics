@@ -310,21 +310,20 @@ $(document).ready(function () {
 		document.documentElement.setAttribute('data-theme', Cookies.get('theme'));
 	});
 
-	$('#rightLink').on('mouseover', function () {
+	$('#rightTransitionLink').on('mouseover', function () {
 		$('#wrapper').addClass('rightTransition');
+		$(this).on('mouseout', function () {
+			$('#wrapper').removeClass('rightTransition');
+		})
 	})
 
-	$('#rightLink').on('mouseout', function () {
-		$('#wrapper').removeClass('rightTransition');
-	})
-
-	$('#leftLink').on('mouseover', function () {
+	$('#leftTransitionLink').on('mouseover', function () {
 		$('#wrapper').addClass('leftTransition');
+		$(this).on('mouseout', function () {
+			$('#wrapper').removeClass('leftTransition');
+		})
 	})
 
-	$('#leftLink').on('mouseout', function () {
-		$('#wrapper').removeClass('leftTransition');
-	})
 
 	$('.presetButton').click(function (e) {
 		activePreset = $(this).html();
