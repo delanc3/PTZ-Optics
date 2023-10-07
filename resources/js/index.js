@@ -8,7 +8,6 @@ let cameraConfig = {
 	zoomspeed: 5,
 	tiltspeed: 8,
 	focusspeed: 5,
-	autopaninterval: 30,
 };
 
 let baseURL = "http://" + cameraConfig.ip + "/cgi-bin";
@@ -43,14 +42,14 @@ let keyActions = {
 function handleKeyEvent(eventType, pressedKey) {
 	if (eventType === 'keydown') {
 		if (pressedKey == 'esc') {
-			$(`#esc`).addClass('pressed')
+			$(`#esc`).addClass('activeButton')
 			keyActions.esc();
 		} else {
-			$(`#${pressedKey}`).addClass('pressed')
+			$(`#${pressedKey}`).addClass('activeButton');
 			keyActions[pressedKey]();
 		}
 	} else if (eventType === 'keyup') {
-		$(`#${pressedKey}`).removeClass('pressed')
+		$(`#${pressedKey}`).removeClass('activeButton');
 		console.log(`Stopped Panning`);
 		camPanTilt(1, 'ptzstop');
 	}
@@ -72,6 +71,8 @@ function createKeybinds() {
 	Mousetrap.bind(numKeys, function (e, currentKey) {
 		$(`#pst${currentKey}`).focus();
 		activePreset = $(`#pst${currentKey}`).html();
+		$(`#pst${currentKey}`).addClass('activeButton');
+		$(`:not(#pst${currentKey})`).removeClass('activeButton');
 
 		presetGetSet(1, currentKey, 'poscall');
 		console.log(`Called preset ${currentKey}`);
@@ -161,13 +162,18 @@ function updateSettingsLabels() {
 		} else {
 			switch (value) {
 				case 0:
-					$(`#${key}`).html(`${key} - No`);
+					$(`#${key}`).removeClass('activeButton');
 					break;
 				case 1:
-					$(`#${key}`).html(`${key} - Yes`);
+					$(`#${key}`).addClass('activeButton')
 					break;
 			}
 		}
+	}
+	if (Cookies.get('theme') == 'dark') {
+		$('#themeToggle').addClass('activeButton');
+	} else if (Cookies.get('theme') == 'light') {
+		$('#themeToggle').removeClass('activeButton');
 	}
 }
 
@@ -275,7 +281,7 @@ $(document).ready(function () {
 
 	$(`.ptzButton`).on('mousedown', function (e) {
 
-		$(this).addClass('pressed');
+		$(this).addClass('activeButton');
 		if ($(this).attr('id') === 'esc') {
 			camPanTilt(1, 'home');
 			console.log('Reset pantilt');
@@ -286,7 +292,7 @@ $(document).ready(function () {
 		}
 		$(`.ptzButton`).on('mouseup', function (e) {
 
-			$(this).removeClass('pressed');
+			$(this).removeClass('activeButton');
 			camPanTilt(1, 'ptzstop');
 			console.log(`Stopped Panning`);
 		});
@@ -324,25 +330,29 @@ $(document).ready(function () {
 		})
 	})
 
-
 	$('.presetButton').click(function (e) {
 		activePreset = $(this).html();
 		presetGetSet(1, activePreset, 'poscall');
 		console.log(`Called preset ${activePreset}`);
 		$('#camTitle').html(`Active Preset: ${Cookies.get(`${activePreset}`)}`);
+		$(this).addClass('activeButton');
+		$(`:not(#${$(this).prop('id')})`).removeClass('activeButton');
 	});
 
 	$('.presetButton').on('mouseover', function (e) {
 		let presetNumber = $(this).html();
 		$('#presetPreview').attr('src', `${presetNumber}.jpg`);
 		$('#presetTitle1').html(`${Cookies.get(`${presetNumber}`)}`);
+		if (typeof Cookies.get(`${presetNumber}`) == "undefined") {
+			$('#presetTitle1').html(`No Preset`);
+		}
 		$('.presetButton').on('mouseout', function (e) {
-			let presetNumber = activePreset;
-			if (typeof activePreset == 'undefined') {
+			let presetNumber = $(this).html();
+			if (typeof Cookies.get(`${activePreset}`) == "undefined") {
 				$('#presetTitle1').html(`Presets`);
 			}
 			else {
-				$('#presetTitle1').html(`${Cookies.get(`${presetNumber}`)}`);
+				$('#presetTitle1').html(`${Cookies.get(`${activePreset}`)}`);
 			}
 		});
 	});
@@ -379,7 +389,14 @@ $(document).ready(function () {
 	$('#clearBtn').click(function (e) {
 		e.preventDefault();
 		if (confirm("Are you sure you want to delete all presets (This cannot be undone!)")) {
-			console.log("deleted");
+			for (const [cookie, value] of Object.entries(Cookies.get())) {
+				if (cookie == "theme") {
+					return;
+				}
+				presetGetSet(1, cookie, 'posset');
+				Cookies.remove(cookie);
+			}
+			alert("All presets have been deleted");
 		} else {
 			console.log("canceled");
 		}

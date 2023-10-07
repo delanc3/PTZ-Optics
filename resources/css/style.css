@@ -4,13 +4,15 @@
 
 /* Dark Theme */
 
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
 html[data-theme="dark"] {
   --document-background-color: #231a17;
-  --textCol: #fff;
-  --section-bg-col: #160d0a;
-  --button-bg-col: #3b3330;
-  --padding-bg-col: #3b3430;
-  --ptzButton-bg-col: #45403e;
+  --textCol: #fefcfb;
+  --section-bg-col: #180c06;
+  --button-bg-col: #29201d;
+  --padding-bg-col: #2d2421;
+  --ptzButton-bg-col: #29201d;
   --button-hover-col: #5f5a57;
   --invCol: invert(100%);
 }
@@ -25,16 +27,16 @@ html[data-theme="dark"] {
 }
 
 html {
-  --document-background-color: #E8DFDC;
-  --textCol: #6A6665;
-  --section-bg-col: #F5EBE9;
+  --document-background-color: #e9e0dd;
+  --textCol: #1d0e07;
+  --section-bg-col: #f9ede7;
   --button-bg-col: #CFC6C4;
   --ptzButton-bg-col: #696563;
   --padding-bg-col: #CFC6C4;
   --button-hover-col: #A8A2A0;
   --invCol: none;
   height: 100%;
-  font-family: "Quicksand", "Arial", sans-serif;
+  font-family: "Poppins", sans-serif;
   font-weight: 400;
   font-size: 20px;
   text-rendering: optimizeLegibility;
@@ -96,8 +98,8 @@ p {
   justify-content: space-between;
   align-items: center;
   flex-direction: row;
-  background-color: var(--section-bg-col);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+  /* background-color: var(--section-bg-col); */
+  /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4); */
 }
 
 .linkContainer {
@@ -115,7 +117,7 @@ p {
   text-decoration: none;
   color: var(--textCol);
   border-radius: 30px;
-  font-weight: 700;
+  font-weight: 400;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.4);
   background-color: var(--button-bg-col);
   -webkit-border-radius: 30px;
@@ -131,11 +133,11 @@ p {
 
 .navLink:hover {
   background-color: var(--button-hover-col);
-  transform: scale(1.1);
-  -webkit-transform: scale(1.1);
-  -moz-transform: scale(1.1);
-  -ms-transform: scale(1.1);
-  -o-transform: scale(1.1);
+  transform: translateY(-5px);
+  -webkit-transform: translateY(-5px);
+  -moz-transform: translateY(-5px);
+  -ms-transform: translateY(-5px);
+  -o-transform: translateY(-5px);
 }
 
 #logoBox {
@@ -147,13 +149,16 @@ p {
 
 #logo {
   width: 50px;
-  height: auto;
-  filter: var(--invCol);
+  height: 50px;
+  background-color: var(--textCol);
+  -webkit-mask: url(../images/PTZ-Logo.svg) no-repeat center;
+  mask: url(../images/PTZ-Logo.svg) no-repeat center;
 }
 
 #title {
   font-size: 30px;
-  font-weight: bold;
+  font-weight: 800;
+  font-style: italic;
   margin-left: 15px;
 }
 
@@ -364,7 +369,7 @@ p {
   height: 65px;
   background-color: var(--ptzButton-bg-col);
   text-decoration: none;
-  color: #fff;
+  color: #fefcfb;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.4);
   justify-content: center;
   align-items: center;
@@ -384,13 +389,8 @@ p {
   -o-transform: scale(0.9);
 }
 
-.ptzButton.pressed {
-  background-color: #61443d;
+.ptzButton.activeButton {
   transform: scale(0.9);
-  -webkit-transform: scale(0.9);
-  -moz-transform: scale(0.9);
-  -ms-transform: scale(0.9);
-  -o-transform: scale(0.9);
 }
 
 #up {
@@ -523,7 +523,9 @@ p {
 #presetTitle1 {
   display: block;
   font-size: 25px;
-  font-weight: bold;
+  font-style: italic;
+  font-weight: 800;
+  letter-spacing: 1px;
 }
 
 #pstBtnContainer {
@@ -556,6 +558,7 @@ p {
   height: auto;
   aspect-ratio: 1/1;
   background-color: var(--button-bg-col);
+  color: var(--textCol);
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.4);
   justify-content: center;
   align-items: center;
@@ -580,24 +583,20 @@ p {
 }
 
 .presetButton:hover {
-  background-color: var(--button-hover-col);
-  border-radius: 50px;
-  transform: scale(1.1);
-  -webkit-transform: scale(1.1);
-  -moz-transform: scale(1.1);
-  -ms-transform: scale(1.1);
-  -o-transform: scale(1.1);
+  transform: translateY(-5px);
+  -webkit-transform: translateY(-5px);
+  -moz-transform: translateY(-5px);
+  -ms-transform: translateY(-5px);
+  -o-transform: translateY(-5px);
 }
 
 .presetButton:focus {
-  background-color: #cb9285;
-  border-radius: 50px;
   outline: none;
-  transform: scale(1.1);
-  -webkit-transform: scale(1.1);
-  -moz-transform: scale(1.1);
-  -ms-transform: scale(1.1);
-  -o-transform: scale(1.1);
+  transform: translateY(-5px);
+  -webkit-transform: translateY(-5px);
+  -moz-transform: translateY(-5px);
+  -ms-transform: translateY(-5px);
+  -o-transform: translateY(-5px);
 }
 
 #autoPan {
@@ -658,24 +657,24 @@ p {
 #panBtn:hover,
 #clearBtn:hover {
   background-color: var(--button-hover-col);
-  transform: scale(1.1);
-  -webkit-transform: scale(1.1);
-  -moz-transform: scale(1.1);
-  -ms-transform: scale(1.1);
-  -o-transform: scale(1.1);
+  transform: translateY(-5px);
+  -webkit-transform: translateY(-5px);
+  -moz-transform: translateY(-5px);
+  -ms-transform: translateY(-5px);
+  -o-transform: translateY(-5px);
 }
 
 #panBtn.pressed {
-  background-color: #cb9285;
+  background-color: #5cafd6;
   transform: scale(1.1);
-  -webkit-transform: scale(1.1);
-  -moz-transform: scale(1.1);
-  -ms-transform: scale(1.1);
-  -o-transform: scale(1.1);
+  -webkit-transform: translateY(-5px);
+  -moz-transform: translateY(-5px);
+  -ms-transform: translateY(-5px);
+  -o-transform: translateY(-5px);
 }
 
 #clearBtn:active {
-  background-color: #cb9285;
+  background-color: #5cafd6;
 }
 
 /*------------------------*/
@@ -825,11 +824,11 @@ p {
   -moz-border-radius: 30px;
   -ms-border-radius: 30px;
   -o-border-radius: 30px;
-  transition: all 0.5s;
-  -webkit-transition: all 0.5s;
-  -moz-transition: all 0.5s;
-  -ms-transition: all 0.5s;
-  -o-transition: all 0.5s;
+  transition: all 0.3s;
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  -ms-transition: all 0.3s;
+  -o-transition: all 0.3s;
   border: none !important;
   outline: none !important;
   text-align: center !important;
@@ -839,8 +838,7 @@ p {
   width: 120px !important;
 }
 
-.asgnBtn:hover,
-.prefBtn:hover {
+.asgnBtn:hover {
   background-color: var(--button-hover-col);
   width: 70px !important;
   border-radius: 100px;
@@ -852,6 +850,15 @@ p {
 
 .asgnBtn:active {
   background-color: #36494d;
+}
+
+.prefBtn:hover {
+  transform: translateY(-5px) !important;
+}
+
+.activeButton {
+  background-color: #5cafd6 !important;
+  box-shadow: 0px 0px 20px rgba(92, 175, 214, 0.5) !important;
 }
 
 input[type="submit"] {
@@ -932,36 +939,13 @@ label {
   -o-border-radius: 20px;
 }
 
+.dropDown:hover,
+#ip:hover {
+  transform: translateY(-5px);
+}
+
 #themeToggle {
   cursor: pointer;
-}
-
-input[type="checkbox"] {
-  -webkit-appearance: none;
-  width: 20px;
-  background-color: var(--button-bg-col);
-  height: 20px;
-  margin-left: 10px;
-  border-radius: 10px;
-  cursor: pointer;
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
-  -ms-border-radius: 10px;
-  -o-border-radius: 10px;
-  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
-  background-repeat: no-repeat;
-  background-image: url("../images/checkmark.svg");
-  background-size: 15px;
-  background-position: center;
-  transition: all 0.4s;
-  -webkit-transition: all 0.4s;
-  -moz-transition: all 0.4s;
-  -ms-transition: all 0.4s;
-  -o-transition: all 0.4s;
-}
-
-.switched {
-  background-color: #51aebe !important;
 }
 
 .rightTransition {

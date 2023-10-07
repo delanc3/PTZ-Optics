@@ -19,7 +19,7 @@
         <div class='linkContainer'>
         </div>
         <div id='logoBox'>
-            <img src='./resources/images/PTZ-Logo.svg' id='logo'>
+            <div id="logo"></div>
             <h1 id='title'>PTZ-OPTICS</h1>
         </div>
         <div class='linkContainer'>
