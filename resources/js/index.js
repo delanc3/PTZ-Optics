@@ -110,10 +110,12 @@ function createKeybinds() {
 			case 'q':
 			case 'a':
 				$('#zoomSlider').val(50);
+				camZoom(1, 'zoomstop');
 				break;
 			case 'w':
 			case 's':
 				$('#focusSlider').val(50);
+				camFocus(1, 'focusstop');
 				break;
 		}
 		camPanTilt(1, 'ptzstop');
@@ -130,7 +132,7 @@ function sendConfig() {
 
 	//set the camera's initial configuration for each value in the saved config object
 	for (const [key, value] of Object.entries(cameraConfig)) {
-		if (key.includes('interval') || key.includes('speed') || key.includes('ip')) {
+		if (key.includes('interval') || key.includes('speed') || key == 'ip') {
 			continue;
 		}
 		sendAjaxRequest(baseURL + "/param.cgi?post_image_value&" + key + "&" + value);
@@ -202,7 +204,7 @@ function sendAjaxRequest(action_url) {
 	$.ajax({
 		url: action_url,
 		type: 'GET',
-		headers: { 'Access-Control-Allow-Origin': `http://${cameraConfig.ip}/` },
+		crossDomain: true,
 	})
 		.done(function () {
 			// console.log("success");
