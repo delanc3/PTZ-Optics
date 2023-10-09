@@ -8,7 +8,7 @@ _**TODO:**_
   - [x] ~General code refactoring~
   - [ ] Streamline cgi-bin url resolving
   - [x] ~Clean up keybinding~
-  - [o] Remove PHP dependancy
+  - [ ] Remove PHP dependancy
  
 ---
 
