@@ -46,7 +46,7 @@ Once everything is setup you can open the "index.html" file via your webserver a
 
 To set the IP that the controller communicates with, click on the "Preferences" button in the top right and change the "Camera IP" field to your camera's IP followed by clicking the "Reload Camera button.
 
-<img src="https://github.com/j-trueman/PTZ-Optics/assets/82833724/36179005-5372-49b4-a854-e794b00f1371" width="300">
+<img src="https://github.com/j-trueman/PTZ-Optics/assets/82833724/374cf918-960e-43ba-803b-8feffa4deeba" width="300">
 
 ## UI Overview
 I have designed the UI to be as easy to understand as possible.[^2] I've used mediaqueries to create 2 slightly different UIs for the controller. The first has 3 main sections:
