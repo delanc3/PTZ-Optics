@@ -13,9 +13,8 @@ _**TODO:**_
 ---
 
 # Welcome!
-Hello GCHQ (or NCSC, idk who reads the applications).
 My goal for this project is to make an easily accessible and intuitive controller for PTZ-Optics cameras.
-The backend of the controller is mostly based off the original (IMHO messy) controller build by PTZ-Optics themselves.
+The backend of the controller is loosely based off the original (IMHO messy) controller built by PTZ-Optics themselves.
 
 ### Contents:
   - [Installation](#installation)
@@ -29,13 +28,23 @@ The backend of the controller is mostly based off the original (IMHO messy) cont
 
 ___
 ## Installation
-Currently (Oct 2023) in order to use this camera controller, you will need to run a local web-server on whatever device you want to run it on, I use Apache's HTTPD server but you can use whatever one you want as long as it can interperet php[^1]. So just click the green "Code" button and select "Download ZIP"
+Currently (Oct 2023) in order to use this camera controller, you will need to run a local web-server on whatever device you want to run it on, I use Easyphp devserver but you can use whatever one you want as long as it can interperet php[^1]. So just click the green "Code" button and select "Download ZIP".
 
 <img src="https://github.com/j-trueman/PTZ-Optics/assets/82833724/80d5ad48-303b-4c85-b402-772af67a8832" width="300">
 
-Then unzip and place all the files in the document root of your web-server
+Then unzip and place all the files in the document root of your web-server. (in my case this is "D:/EasyPHP-Devserver-17/eds-www/").
 
 <img src="https://github.com/j-trueman/PTZ-Optics/assets/82833724/1c35f67b-e99f-4a2d-94c3-3ae00561ec0b" width="300">
+
+For now you will also need to install a CORS Everywhere extension for your browser to allow the requests to get through to the camera. A good one for chrome is the "Moesif Origin & CORS Changer"
+
+<img src="https://github.com/j-trueman/PTZ-Optics/assets/82833724/4d50535e-cb8c-4b11-bd94-c765965de178" width="300">
+
+Once everything is setup you can open the "index.html" file via your webserver and it should pop up with the controller.
+
+<img src="https://github.com/j-trueman/PTZ-Optics/assets/82833724/ab2345e8-7543-4a3a-b970-4fb1b4f0bb70" width="300">
+
+To set the IP that the controller communicates with, click on the "Preferences" button in the top right and change the "Camera IP" field to your camera's IP followed by clicking the "Reload Camera button.
 
 ## UI Overview
 I have designed the UI to be as easy to understand as possible.[^2] I've used mediaqueries to create 2 slightly different UIs for the controller. The first has 3 main sections:
