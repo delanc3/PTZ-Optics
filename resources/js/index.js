@@ -1,4 +1,4 @@
-// config defaults
+// Deafaults for camera config
 let cameraConfig = {
 	ip: '192.168.0.190',
 	flip: 0,
@@ -16,6 +16,7 @@ let arrowKeys = ['up', 'down', 'left', 'right', 'esc'];
 let numKeys = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
 let sliderKeys = ['q', 'a', 'w', 's'];
 
+//Dictionary of functions for arrow keys
 let keyActions = {
 	up: function () {
 		(cameraConfig.invertcontrols == 0) ? camPanTilt(1, 'up') : camPanTilt(1, 'down');
@@ -39,6 +40,7 @@ let keyActions = {
 	}
 };
 
+//Execute the 'keyActions' function associated with the currently pressed key
 function handleKeyEvent(eventType, pressedKey) {
 	if (eventType === 'keydown') {
 		if (pressedKey == 'esc') {
@@ -55,7 +57,7 @@ function handleKeyEvent(eventType, pressedKey) {
 	}
 }
 
-//Creating keybinds
+//Create keybinds
 function createKeybinds() {
 	//Keybinds for controlling the camera with the arrow keys
 	Mousetrap.bind(arrowKeys, function (e, currentKey) {
@@ -122,26 +124,28 @@ function createKeybinds() {
 	}, 'keyup');
 }
 
-// setup all the initial configuration and standard settings
+// Send the current configuration to the camera
 function sendConfig() {
+	//If there is a camera configuration already in memory, use the settings from that.
 	cameraConfig = configLocalStorage('get');
 
-	// set the initial IP value for the camera ip input
+	//Set the value for the 'Camera IP' input
 	$("#ip").val(cameraConfig.ip);
 	baseURL = "http://" + cameraConfig.ip + "/cgi-bin";
 
-	//set the camera's initial configuration for each value in the saved config object
+	//Set each parameter of the camera configuration unless it is a speed value or the camera IP (these are stored locally)
 	for (const [key, value] of Object.entries(cameraConfig)) {
-		if (key.includes('interval') || key.includes('speed') || key == 'ip') {
+		if (key.includes('speed') || key == 'ip') {
 			continue;
 		}
 		sendAjaxRequest(baseURL + "/param.cgi?post_image_value&" + key + "&" + value);
 	}
+	//Update the settings on the "Preferences" page to match that of the current configuration
 	updateSettingsLabels();
 	console.log(cameraConfig);
 }
 
-//Retrieve and set camera config to and from local storage
+//Set or retrieve camera config as a localStorage object
 function configLocalStorage(action) {
 	if (action === 'get') {
 		let retrievedConfig = localStorage.getItem('configStorage');
@@ -156,10 +160,10 @@ function configLocalStorage(action) {
 	}
 }
 
-//Update values of settings buttons to match current camera config
+//Update values of settings buttons to match current camera configuration
 function updateSettingsLabels() {
 	for (const [key, value] of Object.entries(cameraConfig)) {
-		if (key.includes('speed') || key.includes('interval') || key == 'ip') {
+		if (key.includes('speed') || key == 'ip') {
 			$(`#${key}`).val(value)
 		} else {
 			switch (value) {
@@ -179,9 +183,8 @@ function updateSettingsLabels() {
 	}
 }
 
-// Function to adjust camera settings based on the provided action
+// Toggle the "flip", "mirror" or "invertcontrols" when pressed
 function toggleSetting(action) {
-	// Check the value of action and update the URL and config values accordingly
 	switch (action) {
 		case 'flip':
 			cameraConfig.flip = (cameraConfig.flip === 0) ? 1 : 0;
@@ -194,7 +197,7 @@ function toggleSetting(action) {
 			break;
 	}
 
-	// Save the updated config and update the labels
+	// Save the updated config and update the buttons
 	configLocalStorage('set');
 	updateSettingsLabels();
 }
@@ -206,25 +209,19 @@ function sendAjaxRequest(action_url) {
 		type: 'GET',
 		crossDomain: true,
 	})
-		.done(function () {
-			// console.log("success");
-		})
 		.fail(function () {
 			console.log(`error fetching ${action_url}`);
 		})
-		.always(function () {
-			// console.log("complete");
-		});
 }
 
-// function to reload camera IP address
+// Set the ip address of the camera when it is changed in the preferences
 function refreshCameraIP() {
-	// get the value of the camera IP address input field
+	// Get the value of the "Camera IP" input field
 	cameraConfig.ip = $('#ip').val();
 	configLocalStorage('set');
 }
 
-// Function to control the camera's pan and tilt action
+// Control the camera's pan and tilt action
 function camPanTilt(camera, direction) {
 	// Build the URL for the camera control action, including the direction and pan/tilt speed
 	const loc = `${baseURL}/ptzctrl.cgi?ptzcmd&${direction}&${cameraConfig.panspeed}&${cameraConfig.tiltspeed}`;
@@ -237,7 +234,7 @@ function camPanTilt(camera, direction) {
 	console.log(`Panning ${direction}`);
 }
 
-// Function to control the camera zoom
+// Control the camera zoom
 function camZoom(camera, action) {
 	// Build the URL for the camera control action, including the zoom speed
 	const loc = `${baseURL}/ptzctrl.cgi?ptzcmd&${action}&${cameraConfig.zoomspeed}`;
@@ -245,7 +242,7 @@ function camZoom(camera, action) {
 	sendAjaxRequest(loc);
 }
 
-// Function to control the camera focus
+// Control the camera focus
 function camFocus(camera, action) {
 	// Build the URL for the camera control action, including the focus speed
 	const loc = `${baseURL}/ptzctrl.cgi?ptzcmd&${action}&${cameraConfig.focusspeed}`;
@@ -253,7 +250,7 @@ function camFocus(camera, action) {
 	sendAjaxRequest(loc);
 }
 
-// Function to control the camera preset
+// Call or set position presets
 function presetGetSet(camera, positionnum, action) {
 	// Build the URL for the camera control action, including the position number
 	const loc = `${baseURL}/ptzctrl.cgi?ptzcmd&${action}&${positionnum}`;
@@ -261,6 +258,7 @@ function presetGetSet(camera, positionnum, action) {
 	sendAjaxRequest(loc);
 }
 
+//Transition effect between pages
 function transition(direction, targetURL) {
 	switch (direction) {
 		case 'left':
@@ -281,6 +279,7 @@ $(document).ready(function () {
 	sendConfig();
 	createKeybinds();
 
+	//Add click event listeners for ptz control buttons
 	$(`.ptzButton`).on('mousedown', function (e) {
 
 		$(this).addClass('activeButton');
@@ -300,7 +299,7 @@ $(document).ready(function () {
 		});
 	});
 
-	// Add a click event listener to the toggle button
+	// Add click event listener for theme toggle 
 	$('#themeToggle').click(function () {
 		// Get the current theme from the cookie
 		var currentTheme = Cookies.get('theme');
@@ -309,7 +308,7 @@ $(document).ready(function () {
 		if (currentTheme === 'light') {
 			Cookies.set('theme', 'dark', { expires: 1000 });
 		}
-		// If the current theme is dark, set the theme to light
+		// And vice versa
 		else if (currentTheme === 'dark') {
 			Cookies.set('theme', 'light', { expires: 1000 });
 		}
@@ -318,6 +317,7 @@ $(document).ready(function () {
 		document.documentElement.setAttribute('data-theme', Cookies.get('theme'));
 	});
 
+	//Hover event listeners for left and right chevron buttons
 	$('#rightTransitionLink').on('mouseover', function () {
 		$('#wrapper').addClass('rightTransition');
 		$(this).on('mouseout', function () {
@@ -332,6 +332,7 @@ $(document).ready(function () {
 		})
 	})
 
+	// Add click event listeners for preset buttons
 	$('.presetButton').click(function (e) {
 		activePreset = $(this).html();
 		presetGetSet(1, activePreset, 'poscall');
@@ -341,6 +342,7 @@ $(document).ready(function () {
 		$(`:not(#${$(this).prop('id')})`).removeClass('activeButton');
 	});
 
+	// Add hover event listeners for preset buttons
 	$('.presetButton').on('mouseover', function (e) {
 		let presetNumber = $(this).html();
 		$('#presetPreview').attr('src', `${presetNumber}.jpg`);
@@ -359,7 +361,7 @@ $(document).ready(function () {
 		});
 	});
 
-
+	//Add click event listeners for preset assignment buttons
 	$('.asgnBtn').click(function (e) {
 		pstNum = $(this).val();
 		if (pstNum < 11) {
@@ -374,20 +376,7 @@ $(document).ready(function () {
 		Cookies.set(`${pstNum}`, `${presetName}`, { expires: 1000 });
 	});
 
-
-	$('body').on('click', '#panBtn', function (e) {
-		e.preventDefault();
-		$(this).toggleClass('pressed');
-		camPanTilt(1, "ptzstop");
-		if (autopanning == false) {
-			autopan();
-			$(this).addClass('active');
-		} else {
-
-		}
-		return false;
-	});
-
+	//Add click event listener for preset clear buton
 	$('#clearBtn').click(function (e) {
 		e.preventDefault();
 		if (confirm("Are you sure you want to delete all presets (This cannot be undone!)")) {
@@ -404,6 +393,7 @@ $(document).ready(function () {
 		}
 	});
 
+	//Add event listeners to detect when preferences are changed
 	$('body').on('click', '.adjust_setting', function (e) {
 		e.preventDefault();
 		var action = $(this).attr('id').toLowerCase();
