@@ -412,6 +412,16 @@ $(document).ready(function () {
 	$('#reloadcamera').on('mousedown', function (e) {
 		refreshCameraIP();
 	})
+
+	$('.preferencebutton').on('click', function () {
+		if (this.getAttribute('variant') == 'neutral') {
+			this.setAttribute('variant', 'primary');
+			this.removeAttribute("outline");
+		} else {
+			this.setAttribute('variant', 'neutral');
+			this.setAttribute('outline', '');
+		}
+	})
 })
 
 // Check if the theme cookie exists
@@ -419,5 +429,16 @@ if (!Cookies.get('theme')) {
 	// Set the default theme to dark
 	Cookies.set('theme', 'dark', { expires: 1000 })
 }
+
+function preferenceDialog() {
+	const dialog = document.querySelector('.preferences');
+	dialog.show();
+
+	const closeButton = dialog.querySelector('sl-button[slot="footer"]');
+	closeButton.addEventListener("click", () => dialog.hide());
+}
+
+
+
 
 document.documentElement.setAttribute('data-theme', Cookies.get('theme'));

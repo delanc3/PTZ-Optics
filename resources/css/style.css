@@ -889,12 +889,12 @@ input[type="submit"] {
   flex-direction: column !important;
 }
 
-label {
+/* label {
   font-size: 20px;
   margin-bottom: 10px;
   color: var(--textCol);
   font-weight: 500;
-}
+} */
 
 .prefBtn:link,
 .prefBtn:visited {
@@ -921,7 +921,7 @@ label {
   -o-transform: scale(1.1);
 }
 
-.dropDown,
+/* .dropDown,
 #ip {
   width: 320px;
   height: 40px;
@@ -937,7 +937,7 @@ label {
   -moz-border-radius: 20px;
   -ms-border-radius: 20px;
   -o-border-radius: 20px;
-}
+} */
 
 .dropDown:hover,
 #ip:hover {
@@ -962,6 +962,14 @@ label {
 
 .activeLeftTransition {
   transform: translateX(-110%) scaleX(105%) !important;
+}
+
+.preferences {
+  color: white;
+}
+
+.dropdown {
+  height: 200px;
 }
 
 /*---------------------*/

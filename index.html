@@ -9,6 +9,9 @@
     <script src="https://cdn.jsdelivr.net/npm/mousetrap@1.6.5/mousetrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/toolcool-range-slider@4.0.28/dist/toolcool-range-slider.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.11.2/cdn/themes/light.css"/>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.11.2/cdn/shoelace-autoloader.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.11.2/cdn/themes/dark.css"/>
     <script src="https://kit.fontawesome.com/cc9f7fa694.js" crossorigin="anonymous"></script>
     <script src="./resources/js/index.js"></script>
     <title>PTZ-Optics - Main</title>
@@ -24,11 +27,98 @@
             <h1 id='title'>PTZ-OPTICS</h1>
         </div>
         <div class="linkContainer">
-            <a href='javascript:transition("none","./preferenceMenu.html")' class="navLink">Preferences</a>
+            <a href='javascript:preferenceDialog()' class="navLink">Preferences</a>
         </div>
     </section>
-
-    <a href='#' id='infoLink'><i class='ion-ios-information'></i></a>
+    
+    <sl-dialog label="Preferences" class="preferences sl-theme-dark">
+        <sl-mutation-observer class="button-mutation" attr="variant outline">
+            <sl-button variant="neutral" outline class="preferencebutton" id="flip">Flip</sl-button>
+            <sl-button variant="neutral" outline class="preferencebutton" id="mirror">Mirror</sl-button>
+            <br>
+            <sl-button variant="neutral" outline class="preferencebutton" id="invertcontrols">Invert Controls</sl-button>
+            <sl-button variant="neutral" outline class="preferencebutton" id="darkmode">Dark Mode</sl-button>
+            <br>
+        </sl-mutation-observer>
+        <sl-dropdown skidding="25"placement="bottom" id="panspeed">
+            <sl-button slot="trigger" caret>Pan Speed</sl-button>
+            <sl-menu class="dropdown">
+                <sl-menu-item value="1">1</sl-menu-item>
+                <sl-menu-item value="2">2</sl-menu-item>
+                <sl-menu-item value="3">3</sl-menu-item>
+                <sl-menu-item value="4">4</sl-menu-item>
+                <sl-menu-item value="5">5</sl-menu-item>
+                <sl-menu-item value="6">6</sl-menu-item>
+                <sl-menu-item value="7">7</sl-menu-item>
+                <sl-menu-item value="8">8</sl-menu-item>
+                <sl-menu-item value="9">9</sl-menu-item>
+                <sl-menu-item value="10">10</sl-menu-item>
+                <sl-menu-item value="11">11</sl-menu-item>
+                <sl-menu-item value="12">12</sl-menu-item>
+                <sl-menu-item value="13">13</sl-menu-item>
+                <sl-menu-item value="14">14</sl-menu-item>
+                <sl-menu-item value="15">15</sl-menu-item>
+                <sl-menu-item value="16">16</sl-menu-item>
+                <sl-menu-item value="17">17</sl-menu-item>
+                <sl-menu-item value="18">18</sl-menu-item>
+                <sl-menu-item value="19">19</sl-menu-item>
+                <sl-menu-item value="20">20</sl-menu-item>
+            </sl-menu>
+        </sl-dropdown>
+        <sl-dropdown skidding="25"placement="bottom" id="zoomspeed">
+            <sl-button slot="trigger" caret>Zoom Speed</sl-button>
+            <sl-menu class="dropdown">
+                <sl-menu-item value="1">1</sl-menu-item>
+                <sl-menu-item value="2">2</sl-menu-item>
+                <sl-menu-item value="3">3</sl-menu-item>
+                <sl-menu-item value="4">4</sl-menu-item>
+                <sl-menu-item value="5">5</sl-menu-item>
+                <sl-menu-item value="6">6</sl-menu-item>
+                <sl-menu-item value="7">7</sl-menu-item>
+            </sl-menu>
+        </sl-dropdown>
+        <br>
+        <sl-dropdown skidding="25"placement="bottom" id="tiltspeed">
+            <sl-button slot="trigger" caret>Tilt Speed</sl-button>
+            <sl-menu class="dropdown">
+                <sl-menu-item value="1">1</sl-menu-item>
+                <sl-menu-item value="2">2</sl-menu-item>
+                <sl-menu-item value="3">3</sl-menu-item>
+                <sl-menu-item value="4">4</sl-menu-item>
+                <sl-menu-item value="5">5</sl-menu-item>
+                <sl-menu-item value="6">6</sl-menu-item>
+                <sl-menu-item value="7">7</sl-menu-item>
+                <sl-menu-item value="8">8</sl-menu-item>
+                <sl-menu-item value="9">9</sl-menu-item>
+                <sl-menu-item value="10">10</sl-menu-item>
+                <sl-menu-item value="11">11</sl-menu-item>
+                <sl-menu-item value="12">12</sl-menu-item>
+                <sl-menu-item value="13">13</sl-menu-item>
+                <sl-menu-item value="14">14</sl-menu-item>
+                <sl-menu-item value="15">15</sl-menu-item>
+                <sl-menu-item value="16">16</sl-menu-item>
+                <sl-menu-item value="17">17</sl-menu-item>
+                <sl-menu-item value="18">18</sl-menu-item>
+                <sl-menu-item value="19">19</sl-menu-item>
+                <sl-menu-item value="20">20</sl-menu-item>
+            </sl-menu>
+        </sl-dropdown>
+        <sl-dropdown skidding="25"placement="bottom" id="focusspeed">
+            <sl-button slot="trigger" caret>Focus Speed</sl-button>
+            <sl-menu class="dropdown">
+                <sl-menu-item value="1">1</sl-menu-item>
+                <sl-menu-item value="2">2</sl-menu-item>
+                <sl-menu-item value="3">3</sl-menu-item>
+                <sl-menu-item value="4">4</sl-menu-item>
+                <sl-menu-item value="5">5</sl-menu-item>
+                <sl-menu-item value="6">6</sl-menu-item>
+                <sl-menu-item value="7">7</sl-menu-item>
+            </sl-menu>
+        </sl-dropdown>
+        <br>
+        <sl-input id="ip" label="Camera IP"></sl-input>
+        <sl-button slot="footer" variant="primary">Save</sl-button>
+    </sl-dialog>
 
     <a href="#" class="transitionLink" id="leftTransitionLink" onClick="javascript:transition('left','./assignPresets.php')"><i class="fa-solid fa-circle-chevron-left fa-lg"></i></a>
     <a href="#" class="transitionLink" id="rightTransitionLink" onClick="javascript:transition('right','./preferenceMenu.html')"><i class="fa-solid fa-circle-chevron-right fa-lg"></i></a>
