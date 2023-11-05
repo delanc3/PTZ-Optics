@@ -33,15 +33,13 @@
     
     <sl-dialog label="Preferences" class="preferences sl-theme-dark">
         <sl-mutation-observer class="button-mutation" attr="variant outline">
-            <sl-button variant="neutral" outline class="preferencebutton" id="flip">Flip</sl-button>
-            <sl-button variant="neutral" outline class="preferencebutton" id="mirror">Mirror</sl-button>
-            <br>
-            <sl-button variant="neutral" outline class="preferencebutton" id="invertcontrols">Invert Controls</sl-button>
-            <sl-button variant="neutral" outline class="preferencebutton" id="darkmode">Dark Mode</sl-button>
-            <br>
+            <sl-button variant="neutral" outline class="prefBtn" id="flip">Flip</sl-button>
+            <sl-button variant="neutral" outline class="prefBtn" id="mirror">Mirror</sl-button>
+            <sl-button variant="neutral" outline class="prefBtn" id="invertcontrols">Invert Controls</sl-button>
+            <sl-button variant="neutral" outline class="prefBtn" id="themeToggle">Dark Mode</sl-button>
         </sl-mutation-observer>
-        <sl-dropdown skidding="25"placement="bottom" id="panspeed">
-            <sl-button slot="trigger" caret>Pan Speed</sl-button>
+        <sl-dropdown skidding="50%" placement="bottom" class="prefdropdown" id="panspeed">
+            <sl-button slot="trigger" class="dropdowntrigger" caret>Pan Speed</sl-button>
             <sl-menu class="dropdown">
                 <sl-menu-item value="1">1</sl-menu-item>
                 <sl-menu-item value="2">2</sl-menu-item>
@@ -65,8 +63,8 @@
                 <sl-menu-item value="20">20</sl-menu-item>
             </sl-menu>
         </sl-dropdown>
-        <sl-dropdown skidding="25"placement="bottom" id="zoomspeed">
-            <sl-button slot="trigger" caret>Zoom Speed</sl-button>
+        <sl-dropdown skidding="50%" placement="bottom" class="prefdropdown" id="zoomspeed">
+            <sl-button slot="trigger" class="dropdowntrigger" caret>Zoom Speed</sl-button>
             <sl-menu class="dropdown">
                 <sl-menu-item value="1">1</sl-menu-item>
                 <sl-menu-item value="2">2</sl-menu-item>
@@ -77,9 +75,8 @@
                 <sl-menu-item value="7">7</sl-menu-item>
             </sl-menu>
         </sl-dropdown>
-        <br>
-        <sl-dropdown skidding="25"placement="bottom" id="tiltspeed">
-            <sl-button slot="trigger" caret>Tilt Speed</sl-button>
+        <sl-dropdown skidding="50%" placement="bottom" class="prefdropdown" id="tiltspeed">
+            <sl-button slot="trigger" class="dropdowntrigger" caret>Tilt Speed</sl-button>
             <sl-menu class="dropdown">
                 <sl-menu-item value="1">1</sl-menu-item>
                 <sl-menu-item value="2">2</sl-menu-item>
@@ -103,8 +100,8 @@
                 <sl-menu-item value="20">20</sl-menu-item>
             </sl-menu>
         </sl-dropdown>
-        <sl-dropdown skidding="25"placement="bottom" id="focusspeed">
-            <sl-button slot="trigger" caret>Focus Speed</sl-button>
+        <sl-dropdown skidding="50%" placement="bottom" class="prefdropdown" id="focusspeed">
+            <sl-button slot="trigger" class="dropdowntrigger" caret>Focus Speed</sl-button>
             <sl-menu class="dropdown">
                 <sl-menu-item value="1">1</sl-menu-item>
                 <sl-menu-item value="2">2</sl-menu-item>
@@ -115,7 +112,6 @@
                 <sl-menu-item value="7">7</sl-menu-item>
             </sl-menu>
         </sl-dropdown>
-        <br>
         <sl-input id="ip" label="Camera IP"></sl-input>
         <sl-button slot="footer" variant="primary">Save</sl-button>
     </sl-dialog>

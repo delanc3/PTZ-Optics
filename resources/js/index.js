@@ -162,24 +162,27 @@ function configLocalStorage(action) {
 
 //Update values of settings buttons to match current camera configuration
 function updateSettingsLabels() {
+	if (Cookies.get('theme') == 'dark') {
+		document.getElementById('themeToggle').setAttribute('variant', 'neutral');;
+	} else if (Cookies.get('theme') == 'light') {
+		document.getElementById('themeToggle').setAttribute('variant', 'neutral');;
+	}
 	for (const [key, value] of Object.entries(cameraConfig)) {
 		if (key.includes('speed') || key == 'ip') {
 			$(`#${key}`).val(value)
 		} else {
+			console.log(key)
 			switch (value) {
 				case 0:
-					$(`#${key}`).removeClass('activeButton');
+					document.getElementById(key).setAttribute('variant', 'neutral');
+					document.getElementById(key).setAttribute('outline', '');
 					break;
 				case 1:
-					$(`#${key}`).addClass('activeButton')
+					document.getElementById(key).setAttribute('variant', 'primary');
+					document.getElementById(key).removeAttribute("outline");
 					break;
 			}
 		}
-	}
-	if (Cookies.get('theme') == 'dark') {
-		$('#themeToggle').addClass('activeButton');
-	} else if (Cookies.get('theme') == 'light') {
-		$('#themeToggle').removeClass('activeButton');
 	}
 }
 
@@ -276,6 +279,16 @@ function transition(direction, targetURL) {
 }
 
 $(document).ready(function () {
+
+	function setActive(sender){
+		$(sender).setAttribute('variant', 'primary');
+		$(sender).removeAttribute("outline");
+	}
+	function removeActive(sender) {
+		$(sender).setAttribute('variant', 'neutral');
+		$(sender).setAttribute('outline', '');
+	}
+
 	sendConfig();
 	createKeybinds();
 
@@ -413,7 +426,7 @@ $(document).ready(function () {
 		refreshCameraIP();
 	})
 
-	$('.preferencebutton').on('click', function () {
+	$('.prefBtn').on('click', function() {
 		if (this.getAttribute('variant') == 'neutral') {
 			this.setAttribute('variant', 'primary');
 			this.removeAttribute("outline");
@@ -422,6 +435,7 @@ $(document).ready(function () {
 			this.setAttribute('outline', '');
 		}
 	})
+
 })
 
 // Check if the theme cookie exists

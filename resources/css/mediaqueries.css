@@ -199,20 +199,6 @@
         width: 95%;
     }
 
-    #flip,
-    #mirror,
-    #invertcontrols,
-    #infinitypt,
-    #infinityzoom,
-    #infinityfocus,
-    #themeToggle,
-    #reloadcamera,
-    .dropDown,
-    #ip {
-        width: 150px;
-        font-size: 15px;
-    }
-
     label {
         font-size: 15px;
     }
